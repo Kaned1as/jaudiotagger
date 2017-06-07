@@ -23,7 +23,6 @@ import org.jaudiotagger.tag.TagTextField;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 import static org.jaudiotagger.tag.vorbiscomment.VorbisCommentFieldKey.*;
 
@@ -157,7 +156,7 @@ public class VorbisCommentTagField implements TagTextField
     @Override
     public Charset getEncoding()
     {
-        return StandardCharsets.UTF_8;
+        return Charset.forName("UTF-8");
     }
 
     @Override
@@ -170,8 +169,8 @@ public class VorbisCommentTagField implements TagTextField
     public byte[] getRawContent() throws UnsupportedEncodingException
     {
         byte[] size = new byte[VorbisCommentReader.FIELD_COMMENT_LENGTH_LENGTH];
-        byte[] idBytes = this.id.getBytes(StandardCharsets.ISO_8859_1);
-        byte[] contentBytes = this.content.getBytes(StandardCharsets.UTF_8);
+        byte[] idBytes = this.id.getBytes(Charset.forName("ISO-8859-1"));
+        byte[] contentBytes = this.content.getBytes(Charset.forName("UTF-8"));
         byte[] b = new byte[4 + idBytes.length + 1 + contentBytes.length];
 
         int length = idBytes.length + 1 + contentBytes.length;
@@ -229,7 +228,7 @@ public class VorbisCommentTagField implements TagTextField
     @Override
     public void setEncoding(final Charset s)
     {
-        if (!StandardCharsets.UTF_8.equals(s))
+        if (!Charset.forName("UTF-8").equals(s))
         {
             throw new UnsupportedOperationException("The encoding of OggTagFields cannot be " + "changed.(specified to be UTF-8)");
         }

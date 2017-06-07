@@ -7,7 +7,7 @@ import org.jaudiotagger.audio.iff.ChunkHeader;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 
 /**
  * Provides common functionality for textual chunks like {@link NameChunk}, {@link AuthorChunk},
@@ -38,7 +38,7 @@ public abstract class TextChunk extends Chunk
      */
     protected String readChunkText() throws IOException {
         // the spec actually only defines ASCII, not ISO_8859_1, but it probably does not hurt to be lenient
-        return Utils.getString(chunkData, 0, chunkData.remaining(), StandardCharsets.ISO_8859_1);
+        return Utils.getString(chunkData, 0, chunkData.remaining(), Charset.forName("ISO-8859-1"));
     }
 
 }

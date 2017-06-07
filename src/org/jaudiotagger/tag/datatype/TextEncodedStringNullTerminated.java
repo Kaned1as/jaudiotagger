@@ -83,7 +83,7 @@ public class TextEncodedStringNullTerminated extends AbstractString
 
         //Latin-1 and UTF-8 strings are terminated by a single-byte null,
         //while UTF-16 and its variants need two bytes for the null terminator.
-        final boolean nullIsOneByte = StandardCharsets.ISO_8859_1 == charset || StandardCharsets.UTF_8 == charset;
+        final boolean nullIsOneByte = Charset.forName("ISO-8859-1") == charset || Charset.forName("UTF-8") == charset;
 
         boolean isNullTerminatorFound = false;
         while (buffer.hasRemaining())
@@ -207,11 +207,11 @@ public class TextEncodedStringNullTerminated extends AbstractString
         final Charset charset = getTextEncodingCharSet();
         try
         {
-            if (StandardCharsets.UTF_16.equals(charset))
+            if (Charset.forName("UTF-16").equals(charset))
             {
                 if(TagOptionSingleton.getInstance().isEncodeUTF16BomAsLittleEndian())
                 {
-                    final CharsetEncoder encoder = StandardCharsets.UTF_16LE.newEncoder();
+                    final CharsetEncoder encoder = Charset.forName("UTF-16LE").newEncoder();
                     encoder.onMalformedInput(CodingErrorAction.IGNORE);
                     encoder.onUnmappableCharacter(CodingErrorAction.IGNORE);
 
@@ -222,7 +222,7 @@ public class TextEncodedStringNullTerminated extends AbstractString
                 }
                 else
                 {
-                     final CharsetEncoder encoder = StandardCharsets.UTF_16BE.newEncoder();
+                     final CharsetEncoder encoder = Charset.forName("UTF-16BE").newEncoder();
                      encoder.onMalformedInput(CodingErrorAction.IGNORE);
                      encoder.onUnmappableCharacter(CodingErrorAction.IGNORE);
 

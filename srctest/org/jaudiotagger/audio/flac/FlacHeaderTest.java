@@ -12,7 +12,7 @@ import org.jaudiotagger.tag.reference.PictureTypes;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 
 /**
  * basic Flac tests
@@ -81,7 +81,7 @@ public class FlacHeaderTest extends TestCase
             assertEquals(7, (int) image.getPictureType());
             assertEquals("-->", image.getMimeType());
             assertTrue(image.isImageUrl());
-            assertEquals("coverart.gif", new String(image.getImageData(), 0, image.getImageData().length, StandardCharsets.ISO_8859_1));
+            assertEquals("coverart.gif", new String(image.getImageData(), 0, image.getImageData().length, Charset.forName("ISO-8859-1")));
             assertEquals("coverart.gif", image.getImageUrl());
 
             //Create Image Link
@@ -92,7 +92,7 @@ public class FlacHeaderTest extends TestCase
             assertEquals(3, (int) image.getPictureType());
             assertEquals("-->", image.getMimeType());
             assertTrue(image.isImageUrl());
-            assertEquals("../testdata/coverart.jpg", new String(image.getImageData(), 0, image.getImageData().length, StandardCharsets.ISO_8859_1));
+            assertEquals("../testdata/coverart.jpg", new String(image.getImageData(), 0, image.getImageData().length, Charset.forName("ISO-8859-1")));
             assertEquals("../testdata/coverart.jpg", image.getImageUrl());
 
             //Can we actually createField Buffered Image from the url  of course remember url is relative to the audio file

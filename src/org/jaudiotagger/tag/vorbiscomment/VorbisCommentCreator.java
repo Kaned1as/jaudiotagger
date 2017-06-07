@@ -27,9 +27,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.Iterator;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Create the raw packet data for a Vorbis Comment Tag
@@ -53,9 +52,9 @@ public class VorbisCommentCreator extends AbstractTagCreator
 
             //Vendor
             String vendorString = ((VorbisCommentTag) tag).getVendor();
-            int vendorLength = vendorString.getBytes(UTF_8).length;
+            int vendorLength = vendorString.getBytes(Charset.forName("UTF-8")).length;
             baos.write(Utils.getSizeLEInt32(vendorLength));
-            baos.write(vendorString.getBytes(UTF_8));
+            baos.write(vendorString.getBytes(Charset.forName("UTF-8")));
 
             //User Comment List
             int listLength = tag.getFieldCount() - 1; //Remove Vendor from count         

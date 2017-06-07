@@ -140,9 +140,9 @@ public class PartOfSet extends AbstractString
             final Charset charset = getTextEncodingCharSet();
             final String valueWithBOM;
             final CharsetEncoder encoder;
-            if (StandardCharsets.UTF_16.equals(charset))
+            if (Charset.forName("UTF-16").equals(charset))
             {
-                encoder = StandardCharsets.UTF_16LE.newEncoder();
+                encoder = Charset.forName("UTF-16LE").newEncoder();
                 //Note remember LE BOM is ff fe but this is handled by encoder Unicode char is fe ff
                 valueWithBOM = '\ufeff' + value;
             }

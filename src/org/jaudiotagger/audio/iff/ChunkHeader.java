@@ -7,7 +7,7 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 
 /**
  * Each {@link Chunk} starts with a chunk header consisting of a 4 byte id and then a 4 byte size field, the size field
@@ -72,7 +72,7 @@ public class ChunkHeader
     {
         final ByteBuffer bb = ByteBuffer.allocate(CHUNK_HEADER_SIZE);
         bb.order(byteOrder);
-        bb.put(chunkId.getBytes(StandardCharsets.US_ASCII));
+        bb.put(chunkId.getBytes(Charset.forName("US-ASCII")));
         bb.putInt((int)size);
         bb.flip();
         return bb;

@@ -31,9 +31,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeSet;
 
-import static java.nio.charset.StandardCharsets.ISO_8859_1;
-
-
 /**
  * Represents a String thats acts as a key into an enumeration of values. The String will be encoded
  * using the default encoding regardless of what encoding may be specified in the framebody
@@ -221,6 +218,6 @@ public class StringHashMap extends StringFixedLength implements HashMapInterface
      */
     protected Charset getTextEncodingCharSet()
     {
-        return ISO_8859_1;
+        return Charset.forName("ISO-8859-1");
     }
 }

@@ -143,10 +143,10 @@ public class StringFixedLength extends AbstractString
         {
             final Charset charset = getTextEncodingCharSet();
             final CharsetEncoder encoder;
-            if (StandardCharsets.UTF_16.equals(charset))
+            if (Charset.forName("UTF-16").equals(charset))
             {
                 //Note remember LE BOM is ff fe but tis is handled by encoder Unicode char is fe ff
-                encoder = StandardCharsets.UTF_16LE.newEncoder();
+                encoder = Charset.forName("UTF-16LE").newEncoder();
                 dataBuffer = encoder.encode(CharBuffer.wrap('\ufeff' + (String) value));
             }
             else

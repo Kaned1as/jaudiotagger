@@ -8,7 +8,7 @@ import org.jaudiotagger.tag.wav.WavTag;
 
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -60,7 +60,7 @@ public class WavInfoChunk
             String value =null;
             try
             {
-                value = Utils.getString(chunkData, 0, size, StandardCharsets.UTF_8);
+                value = Utils.getString(chunkData, 0, size, Charset.forName("UTF-8"));
             }
             catch(BufferUnderflowException bue)
             {

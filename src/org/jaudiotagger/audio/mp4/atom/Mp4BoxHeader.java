@@ -30,7 +30,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 
 /**
@@ -242,7 +241,7 @@ public class Mp4BoxHeader
      */
     public Charset getEncoding()
     {
-        return StandardCharsets.UTF_8;
+        return Charset.forName("UTF-8");
     }
 
 

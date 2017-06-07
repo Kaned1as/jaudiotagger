@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 //import java.nio.file.attribute.FileTime;  ==Android==
@@ -31,7 +31,7 @@ public class AudioFileWriterTest extends TestCase {
     protected void setUp() throws IOException {
         final File file = File.createTempFile("AudioFileWriterTest", ".bin");
         try (final FileOutputStream out = new FileOutputStream(file)) {
-            for (int i=0; i<100; i++) out.write("Some random stuff\n".getBytes(StandardCharsets.US_ASCII));
+            for (int i=0; i<100; i++) out.write("Some random stuff\n".getBytes(Charset.forName("US-ASCII")));
         }
         this.audioFile = new AudioFile(file, null, new FlacTag());
         TagOptionSingleton.getInstance().setToDefault();

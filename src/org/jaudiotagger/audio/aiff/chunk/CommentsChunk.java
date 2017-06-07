@@ -8,7 +8,7 @@ import org.jaudiotagger.audio.iff.ChunkHeader;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.Date;
 
 /**
@@ -84,7 +84,7 @@ public class CommentsChunk extends Chunk
             final int marker      = Utils.u(chunkData.getShort());
             final int count       = Utils.u(chunkData.getShort());
             // Append a timestamp to the comment
-            final String text = Utils.getString(chunkData, 0, count, StandardCharsets.ISO_8859_1) + " " + AiffUtil.formatDate(jTimestamp);
+            final String text = Utils.getString(chunkData, 0, count, Charset.forName("ISO-8859-1")) + " " + AiffUtil.formatDate(jTimestamp);
             if (count % 2 != 0) {
                 // if count is odd, text is padded with an extra byte that we need to consume
                 chunkData.get();

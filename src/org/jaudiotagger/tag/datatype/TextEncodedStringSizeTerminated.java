@@ -110,7 +110,7 @@ public class TextEncodedStringSizeTerminated extends AbstractString
 
         //If using UTF16 with BOM we then search through the text removing any BOMs that could exist
         //for multiple values, BOM could be Big Endian or Little Endian
-        if (StandardCharsets.UTF_16.equals(getTextEncodingCharSet()))
+        if (Charset.forName("UTF-16").equals(getTextEncodingCharSet()))
         {
             value = outBuffer.toString().replace("\ufeff","").replace("\ufffe","");
         }
@@ -171,7 +171,7 @@ public class TextEncodedStringSizeTerminated extends AbstractString
     protected ByteBuffer writeStringUTF16LEBOM(final String next, final int i, final int noOfValues)
             throws CharacterCodingException
     {
-        final CharsetEncoder encoder = StandardCharsets.UTF_16LE.newEncoder();
+        final CharsetEncoder encoder = Charset.forName("UTF-16LE").newEncoder();
         encoder.onMalformedInput(CodingErrorAction.IGNORE);
         encoder.onUnmappableCharacter(CodingErrorAction.IGNORE);
 
@@ -203,7 +203,7 @@ public class TextEncodedStringSizeTerminated extends AbstractString
     protected ByteBuffer writeStringUTF16BEBOM(final String next, final int i, final int noOfValues)
             throws CharacterCodingException
     {
-        final CharsetEncoder encoder = StandardCharsets.UTF_16BE.newEncoder();
+        final CharsetEncoder encoder = Charset.forName("UTF-16BE").newEncoder();
         encoder.onMalformedInput(CodingErrorAction.IGNORE);
         encoder.onUnmappableCharacter(CodingErrorAction.IGNORE);
 
@@ -281,15 +281,15 @@ public class TextEncodedStringSizeTerminated extends AbstractString
             //Special Handling because there is no UTF16 BOM LE charset
             String stringValue   = (String)value;
             Charset actualCharSet = null;
-            if (StandardCharsets.UTF_16.equals(charset))
+            if (Charset.forName("UTF-16").equals(charset))
             {
                 if (TagOptionSingleton.getInstance().isEncodeUTF16BomAsLittleEndian())
                 {
-                    actualCharSet = StandardCharsets.UTF_16LE;
+                    actualCharSet = Charset.forName("UTF-16LE");
                 }
                 else
                 {
-                    actualCharSet = StandardCharsets.UTF_16BE;
+                    actualCharSet = Charset.forName("UTF-16BE");
                 }
             }
 
@@ -305,11 +305,11 @@ public class TextEncodedStringSizeTerminated extends AbstractString
             {
                 String next = values.get(i);
 
-                if (StandardCharsets.UTF_16LE.equals(actualCharSet))
+                if (Charset.forName("UTF-16LE").equals(actualCharSet))
                 {
                     outputBuffer.put(writeStringUTF16LEBOM( next, i, values.size()));
                 }
-                else if (StandardCharsets.UTF_16BE.equals(actualCharSet))
+                else if (Charset.forName("UTF-16BE").equals(actualCharSet))
                 {
                     outputBuffer.put(writeStringUTF16BEBOM( next, i, values.size()));
                 }
