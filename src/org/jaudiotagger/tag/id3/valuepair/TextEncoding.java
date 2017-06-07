@@ -25,7 +25,6 @@ package org.jaudiotagger.tag.id3.valuepair;
 import org.jaudiotagger.tag.datatype.AbstractIntStringValuePair;
 
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +40,12 @@ import java.util.Map;
  */
 public class TextEncoding extends AbstractIntStringValuePair
 {
+
+    //Supported Java charsets
+    public static final String CHARSET_ISO_8859_1 = "ISO-8859-1";
+    public static final String CHARSET_UTF_16 = "UTF-16";        //Want to use x-UTF-16LE-BOM but not always available
+    public static final String CHARSET_UTF_16BE = "UTF-16BE";
+    public static final String CHARSET_UTF_8 = "UTF-8";
 
     //Supported ID3 charset ids
     public static final byte ISO_8859_1 = 0;
@@ -72,10 +77,10 @@ public class TextEncoding extends AbstractIntStringValuePair
 
     private TextEncoding()
     {
-        idToCharset.put((int) ISO_8859_1, StandardCharsets.ISO_8859_1);
-        idToCharset.put((int) UTF_16, StandardCharsets.UTF_16);
-        idToCharset.put((int) UTF_16BE, StandardCharsets.UTF_16BE);
-        idToCharset.put((int) UTF_8, StandardCharsets.UTF_8);
+        idToCharset.put((int) ISO_8859_1, Charset.forName(CHARSET_ISO_8859_1));
+        idToCharset.put((int) UTF_16, Charset.forName(CHARSET_UTF_16));
+        idToCharset.put((int) UTF_16BE, Charset.forName(CHARSET_UTF_16BE));
+        idToCharset.put((int) UTF_8, Charset.forName(CHARSET_UTF_8));
 
         for (final Map.Entry<Integer, Charset> e : idToCharset.entrySet()) {
             idToValue.put(e.getKey(), e.getValue().name());
