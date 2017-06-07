@@ -1256,12 +1256,18 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
             return false;
         }
         //Major Version
-        if (byteBuffer.get() != getMajorVersion())
+        int major = byteBuffer.get();
+        if (major != getMajorVersion())
         {
             return false;
         }
         //Minor Version
-        return byteBuffer.get() == getRevision();
+        int minor = byteBuffer.get();
+        if (minor != getRevision()) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
