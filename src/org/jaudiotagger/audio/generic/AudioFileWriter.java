@@ -538,8 +538,9 @@ public abstract class AudioFileWriter
         try (final RandomAccessFile raf = new RandomAccessFile(originalFile, "rw"))
         {
             final FileChannel outChannel = raf.getChannel();
-            try (final FileLock lock = outChannel.tryLock())
-            {
+            FileLock lock = null;
+            try {
+                lock = outChannel.tryLock();
                 if (lock != null)
                 {
                     transferNewFileContentToOriginalFile(newFile, originalFile, raf, outChannel);
@@ -573,6 +574,12 @@ public abstract class AudioFileWriter
                 // tryLock failed for some reason other than an IOException — we're definitely doomed
                 logger.warning(ErrorMessage.GENERAL_WRITE_FAILED_FILE_LOCKED.getMsg(originalFile.getPath()));
                 throw new CannotWriteException(ErrorMessage.GENERAL_WRITE_FAILED_FILE_LOCKED.getMsg(originalFile.getPath()), e);
+            }
+            finally
+            {
+                if (lock != null) {
+                    lock.release();
+                }
             }
         }
         catch (FileNotFoundException e)
