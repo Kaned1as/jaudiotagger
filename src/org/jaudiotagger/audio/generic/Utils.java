@@ -241,7 +241,7 @@ public class Utils
         final int len = Utils.u(bb.get()); //Read as unsigned value
         final byte[] buf = new byte[len];
         bb.get(buf);
-        return new String(buf, 0, len, Charset.forName("US-ASCII"));
+        return new String(buf, 0, len, Charset.forName("ISO-8859-1"));
     }
 
     /**
@@ -307,7 +307,7 @@ public class Utils
     {
         final byte[] buf = new byte[charsToRead];
         di.readFully(buf);
-        return new String(buf, Charset.forName("ISO-8859-1"));
+        return new String(buf, Charset.forName("US-ASCII"));
     }
 
     /**
@@ -434,7 +434,7 @@ public class Utils
     {
         byte[] b = new byte[4];
         bytes.get(b);
-        return new String(b, Charset.forName("US-ASCII"));
+        return new String(b, Charset.forName("ISO-8859-1"));
     }
 
     /**
@@ -448,7 +448,7 @@ public class Utils
     {
         byte[] b = new byte[3];
         bytes.get(b);
-        return new String(b, Charset.forName("US-ASCII"));
+        return new String(b, Charset.forName("ISO-8859-1"));
     }
 
     /**
