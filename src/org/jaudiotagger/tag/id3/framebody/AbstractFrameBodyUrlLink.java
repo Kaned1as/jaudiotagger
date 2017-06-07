@@ -32,8 +32,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
-import java.nio.charset.StandardCharsets;
 
 /**
  * Abstract super class of all URL Frames
@@ -114,7 +114,7 @@ public abstract class AbstractFrameBodyUrlLink extends AbstractID3v2FrameBody
      */
     public void write(ByteArrayOutputStream tagBuffer)
     {
-        CharsetEncoder encoder = StandardCharsets.ISO_8859_1.newEncoder();
+        CharsetEncoder encoder = Charset.forName("ISO-8859-1").newEncoder();
         String origUrl = getUrlLink();
         if (!encoder.canEncode(origUrl))
         {

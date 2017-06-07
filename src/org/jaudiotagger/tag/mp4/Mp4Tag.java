@@ -26,7 +26,6 @@ import org.jaudiotagger.tag.images.ArtworkFactory;
 import org.jaudiotagger.tag.mp4.field.*;
 
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -234,7 +233,7 @@ public class Mp4Tag extends AbstractTag
 
     protected boolean isAllowedEncoding(Charset enc)
     {
-        return StandardCharsets.UTF_8.equals(enc);
+        return Charset.forName("UTF-8").equals(enc);
     }
 
     public String toString()

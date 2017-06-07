@@ -5,7 +5,7 @@ import org.jaudiotagger.audio.exceptions.CannotReadException;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.Random;
 
 import static org.jaudiotagger.audio.aiff.AiffType.AIFC;
@@ -95,11 +95,11 @@ public class AiffFileHeaderTest extends TestCase {
 
         try (final DataOutputStream out = new DataOutputStream(new FileOutputStream(tempFile))) {
             // write format
-            out.write(form.getBytes(StandardCharsets.US_ASCII));
+            out.write(form.getBytes(Charset.forName("US-ASCII")));
             // write size
             out.writeInt(size);
             // write format type
-            out.write(formType.getBytes(StandardCharsets.US_ASCII));
+            out.write(formType.getBytes(Charset.forName("US-ASCII")));
             // write remaining random data
             final byte[] remainingData = new byte[size - formType.length()];
             final Random random = new Random();

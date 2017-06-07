@@ -36,7 +36,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -409,7 +409,7 @@ public class WavTagWriter
         //Write LIST header
         final ByteBuffer listHeaderBuffer = ByteBuffer.allocate(ChunkHeader.CHUNK_HEADER_SIZE);
         listHeaderBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        listHeaderBuffer.put(WavChunkType.LIST.getCode().getBytes(StandardCharsets.US_ASCII));
+        listHeaderBuffer.put(WavChunkType.LIST.getCode().getBytes(Charset.forName("US-ASCII")));
         listHeaderBuffer.putInt((int) chunkSize);
         listHeaderBuffer.flip();
         fc.write(listHeaderBuffer);
@@ -449,7 +449,7 @@ public class WavTagWriter
         //Write ID3Data header
         final ByteBuffer listBuffer = ByteBuffer.allocate(ChunkHeader.CHUNK_HEADER_SIZE);
         listBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        listBuffer.put(WavChunkType.ID3.getCode().getBytes(StandardCharsets.US_ASCII));
+        listBuffer.put(WavChunkType.ID3.getCode().getBytes(Charset.forName("US-ASCII")));
         listBuffer.putInt(bb.limit());
         listBuffer.flip();
         fc.write(listBuffer);
@@ -510,11 +510,11 @@ public class WavTagWriter
             {
                 TagTextField next = (TagTextField) nextField;
                 WavInfoIdentifier wii = WavInfoIdentifier.getByByFieldKey(FieldKey.valueOf(next.getId()));
-                baos.write(wii.getCode().getBytes(StandardCharsets.US_ASCII));
+                baos.write(wii.getCode().getBytes(Charset.forName("US-ASCII")));
                 logger.config(loggingName + " Writing:" + wii.getCode() + ":" + next.getContent());
 
                 //TODO Is UTF8 allowed format
-                byte[] contentConvertedToBytes = next.getContent().getBytes(StandardCharsets.UTF_8);
+                byte[] contentConvertedToBytes = next.getContent().getBytes(Charset.forName("UTF-8"));
                 baos.write(Utils.getSizeLEInt32(contentConvertedToBytes.length));
                 baos.write(contentConvertedToBytes);
 
@@ -529,7 +529,7 @@ public class WavTagWriter
                 {
                     if(TagOptionSingleton.getInstance().isWriteWavForTwonky())
                     {
-                        baos.write(WavInfoIdentifier.TWONKY_TRACKNO.getCode().getBytes(StandardCharsets.US_ASCII));
+                        baos.write(WavInfoIdentifier.TWONKY_TRACKNO.getCode().getBytes(Charset.forName("US-ASCII")));
                         logger.config(loggingName + " Writing:" + WavInfoIdentifier.TWONKY_TRACKNO.getCode() + ":" + next.getContent());
 
                         baos.write(Utils.getSizeLEInt32(contentConvertedToBytes.length));
@@ -549,9 +549,9 @@ public class WavTagWriter
             while(ti.hasNext())
             {
                 TagTextField next = ti.next();
-                baos.write(next.getId().getBytes(StandardCharsets.US_ASCII));
+                baos.write(next.getId().getBytes(Charset.forName("US-ASCII")));
                 logger.config(loggingName + " Writing:" +next.getId() + ":" + next.getContent());
-                byte[] contentConvertedToBytes = next.getContent().getBytes(StandardCharsets.UTF_8);
+                byte[] contentConvertedToBytes = next.getContent().getBytes(Charset.forName("UTF-8"));
                 baos.write(Utils.getSizeLEInt32(contentConvertedToBytes.length));
                 baos.write(contentConvertedToBytes);
 
@@ -567,7 +567,7 @@ public class WavTagWriter
 
             //Now Write INFO header
             final ByteBuffer infoHeaderBuffer = ByteBuffer.allocate(SIGNATURE_LENGTH);
-            infoHeaderBuffer.put(WavChunkType.INFO.getCode().getBytes(StandardCharsets.US_ASCII));
+            infoHeaderBuffer.put(WavChunkType.INFO.getCode().getBytes(Charset.forName("US-ASCII")));
             infoHeaderBuffer.flip();
 
 

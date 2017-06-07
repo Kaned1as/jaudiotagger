@@ -32,7 +32,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.Iterator;
 
 /**
@@ -121,7 +121,7 @@ public class Mp4TagCreator extends AbstractTagCreator
                         //Now create the parent Data
                         byte[] data = covrDataBaos.toByteArray();
                         baos.write(Utils.getSizeBEInt32(Mp4BoxHeader.HEADER_LENGTH + data.length));
-                        baos.write(Mp4FieldKey.ARTWORK.getFieldName().getBytes(StandardCharsets.ISO_8859_1));
+                        baos.write(Mp4FieldKey.ARTWORK.getFieldName().getBytes(Charset.forName("ISO-8859-1")));
                         baos.write(data);
                     }
                 }
@@ -134,7 +134,7 @@ public class Mp4TagCreator extends AbstractTagCreator
             //Wrap into ilst box
             ByteArrayOutputStream ilst = new ByteArrayOutputStream();
             ilst.write(Utils.getSizeBEInt32(Mp4BoxHeader.HEADER_LENGTH + baos.size()));
-            ilst.write(Mp4AtomIdentifier.ILST.getFieldName().getBytes(StandardCharsets.ISO_8859_1));
+            ilst.write(Mp4AtomIdentifier.ILST.getFieldName().getBytes(Charset.forName("ISO-8859-1")));
             ilst.write(baos.toByteArray());
 
             //Put into ByteBuffer

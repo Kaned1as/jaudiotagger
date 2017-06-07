@@ -6,7 +6,7 @@ import org.jaudiotagger.audio.mp4.Mp4AtomIdentifier;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 
 /**
  * FreeBox ( padding)
@@ -28,7 +28,7 @@ public class Mp4FreeBox extends AbstractMp4Box
             header = new Mp4BoxHeader();
             ByteArrayOutputStream headerBaos = new ByteArrayOutputStream();
             headerBaos.write(Utils.getSizeBEInt32(Mp4BoxHeader.HEADER_LENGTH + datasize));
-            headerBaos.write(Mp4AtomIdentifier.FREE.getFieldName().getBytes(StandardCharsets.ISO_8859_1));
+            headerBaos.write(Mp4AtomIdentifier.FREE.getFieldName().getBytes(Charset.forName("ISO-8859-1")));
             header.update(ByteBuffer.wrap(headerBaos.toByteArray()));
 
             //Body

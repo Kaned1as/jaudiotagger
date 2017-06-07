@@ -27,8 +27,6 @@ import org.jaudiotagger.tag.id3.AbstractTagFrameBody;
 
 import java.nio.charset.Charset;
 
-import static java.nio.charset.StandardCharsets.ISO_8859_1;
-
 /**
  * Represents a String whose size is determined by finding of a null character at the end of the String with fixed text encoding.
  *
@@ -59,6 +57,6 @@ public class StringNullTerminated extends TextEncodedStringNullTerminated
 
     protected Charset getTextEncodingCharSet()
     {
-        return ISO_8859_1;
+        return Charset.forName("ISO-8859-1");
     }
 }

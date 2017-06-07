@@ -10,7 +10,6 @@ import org.jaudiotagger.tag.vorbiscomment.VorbisCommentFieldKey;
 import org.jaudiotagger.tag.vorbiscomment.VorbisCommentTag;
 
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -497,7 +496,7 @@ public class FlacTag implements Tag
     public TagField createLinkedArtworkField(String url)
     {
         //Add to image list
-        return new MetadataBlockDataPicture(url.getBytes(StandardCharsets.ISO_8859_1), PictureTypes.DEFAULT_ID, MetadataBlockDataPicture.IMAGE_IS_URL, "", 0, 0, 0, 0);
+        return new MetadataBlockDataPicture(url.getBytes(Charset.forName("ISO-8859-1")), PictureTypes.DEFAULT_ID, MetadataBlockDataPicture.IMAGE_IS_URL, "", 0, 0, 0, 0);
     }
 
      /**
@@ -510,7 +509,7 @@ public class FlacTag implements Tag
         if(artwork.isLinked())
         {
             return new MetadataBlockDataPicture(
-                    artwork.getImageUrl().getBytes(StandardCharsets.ISO_8859_1),
+                    artwork.getImageUrl().getBytes(Charset.forName("ISO-8859-1")),
                     artwork.getPictureType(),
                     MetadataBlockDataPicture.IMAGE_IS_URL,
                     "",

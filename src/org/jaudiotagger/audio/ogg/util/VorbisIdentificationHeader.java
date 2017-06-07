@@ -20,7 +20,7 @@ package org.jaudiotagger.audio.ogg.util;
 
 import org.jaudiotagger.audio.ogg.VorbisVersion;
 
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.logging.Logger;
 
 
@@ -126,7 +126,7 @@ public class VorbisIdentificationHeader implements VorbisHeader
     {
         int packetType = b[FIELD_PACKET_TYPE_POS];
         logger.fine("packetType" + packetType);
-        String vorbis = new String(b, VorbisHeader.FIELD_CAPTURE_PATTERN_POS, VorbisHeader.FIELD_CAPTURE_PATTERN_LENGTH, StandardCharsets.ISO_8859_1);
+        String vorbis = new String(b, VorbisHeader.FIELD_CAPTURE_PATTERN_POS, VorbisHeader.FIELD_CAPTURE_PATTERN_LENGTH, Charset.forName("ISO-8859-1"));
 
         if (packetType == VorbisPacketType.IDENTIFICATION_HEADER.getType() && vorbis.equals(CAPTURE_PATTERN))
         {

@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -582,7 +581,7 @@ public class VorbisCommentTag extends AbstractTag
           if(artwork.isLinked())
           {
               return new MetadataBlockDataPicture(
-                      artwork.getImageUrl().getBytes(StandardCharsets.ISO_8859_1),
+                      artwork.getImageUrl().getBytes(Charset.forName("ISO-8859-1")),
                       artwork.getPictureType(),
                       MetadataBlockDataPicture.IMAGE_IS_URL,
                       "",

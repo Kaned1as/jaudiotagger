@@ -6,7 +6,7 @@ import org.jaudiotagger.audio.generic.GenericAudioHeader;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 
 /**
  * AiffInfoReader Test.
@@ -88,20 +88,20 @@ public class AiffInfoReaderTest extends TestCase {
             final DataOutputStream dataOut = new DataOutputStream(bout);
 
             for (final PseudoChunk chunk : chunks) {
-                dataOut.write(chunk.getChunkType().getBytes(StandardCharsets.US_ASCII));
+                dataOut.write(chunk.getChunkType().getBytes(Charset.forName("US-ASCII")));
                 dataOut.writeInt(chunk.getText().length());
-                dataOut.write(chunk.getText().getBytes(StandardCharsets.US_ASCII));
+                dataOut.write(chunk.getText().getBytes(Charset.forName("US-ASCII")));
             }
             dataOut.flush();
 
             // write header
 
             // write format
-            out.write(form.getBytes(StandardCharsets.US_ASCII));
+            out.write(form.getBytes(Charset.forName("US-ASCII")));
             // write size
             out.writeInt(bout.size() + 4);
             // write format type
-            out.write(formType.getBytes(StandardCharsets.US_ASCII));
+            out.write(formType.getBytes(Charset.forName("US-ASCII")));
             out.write(bout.toByteArray());
         }
         return tempFile;

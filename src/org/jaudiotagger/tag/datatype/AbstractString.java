@@ -30,7 +30,6 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
-import java.nio.charset.StandardCharsets;
 
 /**
  * A partial implementation for String based ID3 fields
@@ -144,7 +143,7 @@ public abstract class AbstractString extends AbstractDataType
             return decoder;
         }
 
-        if(getTextEncodingCharSet()== StandardCharsets.UTF_16)
+        if(getTextEncodingCharSet()== Charset.forName("UTF-16"))
         {
             if(inBuffer.getChar(0)==0xfffe || inBuffer.getChar(0)==0xfeff)
             {
@@ -156,12 +155,12 @@ public abstract class AbstractString extends AbstractDataType
             {
                 if(inBuffer.get(0)==0)
                 {
-                    decoder = StandardCharsets.UTF_16BE.newDecoder();
+                    decoder = Charset.forName("UTF-16BE").newDecoder();
                     decoder.reset();
                 }
                 else
                 {
-                    decoder = StandardCharsets.UTF_16LE.newDecoder();
+                    decoder = Charset.forName("UTF-16LE").newDecoder();
                     decoder.reset();
                 }
             }

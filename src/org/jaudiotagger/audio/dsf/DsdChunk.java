@@ -5,7 +5,7 @@ import org.jaudiotagger.audio.iff.IffHeaderChunk;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 
 /**
  * DSD Chunk
@@ -88,7 +88,7 @@ public class DsdChunk
     {
         ByteBuffer buffer = ByteBuffer.allocateDirect(DSD_HEADER_LENGTH);
         buffer.order(ByteOrder.LITTLE_ENDIAN);
-        buffer.put(DsfChunkType.DSD.getCode().getBytes(StandardCharsets.US_ASCII));
+        buffer.put(DsfChunkType.DSD.getCode().getBytes(Charset.forName("US-ASCII")));
         buffer.putLong(chunkSizeLength);
         buffer.putLong(fileLength);
         buffer.putLong(metadataOffset);

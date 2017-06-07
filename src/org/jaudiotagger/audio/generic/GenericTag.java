@@ -23,7 +23,6 @@ import org.jaudiotagger.tag.*;
 import org.jaudiotagger.tag.images.Artwork;
 
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -99,7 +98,7 @@ public abstract class GenericTag extends AbstractTag
         @Override
         public Charset getEncoding()
         {
-            return StandardCharsets.ISO_8859_1;
+            return Charset.forName("ISO-8859-1");
         }
 
         @Override

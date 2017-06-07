@@ -33,7 +33,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -721,7 +720,7 @@ public class ID3v24Frame extends AbstractID3v2Frame
         {
             identifier = identifier + ' ';
         }
-        headerBuffer.put(getIdentifier().getBytes(StandardCharsets.ISO_8859_1), 0, FRAME_ID_SIZE);
+        headerBuffer.put(getIdentifier().getBytes(Charset.forName("ISO-8859-1")), 0, FRAME_ID_SIZE);
 
         //Write Frame Size based on size of body buffer (if it has been unsynced then it size
         //will have increased accordingly

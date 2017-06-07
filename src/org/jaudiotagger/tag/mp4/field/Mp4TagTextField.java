@@ -27,7 +27,6 @@ import org.jaudiotagger.tag.mp4.atom.Mp4DataBox;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 /**
  * Represents a single text field
@@ -119,7 +118,7 @@ public class Mp4TagTextField extends Mp4TagField implements TagTextField
     @Override
     public Charset getEncoding()
     {
-        return StandardCharsets.UTF_8;
+        return Charset.forName("UTF-8");
     }
 
     @Override

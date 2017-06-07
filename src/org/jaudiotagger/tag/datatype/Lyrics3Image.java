@@ -26,7 +26,8 @@ package org.jaudiotagger.tag.datatype;
 import org.jaudiotagger.tag.InvalidDataTypeException;
 import org.jaudiotagger.tag.id3.AbstractTagFrameBody;
 
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
+
 
 public class Lyrics3Image extends AbstractDataType
 {
@@ -267,7 +268,7 @@ public class Lyrics3Image extends AbstractDataType
 
     public byte[] writeByteArray()
     {
-        return writeString().getBytes(StandardCharsets.ISO_8859_1);
+        return writeString().getBytes(Charset.forName("ISO-8859-1"));
     }
 
 }

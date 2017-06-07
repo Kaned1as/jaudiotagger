@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -434,7 +433,7 @@ public class ID3v22Frame extends AbstractID3v2Frame
 
         //Write Frame Header
         //Write Frame ID must adjust can only be 3 bytes long
-        headerBuffer.put(getIdentifier().getBytes(StandardCharsets.ISO_8859_1), 0, getFrameIdSize());
+        headerBuffer.put(getIdentifier().getBytes(Charset.forName("ISO-8859-1")), 0, getFrameIdSize());
         encodeSize(headerBuffer, frameBody.getSize());
 
         //Add header to the Byte Array Output Stream
