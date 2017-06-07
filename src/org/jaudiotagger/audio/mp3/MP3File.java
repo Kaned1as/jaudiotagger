@@ -190,13 +190,10 @@ public class MP3File extends AudioFile
             {
                 fis = new FileInputStream(file);
                 fc = fis.getChannel();
-                bb = fc.map(FileChannel.MapMode.READ_ONLY,0,startByte);
-            }
-            //#JAUDIOTAGGER-419:If reading networked file map can fail so just copy bytes instead
-            catch(IOException ioe)
-            {
                 bb =  ByteBuffer.allocate(startByte);
-                fc.read(bb,0);
+                // XXX: don't change it to map
+                // https://stackoverflow.com/questions/28378713/bytebuffer-getbyte-int-int-failed-on-android-ics-and-jb
+                fc.read(bb, 0);
             }
             finally
             {
