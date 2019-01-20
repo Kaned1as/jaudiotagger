@@ -22,6 +22,7 @@ import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.generic.AudioFileReader;
 import org.jaudiotagger.audio.generic.GenericAudioHeader;
 import org.jaudiotagger.tag.Tag;
+import org.jcodec.containers.mp4.MP4Util;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;

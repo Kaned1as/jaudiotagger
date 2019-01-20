@@ -25,7 +25,12 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -237,11 +242,16 @@ public class Utils
      * @return
      * @throws IOException
      */
-    public static String readPascalString(final ByteBuffer bb) throws IOException {
+    public static String readPascalString(final ByteBuffer bb) {
         final int len = Utils.u(bb.get()); //Read as unsigned value
         final byte[] buf = new byte[len];
         bb.get(buf);
-        return new String(buf, 0, len, Charset.forName("ISO-8859-1"));
+        return new String(buf, 0, len, StandardCharsets.ISO_8859_1);
+    }
+
+    public static void writePascalString(ByteBuffer buffer, String name) {
+        buffer.put((byte) name.length());
+        buffer.put(name.getBytes(StandardCharsets.US_ASCII));
     }
 
     /**
@@ -422,6 +432,34 @@ public class Utils
         }
     }
 
+    public static void write(ByteBuffer to, ByteBuffer from) {
+        if (from.hasArray()) {
+            to.put(from.array(), from.arrayOffset() + from.position(), Math.min(to.remaining(), from.remaining()));
+        } else {
+            to.put(toArray(from));
+        }
+    }
+
+    public static int skip(ByteBuffer buffer, int count) {
+        int toSkip = Math.min(buffer.remaining(), count);
+        buffer.position(buffer.position() + toSkip);
+        return toSkip;
+    }
+
+    public static final ByteBuffer read(ByteBuffer buffer, int count) {
+        ByteBuffer slice = buffer.duplicate();
+        int limit = buffer.position() + count;
+        slice.limit(limit);
+        buffer.position(limit);
+        return slice;
+    }
+
+    public static ByteBuffer readBuf(ByteBuffer buffer) {
+        ByteBuffer result = buffer.duplicate();
+        buffer.position(buffer.limit());
+        return result;
+    }
+
     /**
      * Reads 4 bytes and concatenates them into a String.
      * This pattern is used for ID's of various kinds.
@@ -432,9 +470,37 @@ public class Utils
      */
     public static String readFourBytesAsChars(final ByteBuffer bytes)
     {
+        if (bytes.remaining() < 4)
+            return null;
+
         byte[] b = new byte[4];
         bytes.get(b);
         return new String(b, Charset.forName("ISO-8859-1"));
+    }
+
+    /**
+     * Read a string of a specified number of ASCII bytes.
+     */
+    public static String readString(final ByteBuffer bytes, final int charsToRead)
+    {
+        final byte[] buf = new byte[charsToRead];
+        bytes.get(buf);
+        return new String(buf, Charset.forName("US-ASCII"));
+    }
+
+    public static byte[] toArray(ByteBuffer buffer) {
+        byte[] result = new byte[buffer.remaining()];
+        buffer.duplicate().get(result);
+        return result;
+    }
+
+    public static String readNullTermStringCharset(ByteBuffer buffer, Charset charset) {
+        ByteBuffer fork = buffer.duplicate();
+        while (buffer.hasRemaining() && buffer.get() != 0)
+            ;
+        if (buffer.hasRemaining())
+            fork.limit(buffer.position() - 1);
+        return new String(toArray(fork), charset);
     }
 
     /**
@@ -484,6 +550,35 @@ public class Utils
     public static int u(final byte n)
     {
         return n & 0xff;
+    }
+
+    public static ByteBuffer fetchFromChannel(ReadableByteChannel ch, int size) throws IOException {
+        ByteBuffer buf = ByteBuffer.allocate(size);
+        readFromChannel(ch, buf);
+        buf.flip();
+        return buf;
+    }
+
+    public static int readFromChannel(ReadableByteChannel channel, ByteBuffer buffer) throws IOException {
+        int rem = buffer.position();
+        while (channel.read(buffer) != -1 && buffer.hasRemaining())
+            ;
+        return buffer.position() - rem;
+    }
+
+    public static void copy(ReadableByteChannel _in, WritableByteChannel out, long amount) throws IOException {
+        ByteBuffer buf = ByteBuffer.allocate(0x10000);
+        int read;
+        do {
+            buf.position(0);
+            buf.limit((int) Math.min(amount, buf.capacity()));
+            read = _in.read(buf);
+            if (read != -1) {
+                buf.flip();
+                out.write(buf);
+                amount -= read;
+            }
+        } while (read != -1 && amount > 0);
     }
 
     /**
@@ -555,5 +650,52 @@ public class Utils
             return true;
         }
         return false;
+    }
+
+    private final static Map<Class, Class> boxed2primitive = new HashMap<Class, Class>();
+    static {
+        boxed2primitive.put(Void.class, void.class);
+        boxed2primitive.put(Byte.class, byte.class);
+        boxed2primitive.put(Short.class, short.class);
+        boxed2primitive.put(Character.class, char.class);
+        boxed2primitive.put(Integer.class, int.class);
+        boxed2primitive.put(Long.class, long.class);
+        boxed2primitive.put(Float.class, float.class);
+        boxed2primitive.put(Double.class, double.class);
+    }
+
+    private static Class[] classes(Object[] params) {
+        Class[] classes = new Class[params.length];
+        for (int i = 0; i < params.length; i++) {
+            Class<?> cls = params[i].getClass();
+            classes[i] = boxed2primitive.getOrDefault(cls, cls);
+        }
+        return classes;
+    }
+
+    public static <T> T newInstance(Class<T> clazz, Object[] params) {
+        try {
+            return clazz.getConstructor(classes(params)).newInstance(params);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void writeBER32(ByteBuffer buffer, int value) {
+        buffer.put((byte) ((value >> 21) | 0x80));
+        buffer.put((byte) ((value >> 14) | 0x80));
+        buffer.put((byte) ((value >> 7) | 0x80));
+        buffer.put((byte) (value & 0x7F));
+    }
+
+    public static int readBER32(ByteBuffer input) {
+        int size = 0;
+        for (int i = 0; i < 4; i++) {
+            byte b = input.get();
+            size = (size << 7) | (b & 0x7f);
+            if (((b & 0xff) >> 7) == 0)
+                break;
+        }
+        return size;
     }
 }

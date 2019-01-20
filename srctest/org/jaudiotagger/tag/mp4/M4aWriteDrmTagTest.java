@@ -9,6 +9,7 @@ import org.jaudiotagger.audio.mp4.atom.Mp4EsdsBox;
 import org.jaudiotagger.audio.mp4.atom.Mp4StcoBox;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
+import org.jcodec.containers.mp4.boxes.EsdsBox;
 
 import java.io.File;
 import java.io.RandomAccessFile;
@@ -94,8 +95,8 @@ public class M4aWriteDrmTagTest extends TestCase
 
             //MPEG Specific
             Mp4AudioHeader audioheader = (Mp4AudioHeader) f.getAudioHeader();
-            assertEquals(Mp4EsdsBox.Kind.MPEG4_AUDIO, audioheader.getKind());
-            assertEquals(Mp4EsdsBox.AudioProfile.LOW_COMPLEXITY, audioheader.getProfile());
+            assertEquals(EsdsBox.Kind.MPEG4_AUDIO, audioheader.getKind());
+            assertEquals(EsdsBox.AudioProfile.LOW_COMPLEXITY, audioheader.getProfile());
 
             //Ease of use methods for common fields
             assertEquals("AUTHOR", tag.getFirst(FieldKey.ARTIST));

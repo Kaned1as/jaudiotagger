@@ -2,26 +2,27 @@ package org.jaudiotagger.audio.mp4;
 
 import org.jaudiotagger.audio.generic.GenericAudioHeader;
 import org.jaudiotagger.audio.mp4.atom.Mp4EsdsBox;
+import org.jcodec.containers.mp4.boxes.EsdsBox;
 
 /**
  * Store some additional attributes useful for Mp4s
  */
 public class Mp4AudioHeader extends GenericAudioHeader
 {
-    private Mp4EsdsBox.Kind             kind;
-    private Mp4EsdsBox.AudioProfile     profile;
+    private EsdsBox.Kind             kind;
+    private EsdsBox.AudioProfile     profile;
     private String                      brand;
 
 
-    public void setKind(Mp4EsdsBox.Kind kind)
+    public void setKind(EsdsBox.Kind kind)
     {
-       this.kind=kind;
+       this.kind = kind;
     }
 
     /**
      * @return kind
      */
-    public Mp4EsdsBox.Kind getKind()
+    public EsdsBox.Kind getKind()
     {
         return kind;
     }
@@ -31,15 +32,15 @@ public class Mp4AudioHeader extends GenericAudioHeader
      *
      * @param profile
      */
-    public void setProfile(Mp4EsdsBox.AudioProfile profile)
+    public void setProfile(EsdsBox.AudioProfile profile)
     {
-        this.profile=profile;
+        this.profile = profile;
     }
 
     /**
      * @return audio profile
      */
-    public Mp4EsdsBox.AudioProfile getProfile()
+    public EsdsBox.AudioProfile getProfile()
     {
         return profile;
     }

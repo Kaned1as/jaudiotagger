@@ -1,7 +1,7 @@
 package org.jaudiotagger.audio.mp4;
 
 /**
- * This a list of mp4boxes identifiers that can bwe found in a mp4 container. This list is by no means
+ * This a list of mp4boxes identifiers that can be found in a mp4 container. This list is by no means
  * exhaustive.
  *
  * Only a limited number are of interest to Jaudiotagger

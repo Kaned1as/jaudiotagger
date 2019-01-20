@@ -43,7 +43,7 @@ public class GenericAudioHeader implements AudioHeader
     private Integer samplingRate;
     private Integer bitsPerSample;
     private String  encodingType;
-    private Boolean isVbr = Boolean.TRUE; //TODO this is a weird default
+    private Boolean isVbr = true; //TODO this is a weird default
     private Boolean isLossless;
     private Double  trackLength;
     private Long    noOfSamples;

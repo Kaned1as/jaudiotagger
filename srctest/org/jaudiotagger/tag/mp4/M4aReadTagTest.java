@@ -18,6 +18,7 @@ import org.jaudiotagger.tag.mp4.atom.Mp4ContentTypeValue;
 import org.jaudiotagger.tag.mp4.atom.Mp4RatingValue;
 import org.jaudiotagger.tag.mp4.field.*;
 import org.jaudiotagger.tag.reference.GenreTypes;
+import org.jcodec.containers.mp4.boxes.EsdsBox;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -60,8 +61,8 @@ public class M4aReadTagTest extends TestCase
 
             //MPEG Specific
             Mp4AudioHeader audioheader = (Mp4AudioHeader) f.getAudioHeader();
-            assertEquals(Mp4EsdsBox.Kind.MPEG4_AUDIO, audioheader.getKind());
-            assertEquals(Mp4EsdsBox.AudioProfile.LOW_COMPLEXITY, audioheader.getProfile());
+            assertEquals(EsdsBox.Kind.MPEG4_AUDIO, audioheader.getKind());
+            assertEquals(EsdsBox.AudioProfile.LOW_COMPLEXITY, audioheader.getProfile());
 
             //Ease of use methods for common fields
             assertEquals("Artist", tag.getFirst(FieldKey.ARTIST));
@@ -221,8 +222,8 @@ public class M4aReadTagTest extends TestCase
 
             //MPEG Specific
             Mp4AudioHeader audioheader = (Mp4AudioHeader) f.getAudioHeader();
-            assertEquals(Mp4EsdsBox.Kind.MPEG4_AUDIO, audioheader.getKind());
-            assertEquals(Mp4EsdsBox.AudioProfile.LOW_COMPLEXITY, audioheader.getProfile());
+            assertEquals(EsdsBox.Kind.MPEG4_AUDIO, audioheader.getKind());
+            assertEquals(EsdsBox.AudioProfile.LOW_COMPLEXITY, audioheader.getProfile());
                      
 
             //Lookup by generickey
@@ -378,8 +379,8 @@ public class M4aReadTagTest extends TestCase
 
               //MPEG Specific
               Mp4AudioHeader audioheader = (Mp4AudioHeader) f.getAudioHeader();
-              assertEquals(Mp4EsdsBox.Kind.MPEG4_AUDIO, audioheader.getKind());
-              assertEquals(Mp4EsdsBox.AudioProfile.LOW_COMPLEXITY, audioheader.getProfile());
+              assertEquals(EsdsBox.Kind.MPEG4_AUDIO, audioheader.getKind());
+              assertEquals(EsdsBox.AudioProfile.LOW_COMPLEXITY, audioheader.getProfile());
 
 
               //Lookup by generickey
@@ -445,8 +446,8 @@ public class M4aReadTagTest extends TestCase
 
             //MPEG Specific
             Mp4AudioHeader audioheader = (Mp4AudioHeader) f.getAudioHeader();
-            assertEquals(Mp4EsdsBox.Kind.MPEG4_AUDIO, audioheader.getKind());
-            assertEquals(Mp4EsdsBox.AudioProfile.LOW_COMPLEXITY, audioheader.getProfile());
+            assertEquals(EsdsBox.Kind.MPEG4_AUDIO, audioheader.getKind());
+            assertEquals(EsdsBox.AudioProfile.LOW_COMPLEXITY, audioheader.getProfile());
 
             //Ease of use methods for common fields
             assertEquals("Artist\u01fft", tag.getFirst(FieldKey.ARTIST));
@@ -616,8 +617,8 @@ public class M4aReadTagTest extends TestCase
 
             //MPEG Specific
             Mp4AudioHeader audioheader = (Mp4AudioHeader) f.getAudioHeader();
-            assertEquals(Mp4EsdsBox.Kind.MPEG4_AUDIO, audioheader.getKind());
-            assertEquals(Mp4EsdsBox.AudioProfile.LOW_COMPLEXITY, audioheader.getProfile());
+            assertEquals(EsdsBox.Kind.MPEG4_AUDIO, audioheader.getKind());
+            assertEquals(EsdsBox.AudioProfile.LOW_COMPLEXITY, audioheader.getProfile());
 
             //Ease of use methods for common fields
             assertEquals("Artist", tag.getFirst(FieldKey.ARTIST));
@@ -859,8 +860,8 @@ public class M4aReadTagTest extends TestCase
 
             //MPEG Specific
             Mp4AudioHeader audioheader = (Mp4AudioHeader) f.getAudioHeader();
-            assertEquals(Mp4EsdsBox.Kind.MPEG4_AUDIO, audioheader.getKind());
-            assertEquals(Mp4EsdsBox.AudioProfile.LOW_COMPLEXITY, audioheader.getProfile());
+            assertEquals(EsdsBox.Kind.MPEG4_AUDIO, audioheader.getKind());
+            assertEquals(EsdsBox.AudioProfile.LOW_COMPLEXITY, audioheader.getProfile());
         }
         catch (Exception e)
         {
@@ -901,8 +902,8 @@ public class M4aReadTagTest extends TestCase
 
             //MPEG Specific
             Mp4AudioHeader audioheader = (Mp4AudioHeader) f.getAudioHeader();
-            assertEquals(Mp4EsdsBox.Kind.MPEG4_AUDIO, audioheader.getKind());
-            assertEquals(Mp4EsdsBox.AudioProfile.LOW_COMPLEXITY, audioheader.getProfile());
+            assertEquals(EsdsBox.Kind.MPEG4_AUDIO, audioheader.getKind());
+            assertEquals(EsdsBox.AudioProfile.LOW_COMPLEXITY, audioheader.getProfile());
 
             //These shouldn't be any values for these. because they have invalid fieldtype of 15 instead of 21
             assertEquals("", tag.getFirst(FieldKey.BPM));
@@ -1031,8 +1032,8 @@ public class M4aReadTagTest extends TestCase
 
             //MPEG Specific
             Mp4AudioHeader audioheader = (Mp4AudioHeader) f.getAudioHeader();
-            assertEquals(Mp4EsdsBox.Kind.MPEG4_AUDIO, audioheader.getKind());
-            assertEquals(Mp4EsdsBox.AudioProfile.LOW_COMPLEXITY, audioheader.getProfile());
+            assertEquals(EsdsBox.Kind.MPEG4_AUDIO, audioheader.getKind());
+            assertEquals(EsdsBox.AudioProfile.LOW_COMPLEXITY, audioheader.getProfile());
             assertEquals(1, tag.getFields(Mp4NonStandardFieldKey.AAPR.getFieldName()).size());
             assertNotNull(tag.getFirst(Mp4NonStandardFieldKey.AAPR.getFieldName()));
             assertEquals("AApr", tag.getFirstField(Mp4NonStandardFieldKey.AAPR.getFieldName()).getId());

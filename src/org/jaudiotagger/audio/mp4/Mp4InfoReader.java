@@ -23,6 +23,8 @@ import org.jaudiotagger.audio.exceptions.CannotReadVideoException;
 import org.jaudiotagger.audio.generic.GenericAudioHeader;
 import org.jaudiotagger.audio.mp4.atom.*;
 import org.jaudiotagger.logging.ErrorMessage;
+import org.jcodec.containers.mp4.MP4Util;
+import org.jcodec.containers.mp4.boxes.*;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -88,100 +90,67 @@ public class Mp4InfoReader
 
     public GenericAudioHeader read(RandomAccessFile raf) throws CannotReadException, IOException
     {
-        FileChannel fc = raf.getChannel();
+        MP4Util.Movie mp4 = MP4Util.parseFullMovieChannel(raf.getChannel());
         Mp4AudioHeader info = new Mp4AudioHeader();
 
         //File Identification
-        Mp4BoxHeader ftypHeader = Mp4BoxHeader.seekWithinLevel(fc, Mp4AtomIdentifier.FTYP.getFieldName());
-        if (ftypHeader == null)
+        if (mp4.getFtyp() == null)
         {
             throw new CannotReadException(ErrorMessage.MP4_FILE_NOT_CONTAINER.getMsg());
         }
-        ByteBuffer ftypBuffer = ByteBuffer.allocate(ftypHeader.getLength() - Mp4BoxHeader.HEADER_LENGTH);
-        fc.read(ftypBuffer);
-        ftypBuffer.rewind();
-        Mp4FtypBox ftyp = new Mp4FtypBox(ftypHeader, ftypBuffer);
-        ftyp.processData();
-        info.setBrand(ftyp.getMajorBrand());
+        info.setBrand(mp4.getFtyp().getMajorBrand());
 
         //Get to the facts everything we are interested in is within the moov box, so just load data from file
         //once so no more file I/O needed
-        Mp4BoxHeader moovHeader = Mp4BoxHeader.seekWithinLevel(fc, Mp4AtomIdentifier.MOOV.getFieldName());
-        if (moovHeader == null)
+        MovieBox moov = mp4.getMoov();
+        if (moov == null)
         {
             throw new CannotReadException(ErrorMessage.MP4_FILE_NOT_AUDIO.getMsg());
         }
-        ByteBuffer moovBuffer = ByteBuffer.allocate(moovHeader.getLength() - Mp4BoxHeader.HEADER_LENGTH);
-        moovBuffer.order(ByteOrder.LITTLE_ENDIAN);
-        fc.read(moovBuffer);
-        moovBuffer.rewind();
 
         //Level 2-Searching for "mvhd" somewhere within "moov", we make a slice after finding header
         //so all get() methods will be relative to mvdh positions
-        Mp4BoxHeader boxHeader = Mp4BoxHeader.seekWithinLevel(moovBuffer, Mp4AtomIdentifier.MVHD.getFieldName());
-        if (boxHeader == null)
+        MovieHeaderBox mvhd = moov.getMovieHeader();
+        if (mvhd == null)
         {
             throw new CannotReadException(ErrorMessage.MP4_FILE_NOT_AUDIO.getMsg());
         }
-        ByteBuffer mvhdBuffer = moovBuffer.slice();
-        Mp4MvhdBox mvhd = new Mp4MvhdBox(boxHeader, mvhdBuffer);
-        info.setPreciseLength(mvhd.getLength());
-        //Advance position, TODO should we put this in box code ?
-        mvhdBuffer.position(mvhdBuffer.position() + boxHeader.getDataLength());
+        info.setPreciseLength((float) mvhd.getDuration() / mvhd.getTimescale());
 
         //Level 2-Searching for "trak" within "moov"
-        boxHeader = Mp4BoxHeader.seekWithinLevel(mvhdBuffer, Mp4AtomIdentifier.TRAK.getFieldName());
-        int endOfFirstTrackInBuffer = mvhdBuffer.position() + boxHeader.getDataLength();
-
-        if (boxHeader == null)
+        if (moov.getAudioTracks() == null || moov.getAudioTracks().isEmpty())
         {
             throw new CannotReadException(ErrorMessage.MP4_FILE_NOT_AUDIO.getMsg());
         }
+
         //Level 3-Searching for "mdia" within "trak"
-        boxHeader = Mp4BoxHeader.seekWithinLevel(mvhdBuffer, Mp4AtomIdentifier.MDIA.getFieldName());
-        if (boxHeader == null)
+        TrakBox trak = moov.getAudioTracks().get(0);
+        if (trak == null || trak.getMdia() == null)
         {
             throw new CannotReadException(ErrorMessage.MP4_FILE_NOT_AUDIO.getMsg());
         }
         //Level 4-Searching for "mdhd" within "mdia"
-        boxHeader = Mp4BoxHeader.seekWithinLevel(mvhdBuffer, Mp4AtomIdentifier.MDHD.getFieldName());
-        if (boxHeader == null)
+        MediaHeaderBox mdhd = NodeBox.findFirstPath(trak, MediaHeaderBox.class, Box.path("mdia.mdhd"));
+        if (mdhd == null)
         {
             throw new CannotReadException(ErrorMessage.MP4_FILE_NOT_AUDIO.getMsg());
         }
-        Mp4MdhdBox mdhd = new Mp4MdhdBox(boxHeader, mvhdBuffer.slice());
-        info.setSamplingRate(mdhd.getSampleRate());
-        
-        //Level 4-Searching for "hdlr" within "mdia"
-        /*We dont currently need to process this because contains nothing we want
-        mvhdBuffer.position(mvhdBuffer.position() + boxHeader.getDataLength());
-        boxHeader = Mp4BoxHeader.seekWithinLevel(mvhdBuffer, Mp4NotMetaFieldKey.HDLR.getFieldName());
-        if (boxHeader == null)
-        {
-            throw new CannotReadException(ErrorMessage.MP4_FILE_NOT_AUDIO.getMsg());
-        }
-        Mp4HdlrBox hdlr = new Mp4HdlrBox(boxHeader, mvhdBuffer.slice());
-        hdlr.processData();
-        */
+        info.setSamplingRate(mdhd.getTimescale());
 
         //Level 4-Searching for "minf" within "mdia"
-        mvhdBuffer.position(mvhdBuffer.position() + boxHeader.getDataLength());
-        boxHeader = Mp4BoxHeader.seekWithinLevel(mvhdBuffer, Mp4AtomIdentifier.MINF.getFieldName());
-        if (boxHeader == null)
+        if (trak.getMdia().getMinf() == null)
         {
             throw new CannotReadException(ErrorMessage.MP4_FILE_NOT_AUDIO.getMsg());
         }
 
         //Level 5-Searching for "smhd" within "minf"
         //Only an audio track would have a smhd frame
-        int pos = mvhdBuffer.position();
-        boxHeader = Mp4BoxHeader.seekWithinLevel(mvhdBuffer, Mp4AtomIdentifier.SMHD.getFieldName());
-        if (boxHeader == null)
+        SoundMediaHeaderBox smhd = NodeBox.findFirstPath(trak.getMdia().getMinf(), SoundMediaHeaderBox.class, Box.path("smhd"));
+        if (smhd == null)
         {
-            mvhdBuffer.position(pos);
-            boxHeader = Mp4BoxHeader.seekWithinLevel(mvhdBuffer, Mp4AtomIdentifier.VMHD.getFieldName());
+            VideoMediaHeaderBox vmhd = NodeBox.findFirstPath(trak.getMdia().getMinf(), VideoMediaHeaderBox.class, Box.path("vmhd"));
             //try easy check to confirm that it is video
-            if(boxHeader!=null)
+            if(vmhd != null)
             {
                 throw new CannotReadVideoException(ErrorMessage.MP4_FILE_IS_VIDEO.getMsg());
             }
@@ -190,116 +159,60 @@ public class Mp4InfoReader
                 throw new CannotReadException(ErrorMessage.MP4_FILE_NOT_AUDIO.getMsg());
             }
         }
-        mvhdBuffer.position(mvhdBuffer.position() + boxHeader.getDataLength());
 
         //Level 5-Searching for "stbl within "minf"
-        boxHeader = Mp4BoxHeader.seekWithinLevel(mvhdBuffer, Mp4AtomIdentifier.STBL.getFieldName());
-        if (boxHeader == null)
+        NodeBox stbl = trak.getMdia().getMinf().getStbl();
+        if (stbl == null)
         {
             throw new CannotReadException(ErrorMessage.MP4_FILE_NOT_AUDIO.getMsg());
         }
 
-
-
         //Level 6-Searching for "stsd within "stbl" and process it direct data, dont think these are mandatory so dont throw
         //exception if unable to find
-        int positionBeforeStsdSearch = mvhdBuffer.position();
-        boxHeader = Mp4BoxHeader.seekWithinLevel(mvhdBuffer, Mp4AtomIdentifier.STSD.getFieldName());
-        if (boxHeader != null)
+        SampleDescriptionBox stsd = trak.getStsd();
+        if (stsd != null)
         {
-            Mp4StsdBox stsd = new Mp4StsdBox(boxHeader, mvhdBuffer);
-            stsd.processData();
-            int positionAfterStsdHeaderAndData = mvhdBuffer.position();
-
             ///Level 7-Searching for "mp4a within "stsd"
-            boxHeader = Mp4BoxHeader.seekWithinLevel(mvhdBuffer, Mp4AtomIdentifier.MP4A.getFieldName());
-            if (boxHeader != null)
+            EsdsBox esds = NodeBox.findFirstPath(stsd, EsdsBox.class, Box.path("mp4a.esds"));
+            if (esds != null)
             {
-                ByteBuffer mp4aBuffer = mvhdBuffer.slice();
-                Mp4Mp4aBox mp4a = new Mp4Mp4aBox(boxHeader, mp4aBuffer);
-                mp4a.processData();
-                //Level 8-Searching for "esds" within mp4a to get No Of Channels and bitrate
-                boxHeader = Mp4BoxHeader.seekWithinLevel(mp4aBuffer, Mp4AtomIdentifier.ESDS.getFieldName());
-                if (boxHeader != null)
-                {
-                    Mp4EsdsBox esds = new Mp4EsdsBox(boxHeader, mp4aBuffer.slice());
+                //Set Bitrate in kbps
+                info.setBitRate(esds.getAvgBitrate() / 1000);
 
-                    //Set Bitrate in kbps
-                    info.setBitRate(esds.getAvgBitrate() / 1000);
-
-                    //Set Number of Channels
-                    info.setChannelNumber(esds.getNumberOfChannels());
-
-                    info.setKind(esds.getKind());
-                    info.setProfile(esds.getAudioProfile());
-
-                    info.setEncodingType(EncoderType.AAC.getDescription());
-                }
+                //Set Number of Channels
+                info.setChannelNumber(esds.getNumberOfChannels());
+                info.setKind(esds.getKind());
+                info.setProfile(esds.getAudioProfile());
+                info.setEncodingType(EncoderType.AAC.getDescription());
             }
             else
             {
                 //Level 7 -Searching for drms within stsd instead (m4p files)
-                mvhdBuffer.position(positionAfterStsdHeaderAndData);
-                boxHeader = Mp4BoxHeader.seekWithinLevel(mvhdBuffer, Mp4AtomIdentifier.DRMS.getFieldName());
-                if (boxHeader != null)
+                EsdsBox esdsProtected = NodeBox.findFirstPath(stsd, EsdsBox.class, Box.path("drms.esds"));
+                if (esdsProtected != null)
                 {
-                    Mp4DrmsBox drms = new Mp4DrmsBox(boxHeader, mvhdBuffer);
-                    drms.processData();
-
-                    //Level 8-Searching for "esds" within drms to get No Of Channels and bitrate
-                    boxHeader = Mp4BoxHeader.seekWithinLevel(mvhdBuffer, Mp4AtomIdentifier.ESDS.getFieldName());
-                    if (boxHeader != null)
-                    {
-                        Mp4EsdsBox esds = new Mp4EsdsBox(boxHeader, mvhdBuffer.slice());
-
                         //Set Bitrate in kbps
-                        info.setBitRate(esds.getAvgBitrate() / 1000);
+                        info.setBitRate(esdsProtected.getAvgBitrate() / 1000);
 
                         //Set Number of Channels
-                        info.setChannelNumber(esds.getNumberOfChannels());
+                        info.setChannelNumber(esdsProtected.getNumberOfChannels());
 
-                        info.setKind(esds.getKind());
-                        info.setProfile(esds.getAudioProfile());
+                        info.setKind(esdsProtected.getKind());
+                        info.setProfile(esdsProtected.getAudioProfile());
 
                         info.setEncodingType(EncoderType.DRM_AAC.getDescription());
                     }
                 }
-                //Level 7-Searching for alac (Apple Lossless) instead
-                else
-                {
-                    mvhdBuffer.position(positionAfterStsdHeaderAndData);
-                    boxHeader = Mp4BoxHeader.seekWithinLevel(mvhdBuffer, Mp4AtomIdentifier.ALAC.getFieldName());
-                    if (boxHeader != null)
-                    {
-                        //Process First Alac
-                        Mp4AlacBox alac = new Mp4AlacBox(boxHeader, mvhdBuffer);
-                        alac.processData();
-                        
-                        //Level 8-Searching for 2nd "alac" within box that contains the info we really want
-                        boxHeader = Mp4BoxHeader.seekWithinLevel(mvhdBuffer, Mp4AtomIdentifier.ALAC.getFieldName());
-                        if (boxHeader != null)
-                        {
-                            alac = new Mp4AlacBox(boxHeader, mvhdBuffer);
-                            alac.processData();
-                            info.setEncodingType(EncoderType.APPLE_LOSSLESS.getDescription());
-                            info.setChannelNumber(alac.getChannels());
-                            info.setBitRate(alac.getBitRate() / 1000);
-                            info.setBitsPerSample(alac.getSampleSize());
-                        }
-                    }
-                }
-            }
+                //TODO: Level 7-Searching for alac (Apple Lossless) instead
         }
 
         //Level 6-Searching for "stco within "stbl" to get size of audio data
-        mvhdBuffer.position(positionBeforeStsdSearch);
-        boxHeader = Mp4BoxHeader.seekWithinLevel(mvhdBuffer, Mp4AtomIdentifier.STCO.getFieldName());
-        if (boxHeader != null)
+        if (trak.getStco() != null && trak.getStco().getChunkOffsets().length > 0)
         {
-            Mp4StcoBox stco = new Mp4StcoBox(boxHeader, mvhdBuffer);
-            info.setAudioDataStartPosition((long)stco.getFirstOffSet());
-            info.setAudioDataEndPosition((long)fc.size());
-            info.setAudioDataLength(fc.size() - stco.getFirstOffSet());
+            long[] offsets = trak.getStco().getChunkOffsets();
+            info.setAudioDataStartPosition(offsets[0]);
+            info.setAudioDataEndPosition(raf.length());
+            info.setAudioDataLength(raf.length() - offsets[0]);
         }
 
         //Set default channels if couldn't calculate it
@@ -331,25 +244,15 @@ public class Mp4InfoReader
         //Level 2-Searching for others "trak" within "moov", if we find any traks containing video
         //then reject it if no track if not video then we allow it because many encoders seem to contain all sorts
         //of stuff that you wouldn't expect in an audio track
-        mvhdBuffer.position(endOfFirstTrackInBuffer);
-        while(mvhdBuffer.hasRemaining())
+        for(TrakBox tbox: moov.getTracks())
         {
-            boxHeader = Mp4BoxHeader.seekWithinLevel(mvhdBuffer, Mp4AtomIdentifier.TRAK.getFieldName());
-            if (boxHeader != null)
+            if (tbox.isVideo())
             {
-                if(isTrackAtomVideo(ftyp,boxHeader,mvhdBuffer))
-                {
                     throw new CannotReadVideoException(ErrorMessage.MP4_FILE_IS_VIDEO.getMsg());
-                }
-            }
-            else
-            {
-                break;
             }
         }
 
         //Build AtomTree to ensure it is valid, this means we can detect any problems early on
-        new Mp4AtomTree(raf,false);
         return info;
     }
 
