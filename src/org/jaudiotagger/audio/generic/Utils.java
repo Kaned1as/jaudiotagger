@@ -446,12 +446,16 @@ public class Utils
         return toSkip;
     }
 
-    public static final ByteBuffer read(ByteBuffer buffer, int count) {
+    public static ByteBuffer read(ByteBuffer buffer, int count) {
         ByteBuffer slice = buffer.duplicate();
         int limit = buffer.position() + count;
         slice.limit(limit);
         buffer.position(limit);
         return slice;
+    }
+
+    public static String reinterpretIntAsString(Integer i) {
+        return new String(ByteBuffer.allocate(4).putInt(i).array(), StandardCharsets.US_ASCII);
     }
 
     public static ByteBuffer readBuf(ByteBuffer buffer) {

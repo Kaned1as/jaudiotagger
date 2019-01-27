@@ -56,6 +56,10 @@ public class MetaValue {
         return new MetaValue(type, locale, data);
     }
 
+    public static MetaValue createOtherWithLocale(DataBox box) {
+        return new MetaValue(box.getType(), box.getLocale(), box.getData());
+    }
+
     public int getInt() {
         if (type == TYPE_UINT_V || type == TYPE_INT_V) {
             switch (data.length) {

@@ -1,13 +1,9 @@
 package org.jcodec.containers.mp4.boxes;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * This class is part of JCodec ( www.jcodec.org ) This software is distributed
@@ -80,6 +76,20 @@ public class MetaBox extends NodeBox {
             result.put(index, value);
         }
         return result;
+    }
+
+    public Map<String, MetaValue> getRdnsMeta() {
+        IListBox ilst = NodeBox.findFirst(this, IListBox.class, IListBox.fourcc());
+
+        if (ilst == null || ilst.getRdnsValues() == null)
+            return Collections.emptyMap();
+
+        return ilst.getRdnsValues().stream()
+                .filter(rdns -> rdns.getName() != null && !rdns.getName().isEmpty() )
+                .filter(rdns -> rdns.getIssuer() != null && !rdns.getIssuer().isEmpty() )
+                .filter(rdns -> rdns.getData() != null && rdns.getData().length > 0 )
+                .collect(Collectors.toMap(rdns -> "----:" + rdns.getIssuer() + ":" + rdns.getName(),
+                        rdns -> MetaValue.createOtherWithLocale(rdns.getDataBox())));
     }
 
     public void setKeyedMeta(Map<String, MetaValue> map) {

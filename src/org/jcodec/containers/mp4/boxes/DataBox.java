@@ -1,5 +1,7 @@
 package org.jcodec.containers.mp4.boxes;
 
+import org.jaudiotagger.audio.generic.Utils;
+
 import java.nio.ByteBuffer;
 
 /**
@@ -31,7 +33,7 @@ public class DataBox extends Box {
     public void parse(ByteBuffer buf) {
         type = buf.getInt();
         locale = buf.getInt();
-        data = buf.array().clone();
+        data = Utils.toArray(Utils.readBuf(buf));
     }
 
     public int getType() {

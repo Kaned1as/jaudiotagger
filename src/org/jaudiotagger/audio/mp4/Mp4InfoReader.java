@@ -94,7 +94,7 @@ public class Mp4InfoReader
         Mp4AudioHeader info = new Mp4AudioHeader();
 
         //File Identification
-        if (mp4.getFtyp() == null)
+        if (mp4 == null || mp4.getFtyp() == null)
         {
             throw new CannotReadException(ErrorMessage.MP4_FILE_NOT_CONTAINER.getMsg());
         }

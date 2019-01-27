@@ -127,7 +127,7 @@ public class Mp4TrackField extends Mp4TagTextNumberField
     }
 
 
-    protected void build(ByteBuffer data) throws UnsupportedEncodingException
+    protected void build(ByteBuffer data)
     {
         //Data actually contains a 'Data' Box so process data using this
         Mp4BoxHeader header = new Mp4BoxHeader(data);

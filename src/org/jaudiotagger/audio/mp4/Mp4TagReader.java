@@ -23,12 +23,15 @@ import org.jaudiotagger.audio.generic.Utils;
 import org.jaudiotagger.audio.mp4.atom.Mp4BoxHeader;
 import org.jaudiotagger.audio.mp4.atom.Mp4MetaBox;
 import org.jaudiotagger.logging.ErrorMessage;
+import org.jaudiotagger.tag.FieldDataInvalidException;
 import org.jaudiotagger.tag.TagField;
 import org.jaudiotagger.tag.mp4.Mp4FieldKey;
 import org.jaudiotagger.tag.mp4.Mp4NonStandardFieldKey;
 import org.jaudiotagger.tag.mp4.Mp4Tag;
 import org.jaudiotagger.tag.mp4.atom.Mp4DataBox;
 import org.jaudiotagger.tag.mp4.field.*;
+import org.jcodec.containers.mp4.MP4Util;
+import org.jcodec.containers.mp4.boxes.*;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -36,7 +39,12 @@ import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.logging.Logger;
+
+import static java.nio.charset.StandardCharsets.*;
 
 /**
  * Reads metadata from mp4,
@@ -85,38 +93,36 @@ public class Mp4TagReader
      */
     public Mp4Tag read(RandomAccessFile raf) throws CannotReadException, IOException
     {
-        FileChannel fc = raf.getChannel();
+        MP4Util.Movie mp4 = MP4Util.parseFullMovieChannel(raf.getChannel());
         Mp4Tag tag = new Mp4Tag();
 
         //Get to the facts everything we are interested in is within the moov box, so just load data from file
         //once so no more file I/O needed
-        Mp4BoxHeader moovHeader = Mp4BoxHeader.seekWithinLevel(fc, Mp4AtomIdentifier.MOOV.getFieldName());
-        if (moovHeader == null)
+
+        if (mp4 == null || mp4.getMoov() == null)
         {
             throw new CannotReadException(ErrorMessage.MP4_FILE_NOT_CONTAINER.getMsg());
         }
-        ByteBuffer moovBuffer = ByteBuffer.allocate(moovHeader.getLength() - Mp4BoxHeader.HEADER_LENGTH);
-        raf.getChannel().read(moovBuffer);
-        moovBuffer.rewind();
+        MovieBox moov = mp4.getMoov();
 
         //Level 2-Searching for "udta" within "moov"
-        Mp4BoxHeader boxHeader = Mp4BoxHeader.seekWithinLevel(moovBuffer, Mp4AtomIdentifier.UDTA.getFieldName());
-        if (boxHeader != null)
+        UdtaBox udta = NodeBox.findFirst(moov, UdtaBox.class, "udta");
+        MetaBox meta;
+        IListBox ilst;
+        if (udta != null)
         {
             //Level 3-Searching for "meta" within udta
-            boxHeader = Mp4BoxHeader.seekWithinLevel(moovBuffer, Mp4AtomIdentifier.META.getFieldName());
-            if (boxHeader == null)
+            meta = udta.meta();
+            if (meta == null)
             {
                 logger.warning(ErrorMessage.MP4_FILE_HAS_NO_METADATA.getMsg());
                 return tag;
             }
-            Mp4MetaBox meta = new Mp4MetaBox(boxHeader, moovBuffer);
-            meta.processData();
 
             //Level 4- Search for "ilst" within meta
-            boxHeader = Mp4BoxHeader.seekWithinLevel(moovBuffer, Mp4AtomIdentifier.ILST.getFieldName());
+            ilst = NodeBox.findFirst(meta, IListBox.class, "ilst");
              //This file does not actually contain a tag
-            if (boxHeader == null)
+            if (ilst == null)
             {
                 logger.warning(ErrorMessage.MP4_FILE_HAS_NO_METADATA.getMsg());
                 return tag;
@@ -125,48 +131,24 @@ public class Mp4TagReader
         else
         {
             //Level 2-Searching for "meta" not within udta
-            boxHeader = Mp4BoxHeader.seekWithinLevel(moovBuffer, Mp4AtomIdentifier.META.getFieldName());
-            if (boxHeader == null)
+            meta = NodeBox.findFirst(moov, MetaBox.class, "meta");
+            if (meta == null)
             {
                 logger.warning(ErrorMessage.MP4_FILE_HAS_NO_METADATA.getMsg());
                 return tag;
             }
-            Mp4MetaBox meta = new Mp4MetaBox(boxHeader, moovBuffer);
-            meta.processData();
-
 
             //Level 3- Search for "ilst" within meta
-            boxHeader = Mp4BoxHeader.seekWithinLevel(moovBuffer, Mp4AtomIdentifier.ILST.getFieldName());
+            ilst = NodeBox.findFirst(meta, IListBox.class, "ilst");
             //This file does not actually contain a tag
-            if (boxHeader == null)
+            if (ilst == null)
             {
                 logger.warning(ErrorMessage.MP4_FILE_HAS_NO_METADATA.getMsg());
                 return tag;
             }
         }
 
-        //Size of metadata (exclude the size of the ilst parentHeader), take a slice starting at
-        //metadata children to make things safer
-        int length = boxHeader.getLength() - Mp4BoxHeader.HEADER_LENGTH;
-        ByteBuffer metadataBuffer = moovBuffer.slice();
-        //Datalength is longer are there boxes after ilst at this level?
-        logger.config("headerlengthsays:" + length + "datalength:" + metadataBuffer.limit());
-        int read = 0;
-        logger.config("Started to read metadata fields at position is in metadata buffer:" + metadataBuffer.position());
-        while (read < length)
-        {
-            //Read the boxHeader
-            boxHeader.update(metadataBuffer);
-
-            //Create the corresponding datafield from the id, and slice the buffer so position of main buffer
-            //wont get affected
-            logger.config("Next position is at:" + metadataBuffer.position());
-            createMp4Field(tag, boxHeader, metadataBuffer.slice());
-
-            //Move position in buffer to the start of the next parentHeader
-            metadataBuffer.position(metadataBuffer.position() + boxHeader.getDataLength());
-            read += boxHeader.getLength();
-        }
+        createMp4Field(tag, meta, ilst);
         return tag;
     }
 
@@ -176,144 +158,63 @@ public class Mp4TagReader
      * Note:In the case of coverart MP4 holds all the coverart within individual dataitems all within
      * a single covr atom, we will add separate mp4field for each image.
      *
-     * @param tag
      * @param header
      * @param raw
+     * @param tag
+     * @param meta
      * @return
      * @throws UnsupportedEncodingException
      */
-    private void createMp4Field(Mp4Tag tag, Mp4BoxHeader header, ByteBuffer raw) throws UnsupportedEncodingException
+    private void createMp4Field(Mp4Tag tag, MetaBox meta, IListBox ilst) throws UnsupportedEncodingException
     {
         //Header with no data #JAUDIOTAGGER-463
-         if(header.getDataLength()==0)
-        {
-            //Just Ignore
+        if(ilst.getValues().isEmpty()) {
+            return;
         }
+
         //Reverse Dns Atom
-        else if (header.getId().equals(Mp4TagReverseDnsField.IDENTIFIER))
-        {
-            //
-            try
-            {
-                TagField field = new Mp4TagReverseDnsField(header, raw);
-                tag.addField(field);
-            }
-            catch (Exception e)
-            {
-                logger.warning(ErrorMessage.MP4_UNABLE_READ_REVERSE_DNS_FIELD.getMsg(e.getMessage()));
-                TagField field = new Mp4TagRawBinaryField(header, raw);
-                tag.addField(field);
-            }
-        }
-        //Normal Parent with Data atom
-        else
-        {
-            int currentPos = raw.position();
-            boolean isDataIdentifier = Utils.getString(raw, Mp4BoxHeader.IDENTIFIER_POS, Mp4BoxHeader.IDENTIFIER_LENGTH, Charset.forName("ISO-8859-1")).equals(Mp4DataBox.IDENTIFIER);
-            raw.position(currentPos);
-            if (isDataIdentifier)
-            {
-                //Need this to decide what type of Field to create
-                int type = Utils.getIntBE(raw, Mp4DataBox.TYPE_POS_INCLUDING_HEADER, Mp4DataBox.TYPE_POS_INCLUDING_HEADER + Mp4DataBox.TYPE_LENGTH - 1);
-                Mp4FieldType fieldType = Mp4FieldType.getFieldType(type);
-                logger.config("Box Type id:" + header.getId() + ":type:" + fieldType);
+        Map<Integer, MetaValue> rawMeta = meta.getItunesMeta();
+        Map<String, MetaValue> rdnsMeta = meta.getRdnsMeta();
+        for (Mp4FieldKey key : Mp4FieldKey.values()) {
+            byte[] nameBytes = key.getFieldName().getBytes(US_ASCII);
+            Integer nameCoded = ByteBuffer.wrap(nameBytes).getInt();
 
-                //Special handling for some specific identifiers otherwise just base on class id
-                if (header.getId().equals(Mp4FieldKey.TRACK.getFieldName()))
-                {
-                    TagField field = new Mp4TrackField(header.getId(), raw);
-                    tag.addField(field);
-                }
-                else if (header.getId().equals(Mp4FieldKey.DISCNUMBER.getFieldName()))
-                {
-                    TagField field = new Mp4DiscNoField(header.getId(), raw);
-                    tag.addField(field);
-                }
-                else if (header.getId().equals(Mp4FieldKey.GENRE.getFieldName()))
-                {
-                    TagField field = new Mp4GenreField(header.getId(), raw);
-                    tag.addField(field);
-                }
-                else if (header.getId().equals(Mp4FieldKey.ARTWORK.getFieldName()) || Mp4FieldType.isCoverArtType(fieldType))
-                {
-                    int processedDataSize = 0;
-                    int imageCount = 0;
-                    //The loop should run for each image (each data atom)
-                    while (processedDataSize < header.getDataLength())
-                    {
-                        //There maybe a mixture of PNG and JPEG images so have to check type
-                        //for each subimage (if there are more than one image)
-                        if (imageCount > 0)
-                        {
-                            type = Utils.getIntBE(raw, processedDataSize + Mp4DataBox.TYPE_POS_INCLUDING_HEADER,
-                                    processedDataSize + Mp4DataBox.TYPE_POS_INCLUDING_HEADER + Mp4DataBox.TYPE_LENGTH - 1);
-                            fieldType = Mp4FieldType.getFieldType(type);
-                        }
-                        Mp4TagCoverField field = new Mp4TagCoverField(raw,fieldType);
-                        tag.addField(field);
-                        processedDataSize += field.getDataAndHeaderSize();
-                        imageCount++;
-                    }
-                }
-                else if (fieldType == Mp4FieldType.TEXT)
-                {
-                    TagField field = new Mp4TagTextField(header.getId(), raw);
-                    tag.addField(field);
-                }
-                else if (fieldType == Mp4FieldType.IMPLICIT)
-                {
-                    TagField field = new Mp4TagTextNumberField(header.getId(), raw);
-                    tag.addField(field);
-                }
-                else if (fieldType == Mp4FieldType.INTEGER)
-                {
-                    TagField field = new Mp4TagByteField(header.getId(), raw);
-                    tag.addField(field);
-                }
-                else
-                {
-                    boolean existingId = false;
-                    for (Mp4FieldKey key : Mp4FieldKey.values())
-                    {
-                        if (key.getFieldName().equals(header.getId()))
-                        {
-                            //The parentHeader is a known id but its field type is not one of the expected types so
-                            //this field is invalid. i.e I received a file with the TMPO set to 15 (Oxf) when it should
-                            //be 21 (ox15) so looks like somebody got their decimal and hex numbering confused
-                            //So in this case best to ignore this field and just write a warning
-                            existingId = true;
-                            logger.warning("Known Field:" + header.getId() + " with invalid field type of:" + type + " is ignored");
+            if (rdnsMeta.containsKey(key.getFieldName())) {
+                MetaValue rdns = rdnsMeta.get(key.getFieldName());
+                Mp4TagReverseDnsField field = new Mp4TagReverseDnsField(key.getFieldName(), key.getIssuer(), key.getIdentifier(), rdns.toString());
+                tag.addField(field);
+                continue;
+            }
+
+            if (rawMeta.containsKey(nameCoded)) {
+                MetaValue metaValue = rawMeta.get(nameCoded);
+                try {
+                    switch (key) {
+                        case TRACK:
+                            tag.addField(new Mp4TrackField(metaValue.toString()));
                             break;
-                        }
-                    }
+                        case DISCNUMBER:
+                            tag.addField(new Mp4DiscNoField(metaValue.getString()));
+                            break;
+                        case GENRE:
+                            tag.addField(new Mp4GenreField(metaValue.getString()));
+                            break;
+                        case ARTWORK:
+                            tag.addField(new Mp4TagCoverField(metaValue.getData()));
+                        default:
+                            switch (key.getSubClassFieldType()) {
+                                case TEXT:
+                                    tag.addField(new Mp4TagTextField(key.getFieldName(), metaValue.toString()));
+                            }
 
-                    //Unknown field id with unknown type so just create as binary
-                    if (!existingId)
-                    {
-                        logger.warning("UnKnown Field:" + header.getId() + " with invalid field type of:" + type + " created as binary");
-                        TagField field = new Mp4TagBinaryField(header.getId(), raw);
-                        tag.addField(field);
+                            break;
                     }
-                }
-            }
-            //Special Cases
-            else
-            {
-                //MediaMonkey 3 CoverArt Attributes field, does not have data items so just
-                //copy parent and child as is without modification
-                if (header.getId().equals(Mp4NonStandardFieldKey.AAPR.getFieldName()))
-                {
-                    TagField field = new Mp4TagRawBinaryField(header, raw);
-                    tag.addField(field);
-                }
-                //Default case
-                else
-                {
-                    TagField field = new Mp4TagRawBinaryField(header, raw);
+                } catch (FieldDataInvalidException e) {
+                    logger.warning(ErrorMessage.MP4_UNABLE_READ_REVERSE_DNS_FIELD.getMsg(e.getMessage()));
+                    TagField field = new Mp4TagRawBinaryField(new Mp4BoxHeader(new String(nameBytes, US_ASCII)), ByteBuffer.wrap(metaValue.getData()));
                     tag.addField(field);
                 }
             }
         }
-
     }
 }
