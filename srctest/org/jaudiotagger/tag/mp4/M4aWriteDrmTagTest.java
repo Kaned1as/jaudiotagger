@@ -5,7 +5,6 @@ import org.jaudiotagger.AbstractTestCase;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.mp4.Mp4AudioHeader;
-import org.jaudiotagger.audio.mp4.atom.Mp4EsdsBox;
 import org.jaudiotagger.audio.mp4.atom.Mp4StcoBox;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;

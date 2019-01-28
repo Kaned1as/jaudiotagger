@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 /**
  * Create the tag data ready for writing to flac file
  */
-public class FlacTagCreator extends AbstractTagCreator
+public class FlacTagCreator extends AbstractTagCreator<ByteBuffer>
 {
     // Logger Object
     public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.flac");

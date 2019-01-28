@@ -69,12 +69,12 @@ import static java.nio.charset.StandardCharsets.*;
  * |.........................|
  * |.........................|---- @nam (Optional for each metadatafield)
  * |.........................|.......|-- data
- * |.........................|....... ecetera
+ * |.........................|....... etc
  * |.........................|---- ---- (Optional for reverse dns field)
  * |.................................|-- mean
  * |.................................|-- name
  * |.................................|-- data
- * |.................................... ecetere
+ * |.................................... etc
  * |
  * |--- mdat
  * </pre
@@ -119,7 +119,7 @@ public class Mp4TagReader
                 return tag;
             }
 
-            //Level 4- Search for "ilst" within meta
+            // Level 4- Search for "ilst" within meta
             ilst = NodeBox.findFirst(meta, IListBox.class, "ilst");
              //This file does not actually contain a tag
             if (ilst == null)
@@ -130,7 +130,8 @@ public class Mp4TagReader
         }
         else
         {
-            //Level 2-Searching for "meta" not within udta
+            // Level 2-Searching for "meta" not within udta
+            // This is the so-called apple-specific "keyed meta"
             meta = NodeBox.findFirst(moov, MetaBox.class, "meta");
             if (meta == null)
             {
@@ -138,7 +139,7 @@ public class Mp4TagReader
                 return tag;
             }
 
-            //Level 3- Search for "ilst" within meta
+            // Level 3- Search for "ilst" within meta
             ilst = NodeBox.findFirst(meta, IListBox.class, "ilst");
             //This file does not actually contain a tag
             if (ilst == null)
@@ -158,8 +159,6 @@ public class Mp4TagReader
      * Note:In the case of coverart MP4 holds all the coverart within individual dataitems all within
      * a single covr atom, we will add separate mp4field for each image.
      *
-     * @param header
-     * @param raw
      * @param tag
      * @param meta
      * @return
@@ -174,6 +173,7 @@ public class Mp4TagReader
 
         //Reverse Dns Atom
         Map<Integer, MetaValue> rawMeta = meta.getItunesMeta();
+        Map<String, MetaValue> keyedMeta = meta.getKeyedMeta(); // TODO: unused, apple-specific
         Map<String, MetaValue> rdnsMeta = meta.getRdnsMeta();
         for (Mp4FieldKey key : Mp4FieldKey.values()) {
             byte[] nameBytes = key.getFieldName().getBytes(US_ASCII);

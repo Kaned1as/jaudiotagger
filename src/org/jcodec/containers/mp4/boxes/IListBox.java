@@ -47,6 +47,13 @@ public class IListBox extends Box {
         return box;
     }
 
+    public static IListBox createIListBox(Map<Integer, List<Box>> values, List<ReverseDnsBox> rdnsValues) {
+        IListBox box = new IListBox(Header.createHeader(FOURCC, 0));
+        box.values = values;
+        box.rdnsValues = rdnsValues;
+        return box;
+    }
+
     public void parse(ByteBuffer input) {
         while (input.remaining() >= 4) {
             int size = input.getInt();

@@ -61,33 +61,6 @@ public class Mp4InfoReader
     // Logger Object
     public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.mp4.atom");
 
-    private boolean isTrackAtomVideo(Mp4FtypBox ftyp,  Mp4BoxHeader boxHeader, ByteBuffer mvhdBuffer )
-            throws IOException
-    {
-        boxHeader = Mp4BoxHeader.seekWithinLevel(mvhdBuffer, Mp4AtomIdentifier.MDIA.getFieldName());
-        if (boxHeader == null)
-        {
-            return false;
-        }
-        boxHeader = Mp4BoxHeader.seekWithinLevel(mvhdBuffer, Mp4AtomIdentifier.MDHD.getFieldName());
-        if (boxHeader == null)
-        {
-            return false;
-        }
-        mvhdBuffer.position(mvhdBuffer.position() + boxHeader.getDataLength());
-        boxHeader = Mp4BoxHeader.seekWithinLevel(mvhdBuffer, Mp4AtomIdentifier.MINF.getFieldName());
-        if (boxHeader == null)
-        {
-            return false;
-        }
-        boxHeader = Mp4BoxHeader.seekWithinLevel(mvhdBuffer, Mp4AtomIdentifier.VMHD.getFieldName());
-        if (boxHeader != null)
-        {
-            return true;
-        }
-        return false;
-    }
-
     public GenericAudioHeader read(RandomAccessFile raf) throws CannotReadException, IOException
     {
         MP4Util.Movie mp4 = MP4Util.parseFullMovieChannel(raf.getChannel());

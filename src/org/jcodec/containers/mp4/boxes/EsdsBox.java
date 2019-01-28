@@ -1,7 +1,6 @@
 package org.jcodec.containers.mp4.boxes;
 
 import org.jaudiotagger.audio.generic.Utils;
-import org.jaudiotagger.audio.mp4.atom.Mp4EsdsBox;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;

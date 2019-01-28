@@ -27,7 +27,7 @@ import java.nio.ByteBuffer;
  * Abstract class for creating the raw content that represents the tag so it can be written
  * to file.
  */
-public abstract class AbstractTagCreator
+public abstract class AbstractTagCreator<T>
 {
     /**
      * Convert tagdata to rawdata ready for writing to file with no additional padding
@@ -36,7 +36,7 @@ public abstract class AbstractTagCreator
      * @return
      * @throws UnsupportedEncodingException
      */
-    public ByteBuffer convert(Tag tag) throws UnsupportedEncodingException
+    public T convert(Tag tag) throws UnsupportedEncodingException
     {
         return convert(tag, 0);
     }
@@ -49,5 +49,5 @@ public abstract class AbstractTagCreator
      * @return
      * @throws UnsupportedEncodingException
      */
-    public abstract ByteBuffer convert(Tag tag, int padding) throws UnsupportedEncodingException;
+    public abstract T convert(Tag tag, int padding) throws UnsupportedEncodingException;
 }

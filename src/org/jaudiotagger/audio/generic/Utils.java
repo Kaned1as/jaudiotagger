@@ -458,6 +458,10 @@ public class Utils
         return new String(ByteBuffer.allocate(4).putInt(i).array(), StandardCharsets.US_ASCII);
     }
 
+    public static Integer reinterpretStringAsInt(String str) {
+        return ByteBuffer.wrap(str.getBytes(StandardCharsets.US_ASCII)).getInt();
+    }
+
     public static ByteBuffer readBuf(ByteBuffer buffer) {
         ByteBuffer result = buffer.duplicate();
         buffer.position(buffer.limit());

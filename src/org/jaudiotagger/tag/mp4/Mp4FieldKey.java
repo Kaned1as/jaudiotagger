@@ -4,6 +4,8 @@ import org.jaudiotagger.tag.mp4.field.Mp4FieldType;
 import org.jaudiotagger.tag.mp4.field.Mp4TagReverseDnsField;
 import org.jaudiotagger.tag.reference.Tagger;
 
+import java.util.Arrays;
+
 import static org.jaudiotagger.tag.mp4.field.Mp4FieldType.*;
 
 /**
@@ -364,5 +366,10 @@ public enum Mp4FieldKey {
             return tagger;
         }
         return Tagger.ITUNES;
+    }
+
+
+    public static Mp4FieldKey byFieldName(String id) {
+        return Arrays.stream(values()).filter(key -> key.getFieldName().equals(id)).findFirst().get();
     }
 }

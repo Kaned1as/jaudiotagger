@@ -33,7 +33,7 @@ import java.util.Iterator;
 /**
  * Create the raw packet data for a Vorbis Comment Tag
  */
-public class VorbisCommentCreator extends AbstractTagCreator
+public class VorbisCommentCreator extends AbstractTagCreator<ByteBuffer>
 {
     /**
      * Convert tagdata to rawdata ready for writing to file

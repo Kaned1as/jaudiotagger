@@ -44,7 +44,7 @@ public abstract class AbstractTag implements Tag
      * that they are added in is preserved, the only exception to this rule is when two fields of the same id
      * exist, both will be returned according to when the first item was added to the file. <br>
      */
-    protected Map<String, List<TagField>> fields = new LinkedHashMap<String, List<TagField>>();
+    protected Map<String, List<TagField>> fields = new LinkedHashMap<>();
 
     /**
      * Add field
@@ -65,7 +65,7 @@ public abstract class AbstractTag implements Tag
         // There was no previous item
         if (list == null)
         {
-            list = new ArrayList<TagField>();
+            list = new ArrayList<>();
             list.add(field);
             fields.put(field.getId(), list);
             if (field.isCommon())
@@ -93,17 +93,21 @@ public abstract class AbstractTag implements Tag
 
         if (list == null)
         {
-            return new ArrayList<TagField>();
+            return new ArrayList<>();
         }
 
         return list;
+    }
+
+    public Map<String, List<TagField>> getMappedFields() {
+        return fields;
     }
 
 
 
     public List<String> getAll(String id) throws KeyNotFoundException
     {
-        List<String>   fields = new ArrayList<String>();
+        List<String>   fields = new ArrayList<>();
         List<TagField> tagFields = getFields(id);
         for(TagField tagField:tagFields)
         {
@@ -152,13 +156,10 @@ public abstract class AbstractTag implements Tag
 
     public List<TagField> getAll()
     {
-        List<TagField> fieldList = new ArrayList<TagField>();
+        List<TagField> fieldList = new ArrayList<>();
         for(List<TagField> listOfFields : fields.values())
         {
-            for(TagField next:listOfFields)
-            {
-                fieldList.add(next);
-            }
+            fieldList.addAll(listOfFields);
         }
         return fieldList;
     }
@@ -342,7 +343,7 @@ public abstract class AbstractTag implements Tag
         }
 
         // Else we put the new field in the fields.
-        list = new ArrayList<TagField>();
+        list = new ArrayList<>();
         list.add(field);
         fields.put(field.getId(), list);
         if (field.isCommon())

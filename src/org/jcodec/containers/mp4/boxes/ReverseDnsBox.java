@@ -18,6 +18,14 @@ public class ReverseDnsBox extends NodeBox {
         factory = new SimpleBoxFactory(new ReverseDnsBox.LocalBoxes());
     }
 
+    public static ReverseDnsBox createReverseDnsBox(String issuer, String name, DataBox data) {
+        ReverseDnsBox box = new ReverseDnsBox(new Header(fourcc()));
+        box.add(RdnsMeanBox.createRdnsMeanBox(issuer));
+        box.add(RdnsNameBox.createRdnsNameBox(name));
+        box.add(data);
+        return box;
+    }
+
     @Override
     public void parse(ByteBuffer input) {
         while (input.remaining() >= 8) {

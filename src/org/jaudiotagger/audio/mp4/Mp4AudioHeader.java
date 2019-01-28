@@ -1,7 +1,6 @@
 package org.jaudiotagger.audio.mp4;
 
 import org.jaudiotagger.audio.generic.GenericAudioHeader;
-import org.jaudiotagger.audio.mp4.atom.Mp4EsdsBox;
 import org.jcodec.containers.mp4.boxes.EsdsBox;
 
 /**
