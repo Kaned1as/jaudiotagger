@@ -1,17 +1,17 @@
 /*
  * Entagged Audio Tag library
  * Copyright (c) 2003-2005 Raphaël Slinckx <raphael@slinckx.net>
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- *  
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -79,8 +79,7 @@ import static java.nio.charset.StandardCharsets.*;
  * |--- mdat
  * </pre
  */
-public class Mp4TagReader
-{
+public class Mp4TagReader {
 
     // Logger Object
     public static Logger logger = Logger.getLogger("org.jaudiotagger.tag.mp4");
@@ -91,16 +90,14 @@ public class Mp4TagReader
      * There are gaps between these boxes
 
      */
-    public Mp4Tag read(RandomAccessFile raf) throws CannotReadException, IOException
-    {
+    public Mp4Tag read(RandomAccessFile raf) throws CannotReadException, IOException {
         MP4Util.Movie mp4 = MP4Util.parseFullMovieChannel(raf.getChannel());
         Mp4Tag tag = new Mp4Tag();
 
         //Get to the facts everything we are interested in is within the moov box, so just load data from file
         //once so no more file I/O needed
 
-        if (mp4 == null || mp4.getMoov() == null)
-        {
+        if (mp4 == null || mp4.getMoov() == null) {
             throw new CannotReadException(ErrorMessage.MP4_FILE_NOT_CONTAINER.getMsg());
         }
         MovieBox moov = mp4.getMoov();
@@ -109,32 +106,26 @@ public class Mp4TagReader
         UdtaBox udta = NodeBox.findFirst(moov, UdtaBox.class, "udta");
         MetaBox meta;
         IListBox ilst;
-        if (udta != null)
-        {
+        if (udta != null) {
             //Level 3-Searching for "meta" within udta
             meta = udta.meta();
-            if (meta == null)
-            {
+            if (meta == null) {
                 logger.warning(ErrorMessage.MP4_FILE_HAS_NO_METADATA.getMsg());
                 return tag;
             }
 
             // Level 4- Search for "ilst" within meta
             ilst = NodeBox.findFirst(meta, IListBox.class, "ilst");
-             //This file does not actually contain a tag
-            if (ilst == null)
-            {
+            //This file does not actually contain a tag
+            if (ilst == null) {
                 logger.warning(ErrorMessage.MP4_FILE_HAS_NO_METADATA.getMsg());
                 return tag;
             }
-        }
-        else
-        {
+        } else {
             // Level 2-Searching for "meta" not within udta
             // This is the so-called apple-specific "keyed meta"
             meta = NodeBox.findFirst(moov, MetaBox.class, "meta");
-            if (meta == null)
-            {
+            if (meta == null) {
                 logger.warning(ErrorMessage.MP4_FILE_HAS_NO_METADATA.getMsg());
                 return tag;
             }
@@ -142,8 +133,7 @@ public class Mp4TagReader
             // Level 3- Search for "ilst" within meta
             ilst = NodeBox.findFirst(meta, IListBox.class, "ilst");
             //This file does not actually contain a tag
-            if (ilst == null)
-            {
+            if (ilst == null) {
                 logger.warning(ErrorMessage.MP4_FILE_HAS_NO_METADATA.getMsg());
                 return tag;
             }
@@ -155,7 +145,7 @@ public class Mp4TagReader
 
     /**
      * Process the field and add to the tag
-     *
+     * <p>
      * Note:In the case of coverart MP4 holds all the coverart within individual dataitems all within
      * a single covr atom, we will add separate mp4field for each image.
      *
@@ -164,10 +154,9 @@ public class Mp4TagReader
      * @return
      * @throws UnsupportedEncodingException
      */
-    private void createMp4Field(Mp4Tag tag, MetaBox meta, IListBox ilst) throws UnsupportedEncodingException
-    {
+    private void createMp4Field(Mp4Tag tag, MetaBox meta, IListBox ilst) throws UnsupportedEncodingException {
         //Header with no data #JAUDIOTAGGER-463
-        if(ilst.getValues().isEmpty()) {
+        if (ilst.getValues().isEmpty()) {
             return;
         }
 

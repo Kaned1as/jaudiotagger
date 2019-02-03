@@ -30,7 +30,7 @@ public abstract class Box {
 
     public void write(ByteBuffer buf) {
         ByteBuffer dup = buf.duplicate();
-        dup.position(dup.position() + 8);
+        Utils.skip(buf, 8);
         doWrite(buf);
 
         header.setBodySize(buf.position() - dup.position() - 8);

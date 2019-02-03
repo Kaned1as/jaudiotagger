@@ -23,10 +23,7 @@ import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.mp4.Mp4Tag;
 import org.jaudiotagger.tag.mp4.Mp4TagCreator;
 import org.jcodec.containers.mp4.MP4Util;
-import org.jcodec.containers.mp4.boxes.IListBox;
-import org.jcodec.containers.mp4.boxes.MetaBox;
-import org.jcodec.containers.mp4.boxes.NodeBox;
-import org.jcodec.containers.mp4.boxes.UdtaBox;
+import org.jcodec.containers.mp4.boxes.*;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -117,7 +114,6 @@ public class Mp4TagWriter
     {
         logger.config("Started writing tag data");
         MP4Util.Movie mp4 = MP4Util.parseFullMovieChannel(raf.getChannel());
-        FileChannel writeChannel = rafTemp.getChannel();
 
         IListBox ilst = tc.convert(tag);
 
@@ -127,12 +123,12 @@ public class Mp4TagWriter
             mp4.getMoov().add(udta);
         }
 
-        MetaBox meta = NodeBox.findFirst(udta, MetaBox.class, MetaBox.fourcc());
+        UdtaMetaBox meta = NodeBox.findFirst(udta, UdtaMetaBox.class, UdtaMetaBox.fourcc());
         if (meta == null) {
-            meta = MetaBox.createMetaBox();
+            meta = UdtaMetaBox.createUdtaMetaBox();
             udta.add(meta);
         }
-        meta.add(ilst);
+        meta.replace(IListBox.fourcc(), ilst);
 
         MP4Util.writeFullMovie(rafTemp.getChannel(), mp4);
         raf.close();

@@ -5,6 +5,8 @@ import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.mp4.Mp4AtomTree;
 import org.jaudiotagger.tag.id3.valuepair.ImageFormats;
+import org.jcodec.containers.mp4.MP4Util;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.RandomAccessFile;
@@ -28,8 +30,9 @@ public class Issue451Test extends AbstractTestCase
         try
         {
             //Now just createField tree
-            Mp4AtomTree atomTree = new Mp4AtomTree(new RandomAccessFile(testFile, "r"));
-            atomTree.printAtomTree();
+            MP4Util.Movie mp4 = MP4Util.parseFullMovie(testFile);
+            String json = new JSONObject(mp4.getMoov().toString()).toString(2);
+            System.out.println(json);
         }
         catch(Exception e)
         {

@@ -17,7 +17,9 @@ import org.jaudiotagger.tag.mp4.atom.Mp4ContentTypeValue;
 import org.jaudiotagger.tag.mp4.atom.Mp4RatingValue;
 import org.jaudiotagger.tag.mp4.field.*;
 import org.jaudiotagger.tag.reference.GenreTypes;
+import org.jcodec.containers.mp4.MP4Util;
 import org.jcodec.containers.mp4.boxes.EsdsBox;
+import org.json.JSONObject;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -45,8 +47,9 @@ public class M4aReadTagTest extends TestCase
             AudioFile f = AudioFileIO.read(testFile);
             Tag tag = f.getTag();
 
-            Mp4AtomTree tree = new Mp4AtomTree(new RandomAccessFile(testFile,"r"),false);
-            tree.printAtomTree();
+            MP4Util.Movie mp4 = MP4Util.parseFullMovie(testFile);
+            String json = new JSONObject(mp4.getMoov().toString()).toString(2);
+            System.out.println(json);
 
             System.out.println(f.getAudioHeader());
             System.out.println(tag);
@@ -760,8 +763,9 @@ public class M4aReadTagTest extends TestCase
            try
            {
                File testFile = AbstractTestCase.copyAudioToTmp("test7.mp4");
-               Mp4AtomTree tree = new Mp4AtomTree(new RandomAccessFile(testFile,"r"),false);
-               tree.printAtomTree();
+               MP4Util.Movie mp4 = MP4Util.parseFullMovie(testFile);
+               String json = new JSONObject(mp4.getMoov().toString()).toString(2);
+               System.out.println(json);
 
                AudioFile f = AudioFileIO.read(testFile);
 
@@ -790,8 +794,9 @@ public class M4aReadTagTest extends TestCase
            try
            {
                File testFile = AbstractTestCase.copyAudioToTmp("test86.mp4");
-               Mp4AtomTree tree = new Mp4AtomTree(new RandomAccessFile(testFile,"r"),false);
-               tree.printAtomTree();
+               MP4Util.Movie mp4 = MP4Util.parseFullMovie(testFile);
+               String json = new JSONObject(mp4.getMoov().toString()).toString(2);
+               System.out.println(json);
 
                AudioFile f = AudioFileIO.read(testFile);
 
@@ -819,8 +824,9 @@ public class M4aReadTagTest extends TestCase
         {
             File testFile = AbstractTestCase.copyAudioToTmp("test87.mp4");
 
-            Mp4AtomTree tree = new Mp4AtomTree(new RandomAccessFile(testFile,"r"),false);
-            tree.printAtomTree();
+            MP4Util.Movie mp4 = MP4Util.parseFullMovie(testFile);
+            String json = new JSONObject(mp4.getMoov().toString()).toString(2);
+            System.out.println(json);
 
             AudioFile f = AudioFileIO.read(testFile);
 

@@ -5,6 +5,8 @@ import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.mp4.Mp4AtomTree;
 import org.jaudiotagger.tag.FieldKey;
+import org.jcodec.containers.mp4.MP4Util;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.RandomAccessFile;
@@ -29,8 +31,9 @@ public class Issue463Test extends AbstractTestCase
 
             File testFile = AbstractTestCase.copyAudioToTmp("test116.m4a");
             RandomAccessFile raf = new RandomAccessFile(testFile,"r");
-            Mp4AtomTree tree = new Mp4AtomTree(raf,false);
-            tree.printAtomTree();
+            MP4Util.Movie mp4 = MP4Util.parseFullMovie(testFile);
+            String json = new JSONObject(mp4.getMoov().toString()).toString(2);
+            System.out.println(json);
             raf.close();
 
             AudioFile af = AudioFileIO.read(testFile);
@@ -42,8 +45,9 @@ public class Issue463Test extends AbstractTestCase
             af.commit();
 
             raf = new RandomAccessFile(testFile,"r");
-            tree = new Mp4AtomTree(raf,false);
-            tree.printAtomTree();
+            MP4Util.Movie mp42 = MP4Util.parseFullMovie(testFile);
+            String json2 = new JSONObject(mp42.getMoov().toString()).toString(2);
+            System.out.println(json2);
             raf.close();
 
             af = AudioFileIO.read(testFile);

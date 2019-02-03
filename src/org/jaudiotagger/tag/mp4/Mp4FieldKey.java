@@ -337,7 +337,7 @@ public enum Mp4FieldKey {
      * @return true if this is a reverse dns key
      */
     public boolean isReverseDnsType() {
-        return identifier.startsWith(Mp4TagReverseDnsField.IDENTIFIER);
+        return identifier != null && identifier.startsWith(Mp4TagReverseDnsField.IDENTIFIER);
     }
 
     /**
