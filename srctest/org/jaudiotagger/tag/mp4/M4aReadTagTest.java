@@ -4,17 +4,12 @@ import junit.framework.TestCase;
 import org.jaudiotagger.AbstractTestCase;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.CannotReadVideoException;
-import org.jaudiotagger.audio.exceptions.CannotWriteException;
 import org.jaudiotagger.audio.mp4.EncoderType;
-import org.jaudiotagger.audio.mp4.Mp4AtomTree;
 import org.jaudiotagger.audio.mp4.Mp4AudioHeader;
 import org.jaudiotagger.audio.mp4.Mp4TagReader;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
-import org.jaudiotagger.tag.mp4.atom.Mp4ContentTypeValue;
-import org.jaudiotagger.tag.mp4.atom.Mp4RatingValue;
 import org.jaudiotagger.tag.mp4.field.*;
 import org.jaudiotagger.tag.reference.GenreTypes;
 import org.jcodec.containers.mp4.MP4Util;
@@ -1382,7 +1377,10 @@ public class M4aReadTagTest extends TestCase
             return;
         }
 
-        new Mp4AtomTree(new RandomAccessFile(orig,"r")).printAtomTree();
+        MP4Util.Movie mp4 = MP4Util.parseFullMovie(orig);
+        String json = new JSONObject(mp4.getMoov().toString()).toString(2);
+        System.out.println(json);
+
         Exception exceptionCaught = null;
         try
         {

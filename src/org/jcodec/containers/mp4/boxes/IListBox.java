@@ -117,7 +117,7 @@ public class IListBox extends Box {
             }
         }
         for (ReverseDnsBox rdns: rdnsValues) {
-            sz += 8 + rdns.estimateSize();
+            sz += rdns.estimateSize();
         }
         return sz;
     }

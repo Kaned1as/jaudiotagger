@@ -88,7 +88,7 @@ public class Mp4InfoReader
         {
             throw new CannotReadException(ErrorMessage.MP4_FILE_NOT_AUDIO.getMsg());
         }
-        info.setPreciseLength((float) mvhd.getDuration() / mvhd.getTimescale());
+        info.setPreciseLength(mvhd.getDuration() / mvhd.getTimescale());
 
         //Level 2-Searching for "trak" within "moov"
         if (moov.getAudioTracks() == null || moov.getAudioTracks().isEmpty())
@@ -147,6 +147,8 @@ public class Mp4InfoReader
         {
             ///Level 7-Searching for "mp4a within "stsd"
             EsdsBox esds = NodeBox.findFirstPath(stsd, EsdsBox.class, Box.path("mp4a.esds"));
+            EsdsBox esdsProtected = NodeBox.findFirstPath(stsd, EsdsBox.class, Box.path("drms.esds"));
+            AudioSampleEntry alac = NodeBox.findFirstPath(stsd, AudioSampleEntry.class, Box.path("alac"));
             if (esds != null)
             {
                 //Set Bitrate in kbps
@@ -158,25 +160,30 @@ public class Mp4InfoReader
                 info.setProfile(esds.getAudioProfile());
                 info.setEncodingType(EncoderType.AAC.getDescription());
             }
-            else
+            else if (esdsProtected != null)
             {
                 //Level 7 -Searching for drms within stsd instead (m4p files)
-                EsdsBox esdsProtected = NodeBox.findFirstPath(stsd, EsdsBox.class, Box.path("drms.esds"));
-                if (esdsProtected != null)
-                {
-                        //Set Bitrate in kbps
-                        info.setBitRate(esdsProtected.getAvgBitrate() / 1000);
+                //Set Bitrate in kbps
+                info.setBitRate(esdsProtected.getAvgBitrate() / 1000);
 
-                        //Set Number of Channels
-                        info.setChannelNumber(esdsProtected.getNumberOfChannels());
+                //Set Number of Channels
+                info.setChannelNumber(esdsProtected.getNumberOfChannels());
 
-                        info.setKind(esdsProtected.getKind());
-                        info.setProfile(esdsProtected.getAudioProfile());
+                info.setKind(esdsProtected.getKind());
+                info.setProfile(esdsProtected.getAudioProfile());
 
-                        info.setEncodingType(EncoderType.DRM_AAC.getDescription());
-                    }
-                }
-                //TODO: Level 7-Searching for alac (Apple Lossless) instead
+                info.setEncodingType(EncoderType.DRM_AAC.getDescription());
+            } else if (alac != null) {
+                info.setBitRate((int) (alac.getSampleRate() / alac.getSampleSize() / 8));
+                info.setBitsPerSample(alac.getSampleSize());
+
+                //Set Number of Channels
+                info.setChannelNumber(alac.getChannelCount());
+                info.setKind(EsdsBox.Kind.MPEG4_AUDIO);
+                info.setProfile(EsdsBox.AudioProfile.MAIN);
+                info.setEncodingType(EncoderType.APPLE_LOSSLESS.getDescription());
+            }
+
         }
 
         //Level 6-Searching for "stco within "stbl" to get size of audio data

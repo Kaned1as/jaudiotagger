@@ -1,10 +1,8 @@
 package org.jaudiotagger.tag.mp4.field;
 
 import org.jaudiotagger.audio.generic.Utils;
-import org.jaudiotagger.audio.mp4.atom.Mp4BoxHeader;
 import org.jaudiotagger.tag.FieldDataInvalidException;
 import org.jaudiotagger.tag.mp4.Mp4FieldKey;
-import org.jaudiotagger.tag.mp4.atom.Mp4DataBox;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
@@ -66,18 +64,6 @@ public class Mp4TagByteField extends Mp4TagTextField
         }
     }
 
-    /**
-     * Construct from rawdata from audio file
-     *
-     * @param id
-     * @param raw
-     * @throws UnsupportedEncodingException
-     */
-    public Mp4TagByteField(String id, ByteBuffer raw) throws UnsupportedEncodingException
-    {
-        super(id, raw);
-    }
-
     public Mp4FieldType getFieldType()
     {
         return Mp4FieldType.INTEGER;
@@ -131,19 +117,6 @@ public class Mp4TagByteField extends Mp4TagTextField
                 throw new RuntimeException(id + ":" + realDataLength + ":" + "Dont know how to write byte fields of this length");
             }
         }
-
-    }
-
-    protected void build(ByteBuffer data) throws UnsupportedEncodingException
-    {
-        //Data actually contains a 'Data' Box so process data using this
-        Mp4BoxHeader header = new Mp4BoxHeader(data);
-        Mp4DataBox databox = new Mp4DataBox(header, data);
-        dataSize = header.getDataLength();
-        //Needed for subsequent write
-        realDataLength = dataSize - Mp4DataBox.PRE_DATA_LENGTH;
-        bytedata = databox.getByteData();
-        content = databox.getContent();
 
     }
 }

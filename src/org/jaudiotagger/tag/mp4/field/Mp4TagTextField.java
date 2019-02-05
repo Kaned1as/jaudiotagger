@@ -18,14 +18,11 @@
  */
 package org.jaudiotagger.tag.mp4.field;
 
-import org.jaudiotagger.audio.mp4.atom.Mp4BoxHeader;
 import org.jaudiotagger.tag.TagField;
 import org.jaudiotagger.tag.TagTextField;
 import org.jaudiotagger.tag.mp4.Mp4TagField;
-import org.jaudiotagger.tag.mp4.atom.Mp4DataBox;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
 /**
@@ -55,18 +52,6 @@ public class Mp4TagTextField extends Mp4TagField implements TagTextField
     protected String content;
 
     /**
-     * Construct from File
-     *
-     * @param id   parent id
-     * @param data atom data
-     * @throws UnsupportedEncodingException
-     */
-    public Mp4TagTextField(String id, ByteBuffer data) throws UnsupportedEncodingException
-    {
-        super(id, data);
-    }
-
-    /**
      * Construct new Field
      *
      * @param id      parent id
@@ -76,16 +61,6 @@ public class Mp4TagTextField extends Mp4TagField implements TagTextField
     {
         super(id);
         this.content = content;
-    }
-
-    @Override
-    protected void build(ByteBuffer data) throws UnsupportedEncodingException
-    {
-        //Data actually contains a 'Data' Box so process data using this
-        Mp4BoxHeader header = new Mp4BoxHeader(data);
-        Mp4DataBox databox = new Mp4DataBox(header, data);
-        dataSize = header.getDataLength();
-        content = databox.getContent();
     }
 
     @Override

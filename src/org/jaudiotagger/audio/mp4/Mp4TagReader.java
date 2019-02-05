@@ -19,16 +19,9 @@
 package org.jaudiotagger.audio.mp4;
 
 import org.jaudiotagger.audio.exceptions.CannotReadException;
-import org.jaudiotagger.audio.generic.Utils;
-import org.jaudiotagger.audio.mp4.atom.Mp4BoxHeader;
-import org.jaudiotagger.audio.mp4.atom.Mp4MetaBox;
 import org.jaudiotagger.logging.ErrorMessage;
-import org.jaudiotagger.tag.FieldDataInvalidException;
-import org.jaudiotagger.tag.TagField;
 import org.jaudiotagger.tag.mp4.Mp4FieldKey;
-import org.jaudiotagger.tag.mp4.Mp4NonStandardFieldKey;
 import org.jaudiotagger.tag.mp4.Mp4Tag;
-import org.jaudiotagger.tag.mp4.atom.Mp4DataBox;
 import org.jaudiotagger.tag.mp4.field.*;
 import org.jcodec.containers.mp4.MP4Util;
 import org.jcodec.containers.mp4.boxes.*;
@@ -37,10 +30,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -165,7 +154,7 @@ public class Mp4TagReader {
         Map<String, MetaValue> keyedMeta = meta.getKeyedMeta(); // TODO: unused, apple-specific
         Map<String, MetaValue> rdnsMeta = meta.getRdnsMeta();
         for (Mp4FieldKey key : Mp4FieldKey.values()) {
-            byte[] nameBytes = key.getFieldName().getBytes(US_ASCII);
+            byte[] nameBytes = key.getFieldName().getBytes(ISO_8859_1);
             Integer nameCoded = ByteBuffer.wrap(nameBytes).getInt();
 
             if (rdnsMeta.containsKey(key.getFieldName())) {
@@ -177,31 +166,30 @@ public class Mp4TagReader {
 
             if (rawMeta.containsKey(nameCoded)) {
                 MetaValue metaValue = rawMeta.get(nameCoded);
-                try {
-                    switch (key) {
-                        case TRACK:
-                            tag.addField(new Mp4TrackField(metaValue.toString()));
-                            break;
-                        case DISCNUMBER:
-                            tag.addField(new Mp4DiscNoField(metaValue.getString()));
-                            break;
-                        case GENRE:
-                            tag.addField(new Mp4GenreField(metaValue.getString()));
-                            break;
-                        case ARTWORK:
-                            tag.addField(new Mp4TagCoverField(metaValue.getData()));
-                        default:
-                            switch (key.getSubClassFieldType()) {
-                                case TEXT:
-                                    tag.addField(new Mp4TagTextField(key.getFieldName(), metaValue.toString()));
-                            }
-
-                            break;
-                    }
-                } catch (FieldDataInvalidException e) {
-                    logger.warning(ErrorMessage.MP4_UNABLE_READ_REVERSE_DNS_FIELD.getMsg(e.getMessage()));
-                    TagField field = new Mp4TagRawBinaryField(new Mp4BoxHeader(new String(nameBytes, US_ASCII)), ByteBuffer.wrap(metaValue.getData()));
-                    tag.addField(field);
+                switch (key) {
+                    case TRACK:
+                        tag.addField(new Mp4TrackField(metaValue.getData()));
+                        break;
+                    case DISCNUMBER:
+                        tag.addField(new Mp4DiscNoField(metaValue.getData()));
+                        break;
+                    case GENRE:
+                        tag.addField(new Mp4GenreField(metaValue.getString()));
+                        break;
+                    case ARTWORK:
+                        tag.addField(new Mp4TagCoverField(metaValue.getData()));
+                    default:
+                        switch (key.getSubClassFieldType()) {
+                            case TEXT:
+                                tag.addField(new Mp4TagTextField(key.getFieldName(), metaValue.toString()));
+                                break;
+                            case NUMBER:
+                            case BYTE:
+                                String number = String.valueOf(metaValue.getInt());
+                                tag.addField(new Mp4TagTextSingleNumberField(key.getFieldName(), number));
+                                break;
+                        }
+                        break;
                 }
             }
         }

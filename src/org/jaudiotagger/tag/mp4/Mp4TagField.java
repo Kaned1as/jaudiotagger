@@ -18,16 +18,11 @@
  */
 package org.jaudiotagger.tag.mp4;
 
-import org.jaudiotagger.audio.generic.Utils;
 import org.jaudiotagger.audio.mp4.atom.Mp4BoxHeader;
 import org.jaudiotagger.tag.TagField;
-import org.jaudiotagger.tag.mp4.atom.Mp4DataBox;
 import org.jaudiotagger.tag.mp4.field.Mp4FieldType;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.logging.Logger;
 
@@ -55,36 +50,6 @@ public abstract class Mp4TagField implements TagField
     protected Mp4TagField(String id)
     {
         this.id = id;
-    }
-
-    /**
-     * Used by subclasses that canot identify their id until after they have been built such as ReverseDnsField
-     *
-     * @param data
-     * @throws UnsupportedEncodingException
-     */
-    protected Mp4TagField(ByteBuffer data) throws UnsupportedEncodingException
-    {
-        build(data);
-    }
-
-    /**
-     * Used by reverese dns when reading from file, so can identify when there is a data atom
-     *
-     * @param parentHeader
-     * @param data
-     * @throws UnsupportedEncodingException
-     */
-    protected Mp4TagField(Mp4BoxHeader parentHeader, ByteBuffer data) throws UnsupportedEncodingException
-    {
-        this.parentHeader = parentHeader;
-        build(data);
-    }
-
-    protected Mp4TagField(String id, ByteBuffer data) throws UnsupportedEncodingException
-    {
-        this(id);
-        build(data);
     }
 
     /**
@@ -125,14 +90,6 @@ public abstract class Mp4TagField implements TagField
      */
     public abstract Mp4FieldType getFieldType();
 
-    /**
-     * Processes the data and sets the position of the data buffer to just after the end of this fields data
-     * ready for processing next field.
-     *
-     * @param data
-     * @throws UnsupportedEncodingException
-     */
-    protected abstract void build(ByteBuffer data) throws UnsupportedEncodingException;
 
     /**
      * Convert back to raw content, includes parent and data atom as views as one thing externally
@@ -143,51 +100,6 @@ public abstract class Mp4TagField implements TagField
     public byte[] getRawContent() throws UnsupportedEncodingException
     {
         logger.fine("Getting Raw data for:" + getId());
-        try
-        {
-            //Create Data Box
-            byte[] databox = getRawContentDataOnly();
-
-            //Wrap in Parent box
-            ByteArrayOutputStream outerbaos = new ByteArrayOutputStream();
-            outerbaos.write(Utils.getSizeBEInt32(Mp4BoxHeader.HEADER_LENGTH + databox.length));
-            outerbaos.write(getId().getBytes(Charset.forName("ISO-8859-1")));
-            outerbaos.write(databox);
-            return outerbaos.toByteArray();
-        }
-        catch (IOException ioe)
-        {
-            //This should never happen as were not actually writing to/from a file
-            throw new RuntimeException(ioe);
-        }
-    }
-
-    /**
-     * Get raw content for the data component only
-     *
-     * @return
-     * @throws UnsupportedEncodingException
-     */
-    public byte[] getRawContentDataOnly() throws UnsupportedEncodingException
-    {
-        logger.fine("Getting Raw data for:" + getId());
-        try
-        {
-            //Create Data Box
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            byte[] data = getDataBytes();
-            baos.write(Utils.getSizeBEInt32(Mp4DataBox.DATA_HEADER_LENGTH + data.length));
-            baos.write(Mp4DataBox.IDENTIFIER.getBytes(Charset.forName("ISO-8859-1")));
-            baos.write(new byte[]{0});
-            baos.write(new byte[]{0, 0, (byte) getFieldType().getFileClassId()});
-            baos.write(new byte[]{0, 0, 0, 0});
-            baos.write(data);
-            return baos.toByteArray();
-        }
-        catch (IOException ioe)
-        {
-            //This should never happen as were not actually writing to/from a file
-            throw new RuntimeException(ioe);
-        }
+        return getDataBytes();
     }
 }

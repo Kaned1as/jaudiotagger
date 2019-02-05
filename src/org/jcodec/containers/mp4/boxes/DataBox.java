@@ -57,7 +57,7 @@ public class DataBox extends Box {
     
     @Override
     public int estimateSize() {
-        return 16 + data.length;
+        return 8 + 4 + 4 + data.length;
     }
 
     public static String fourcc() {

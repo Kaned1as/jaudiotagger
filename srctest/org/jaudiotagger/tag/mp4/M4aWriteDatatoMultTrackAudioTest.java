@@ -4,9 +4,10 @@ import junit.framework.TestCase;
 import org.jaudiotagger.AbstractTestCase;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.audio.mp4.Mp4AtomTree;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
+import org.jcodec.containers.mp4.MP4Util;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.RandomAccessFile;
@@ -27,8 +28,9 @@ public class M4aWriteDatatoMultTrackAudioTest extends TestCase
             File testFile = AbstractTestCase.copyAudioToTmp("test16.m4a", new File("testWriteMultiTrack1.m4a"));
 
             //First let's just createField tree
-            Mp4AtomTree atomTree = new Mp4AtomTree(new RandomAccessFile(testFile, "r"));
-            atomTree.printAtomTree();
+            MP4Util.Movie mp4 = MP4Util.parseFullMovie(testFile);
+            String json = new JSONObject(mp4.getMoov().toString()).toString(2);
+            System.out.println(json);
 
             //Now we try to make some changes
             AudioFile f = AudioFileIO.read(testFile);
@@ -44,8 +46,9 @@ public class M4aWriteDatatoMultTrackAudioTest extends TestCase
             System.out.println(tag);
 
             //See tree again
-            atomTree = new Mp4AtomTree(new RandomAccessFile(testFile, "r"));
-            atomTree.printAtomTree();
+            MP4Util.Movie mp42 = MP4Util.parseFullMovie(testFile);
+            String json2 = new JSONObject(mp42.getMoov().toString()).toString(2);
+            System.out.println(json2);
 
             //Ease of use methods for common fields
             assertEquals("AUTHOR", tag.getFirst(FieldKey.ARTIST));
@@ -71,8 +74,9 @@ public class M4aWriteDatatoMultTrackAudioTest extends TestCase
             File testFile = AbstractTestCase.copyAudioToTmp("test16.m4a", new File("testWriteMultiTrack3.m4a"));
 
             //First lets just createField tree
-            Mp4AtomTree atomTree = new Mp4AtomTree(new RandomAccessFile(testFile, "r"));
-            atomTree.printAtomTree();
+            MP4Util.Movie mp4 = MP4Util.parseFullMovie(testFile);
+            String json = new JSONObject(mp4.getMoov().toString()).toString(2);
+            System.out.println(json);
 
             //Now we try to make some changes
             AudioFile f = AudioFileIO.read(testFile);
@@ -88,8 +92,9 @@ public class M4aWriteDatatoMultTrackAudioTest extends TestCase
             System.out.println(tag);
 
             //See tree again
-            atomTree = new Mp4AtomTree(new RandomAccessFile(testFile, "r"));
-            atomTree.printAtomTree();
+            MP4Util.Movie mp42 = MP4Util.parseFullMovie(testFile);
+            String json2 = new JSONObject(mp42.getMoov().toString()).toString(2);
+            System.out.println(json2);
 
             //Ease of use methods for common fields
             assertEquals("A", tag.getFirst(FieldKey.ARTIST));
@@ -115,8 +120,9 @@ public class M4aWriteDatatoMultTrackAudioTest extends TestCase
             File testFile = AbstractTestCase.copyAudioToTmp("test16.m4a", new File("testWriteMultiTrack4.m4a"));
 
             //First lets just createField tree
-            Mp4AtomTree atomTree = new Mp4AtomTree(new RandomAccessFile(testFile, "r"));
-            atomTree.printAtomTree();
+            MP4Util.Movie mp4 = MP4Util.parseFullMovie(testFile);
+            String json = new JSONObject(mp4.getMoov().toString()).toString(2);
+            System.out.println(json);
 
             //Now we try to make some changes
             AudioFile f = AudioFileIO.read(testFile);
@@ -131,8 +137,9 @@ public class M4aWriteDatatoMultTrackAudioTest extends TestCase
             System.out.println(tag);
 
             //See tree again
-            atomTree = new Mp4AtomTree(new RandomAccessFile(testFile, "r"));
-            atomTree.printAtomTree();
+            MP4Util.Movie mp42 = MP4Util.parseFullMovie(testFile);
+            String json2 = new JSONObject(mp42.getMoov().toString()).toString(2);
+            System.out.println(json2);
 
             //Ease of use methods for common fields
             assertEquals("AR", tag.getFirst(FieldKey.ARTIST));
@@ -409,8 +416,9 @@ public class M4aWriteDatatoMultTrackAudioTest extends TestCase
 
             //Visual check of atom tree
             testFile = new File("testdatatmp", "testWriteMultiTrack7.m4a");
-            Mp4AtomTree atomTree = new Mp4AtomTree(new RandomAccessFile(testFile, "r"));
-            atomTree.printAtomTree();
+            MP4Util.Movie mp4 = MP4Util.parseFullMovie(testFile);
+            String json = new JSONObject(mp4.getMoov().toString()).toString(2);
+            System.out.println(json);
 
         }
         catch (Exception e)

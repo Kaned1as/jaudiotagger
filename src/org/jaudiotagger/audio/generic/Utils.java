@@ -459,7 +459,7 @@ public class Utils
     }
 
     public static Integer reinterpretStringAsInt(String str) {
-        return ByteBuffer.wrap(str.getBytes(StandardCharsets.US_ASCII)).getInt();
+        return ByteBuffer.wrap(str.getBytes(StandardCharsets.ISO_8859_1)).getInt();
     }
 
     public static ByteBuffer readBuf(ByteBuffer buffer) {

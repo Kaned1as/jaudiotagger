@@ -1,13 +1,8 @@
 package org.jaudiotagger.tag.mp4.field;
 
-import org.jaudiotagger.audio.mp4.atom.Mp4BoxHeader;
-import org.jaudiotagger.logging.ErrorMessage;
 import org.jaudiotagger.tag.mp4.Mp4FieldKey;
-import org.jaudiotagger.tag.mp4.atom.Mp4DataBox;
 import org.jaudiotagger.tag.reference.GenreTypes;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 /**
@@ -17,10 +12,6 @@ import java.util.ArrayList;
  */
 public class Mp4GenreField extends Mp4TagTextNumberField
 {
-    public Mp4GenreField(String id, ByteBuffer data) throws UnsupportedEncodingException
-    {
-        super(id, data);
-    }
 
     /**
      * Precheck to see if the value is a valid genre or whether you should use a custom genre.
@@ -98,31 +89,5 @@ public class Mp4GenreField extends Mp4TagTextNumberField
         }
         numbers = new ArrayList<Short>();
         numbers.add((short) (1));
-    }
-
-    protected void build(ByteBuffer data) throws UnsupportedEncodingException
-    {
-        //Data actually contains a 'Data' Box so process data using this
-        Mp4BoxHeader header = new Mp4BoxHeader(data);
-        Mp4DataBox databox = new Mp4DataBox(header, data);
-        dataSize = header.getDataLength();
-        numbers = databox.getNumbers();
-
-        if(numbers.size()>0)
-        {
-            int genreId = numbers.get(0);
-            //Get value, we have to adjust index by one because iTunes labels from one instead of zero
-            content = GenreTypes.getInstanceOf().getValueForId(genreId - 1);
-            //Some apps set genre to invalid value, we dont disguise this by setting content to empty string we leave
-            //as null so apps can handle if they wish, but we do display a warning to make them aware.
-            if (content == null)
-            {
-                logger.warning(ErrorMessage.MP4_GENRE_OUT_OF_RANGE.getMsg(genreId));
-            }
-        }
-        else
-        {
-            logger.warning(ErrorMessage.MP4_NO_GENREID_FOR_GENRE.getMsg(header.getDataLength()));
-        }
     }
 }

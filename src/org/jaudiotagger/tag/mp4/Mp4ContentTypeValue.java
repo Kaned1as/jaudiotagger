@@ -1,4 +1,4 @@
-package org.jaudiotagger.tag.mp4.atom;
+package org.jaudiotagger.tag.mp4;
 
 
 /**

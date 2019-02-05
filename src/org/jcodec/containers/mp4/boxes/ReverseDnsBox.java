@@ -111,17 +111,19 @@ public class ReverseDnsBox extends NodeBox {
 
         @Override
         public void parse(ByteBuffer input) {
+            Utils.skip(input, 4);
             issuer = Utils.readString(input, input.remaining());
         }
 
         @Override
         protected void doWrite(ByteBuffer out) {
+            out.putInt(0);
             out.put(issuer.getBytes(StandardCharsets.US_ASCII));
         }
 
         @Override
         public int estimateSize() {
-            return issuer.getBytes(StandardCharsets.US_ASCII).length;
+            return 8 + 4 + issuer.getBytes(StandardCharsets.US_ASCII).length;
         }
 
         public static String fourcc() {
@@ -155,17 +157,19 @@ public class ReverseDnsBox extends NodeBox {
 
         @Override
         public void parse(ByteBuffer input) {
+            Utils.skip(input, 4);
             name = Utils.readString(input, input.remaining());
         }
 
         @Override
         protected void doWrite(ByteBuffer out) {
+            out.putInt(0);
             out.put(name.getBytes(StandardCharsets.US_ASCII));
         }
 
         @Override
         public int estimateSize() {
-            return name.getBytes(StandardCharsets.US_ASCII).length;
+            return 8 + 4 + name.getBytes(StandardCharsets.US_ASCII).length;
         }
 
         public static String fourcc() {
