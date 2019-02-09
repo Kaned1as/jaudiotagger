@@ -8,6 +8,7 @@ import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jcodec.containers.mp4.MP4Util;
 import org.json.JSONObject;
+import org.junit.Ignore;
 
 import java.io.File;
 import java.io.RandomAccessFile;
@@ -15,7 +16,8 @@ import java.io.RandomAccessFile;
 /**
  * Write tags for a file which contains multiple tracks such as winamp encoder.
  */
-public class M4aWriteDatatoMultTrackAudioTest extends TestCase
+@Ignore("Non-standard mp4")
+public class M4aWriteDataToMultTrackAudioTest extends TestCase
 {
     /**
      * Test to write file that has multiple tracks such as winamp encoder.
