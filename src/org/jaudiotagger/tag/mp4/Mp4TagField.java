@@ -18,7 +18,6 @@
  */
 package org.jaudiotagger.tag.mp4;
 
-import org.jaudiotagger.audio.mp4.atom.Mp4BoxHeader;
 import org.jaudiotagger.tag.TagField;
 import org.jaudiotagger.tag.mp4.field.Mp4FieldType;
 
@@ -43,9 +42,6 @@ public abstract class Mp4TagField implements TagField
 
 
     protected String id;
-
-    //Just used by reverese dns class, so it knows the size of its aprent so it can detect end correctly
-    protected Mp4BoxHeader parentHeader;
 
     protected Mp4TagField(String id)
     {

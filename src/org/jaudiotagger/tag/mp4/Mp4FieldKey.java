@@ -282,7 +282,6 @@ public enum Mp4FieldKey {
      * @param fieldType  of data atom
      */
     Mp4FieldKey(String issuer, String identifier, Mp4FieldType fieldType) {
-
         this.issuer = issuer;
         this.identifier = identifier;
         this.fieldName = Mp4TagReverseDnsField.IDENTIFIER + ":" + issuer + ":" + identifier;
@@ -301,7 +300,6 @@ public enum Mp4FieldKey {
      * @param tagger
      */
     Mp4FieldKey(String issuer, String identifier, Mp4FieldType fieldType, Tagger tagger) {
-
         this.issuer = issuer;
         this.identifier = identifier;
         this.fieldName = Mp4TagReverseDnsField.IDENTIFIER + ":" + issuer + ":" + identifier;
@@ -337,7 +335,7 @@ public enum Mp4FieldKey {
      * @return true if this is a reverse dns key
      */
     public boolean isReverseDnsType() {
-        return identifier != null && identifier.startsWith(Mp4TagReverseDnsField.IDENTIFIER);
+        return subclassType == Mp4TagFieldSubType.REVERSE_DNS;
     }
 
     /**

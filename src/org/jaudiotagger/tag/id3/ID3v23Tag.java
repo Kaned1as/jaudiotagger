@@ -199,7 +199,7 @@ public class ID3v23Tag extends AbstractID3v2Tag
         {
             PairedTextEncodedStringNullTerminated.ValuePairs oldVps = ((FrameBodyIPLS)(existingFrame).getBody()).getPairing();
             PairedTextEncodedStringNullTerminated.ValuePairs newVps = ((FrameBodyIPLS)newFrame.getBody()).getPairing();
-            for(Pair next:newVps.getMapping())
+            for(Pair<String, String> next:newVps.getMapping())
             {
                 oldVps.add(next);
             }
@@ -271,7 +271,7 @@ public class ID3v23Tag extends AbstractID3v2Tag
         //If at later stage we have multiple IPLS frames we have to merge
         else if ((frame.getIdentifier().equals(ID3v24Frames.FRAME_ID_INVOLVED_PEOPLE)) && (frame.getBody() instanceof FrameBodyTIPL))
         {
-            List<Pair> pairs= ((FrameBodyTIPL)frame.getBody()).getPairing().getMapping();
+            List<Pair<String, String>> pairs= ((FrameBodyTIPL)frame.getBody()).getPairing().getMapping();
             AbstractID3v2Frame ipls = new ID3v23Frame((ID3v24Frame)frame,ID3v23Frames.FRAME_ID_V3_INVOLVED_PEOPLE);
             FrameBodyIPLS iplsBody  = new FrameBodyIPLS(frame.getBody().getTextEncoding(),pairs);
             ipls.setBody(iplsBody);
@@ -279,7 +279,7 @@ public class ID3v23Tag extends AbstractID3v2Tag
         }
         else if ((frame.getIdentifier().equals(ID3v24Frames.FRAME_ID_MUSICIAN_CREDITS)) && (frame.getBody() instanceof FrameBodyTMCL))
         {
-            List<Pair> pairs= ((FrameBodyTMCL)frame.getBody()).getPairing().getMapping();
+            List<Pair<String, String>> pairs= ((FrameBodyTMCL)frame.getBody()).getPairing().getMapping();
             AbstractID3v2Frame ipls = new ID3v23Frame((ID3v24Frame)frame,ID3v23Frames.FRAME_ID_V3_INVOLVED_PEOPLE);
             FrameBodyIPLS iplsBody  = new FrameBodyIPLS(frame.getBody().getTextEncoding(),pairs);
             ipls.setBody(iplsBody);

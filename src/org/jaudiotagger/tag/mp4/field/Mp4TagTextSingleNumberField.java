@@ -9,4 +9,8 @@ public class Mp4TagTextSingleNumberField extends Mp4TagTextNumberField {
         numbers = new ArrayList<>(1);
         numbers.add(Short.valueOf(number));
     }
+
+    public Mp4FieldType getFieldType() {
+        return Mp4FieldType.INTEGER;
+    }
 }

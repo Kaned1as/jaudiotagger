@@ -389,11 +389,11 @@ public class ID3v24Tag extends AbstractID3v2Tag
         //This frame may need splitting and converting into two frames depending on its content
         if(frame instanceof ID3v23Frame && frame.getIdentifier().equals(ID3v23Frames.FRAME_ID_V3_INVOLVED_PEOPLE))
         {
-            List<Pair> pairs= ((FrameBodyIPLS)frame.getBody()).getPairing().getMapping();
-            List<Pair> pairsTipl = new ArrayList<>();
-            List<Pair> pairsTmcl = new ArrayList<>();
+            List<Pair<String, String>> pairs= ((FrameBodyIPLS)frame.getBody()).getPairing().getMapping();
+            List<Pair<String, String>> pairsTipl = new ArrayList<>();
+            List<Pair<String, String>> pairsTmcl = new ArrayList<>();
 
-            for(Pair next:pairs)
+            for(Pair<String, String> next:pairs)
             {
                 if(StandardIPLSKey.isKey(next.getKey()))
                 {

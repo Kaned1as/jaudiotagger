@@ -1,8 +1,4 @@
 # Jaudiotagger
-
-[![Coverage Status](https://coveralls.io/repos/ijabz/jaudiotagger/badge.svg?branch=master&service=bitbucket)](https://coveralls.io/bitbucket/ijabz/jaudiotagger?branch=master)
-[![Build Status](https://drone.io/bitbucket.org/ijabz/jaudiotagger/status.png)](https://drone.io/bitbucket.org/ijabz/jaudiotagger/latest)
-
 *Jaudiotagger* is a Java API for audio metatagging. Both a common API and format
 specific APIs are available, currently supports reading and writing metadata for:
 
@@ -19,8 +15,7 @@ The main project page is http://www.jthink.net/jaudiotagger/ and you can contact
 
 ## Requirements
 
-*Jaudiotagger* requires Java 1.8 for a full build and install, but the code is Java 1.7 compatible
-(You can run mvn package successfully with Java 1.7)
+*Jaudiotagger* requires Java 1.8 for a full build and install
 
 ## Contributing
 

@@ -69,7 +69,7 @@ public class PairedTextEncodedStringNullTerminated extends AbstractDataType
      */
     public boolean canBeEncoded()
     {
-        for (Pair entry : ((ValuePairs) value).mapping)
+        for (Pair<String, String> entry : ((ValuePairs) value).mapping)
         {
             TextEncodedStringNullTerminated next = new TextEncodedStringNullTerminated(identifier, frameBody, entry.getValue());
             if (!next.canBeEncoded())
@@ -170,7 +170,7 @@ public class PairedTextEncodedStringNullTerminated extends AbstractDataType
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         try
         {
-            for (Pair pair : ((ValuePairs) value).mapping)
+            for (Pair<String, String> pair : ((ValuePairs) value).mapping)
             {
                 {
                     TextEncodedStringNullTerminated next = new TextEncodedStringNullTerminated(identifier, frameBody, pair.getKey());
@@ -208,7 +208,7 @@ public class PairedTextEncodedStringNullTerminated extends AbstractDataType
      */
     public static class ValuePairs
     {
-        private List<Pair> mapping = new ArrayList<Pair>();
+        private List<Pair<String, String>> mapping = new ArrayList<>();
 
         public ValuePairs()
         {
@@ -235,7 +235,7 @@ public class PairedTextEncodedStringNullTerminated extends AbstractDataType
          *
          * @return the list of values
          */
-        public List<Pair> getMapping()
+        public List<Pair<String, String>> getMapping()
         {
             return mapping;
         }
@@ -256,7 +256,7 @@ public class PairedTextEncodedStringNullTerminated extends AbstractDataType
         public String toString()
         {
             StringBuffer sb = new StringBuffer();
-            for(Pair next:mapping)
+            for(Pair<String, String> next:mapping)
             {
                 sb.append(next.getKey()+':'+next.getValue()+',');
             }

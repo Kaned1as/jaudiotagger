@@ -20,24 +20,15 @@ package org.jaudiotagger.tag.mp4;
 
 import org.jaudiotagger.audio.generic.AbstractTagCreator;
 import org.jaudiotagger.audio.generic.Utils;
-import org.jaudiotagger.audio.mp4.Mp4AtomIdentifier;
-import org.jaudiotagger.audio.mp4.atom.Mp4BoxHeader;
-import org.jaudiotagger.tag.FieldKey;
-import org.jaudiotagger.tag.KeyNotFoundException;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagField;
-import org.jaudiotagger.tag.mp4.field.Mp4FieldType;
-import org.jaudiotagger.tag.mp4.field.Mp4TagCoverField;
 import org.jcodec.containers.mp4.boxes.Box;
 import org.jcodec.containers.mp4.boxes.DataBox;
 import org.jcodec.containers.mp4.boxes.IListBox;
 import org.jcodec.containers.mp4.boxes.ReverseDnsBox;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 import java.util.*;
 
 /**
@@ -80,16 +71,14 @@ public class Mp4TagCreator extends AbstractTagCreator<IListBox>
      * @param tag
      * @param padding TODO padding parameter currently ignored
      * @return
-     * @throws UnsupportedEncodingException
      */
-    public IListBox convert(Tag tag, int padding) throws UnsupportedEncodingException
+    public IListBox convert(Tag tag, int padding)
     {
         Map<Integer, List<Box>> values = new LinkedHashMap<>();
         List<ReverseDnsBox> rdnsBoxes = new ArrayList<>();
         try
         {
             //Add metadata raw content
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
             Iterator<TagField> it = tag.getFields();
             while (it.hasNext())
             {
@@ -97,11 +86,12 @@ public class Mp4TagCreator extends AbstractTagCreator<IListBox>
                 if (frame instanceof Mp4TagField) {
                     Mp4TagField mp4Frame = (Mp4TagField) frame;
                     Mp4FieldKey key = Mp4FieldKey.byFieldName(frame.getId());
-                    DataBox data = DataBox.createDataBox(key.getFieldType().getFileClassId(), 0, mp4Frame.getDataBytes());
+                    DataBox data = DataBox.createDataBox(mp4Frame.getFieldType().getFileClassId(), 0, mp4Frame.getDataBytes());
                     if (key.isReverseDnsType()) {
                         rdnsBoxes.add(ReverseDnsBox.createReverseDnsBox(key.getIssuer(), key.getIdentifier(), data));
                     } else {
-                        values.put(Utils.reinterpretStringAsInt(key.getFieldName()), Collections.singletonList(data));
+                        Integer keyAsInt = Utils.reinterpretStringAsInt(key.getFieldName());
+                        values.computeIfAbsent(keyAsInt, idx -> new ArrayList<>()).add(data);
                     }
                 }
 

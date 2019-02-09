@@ -102,11 +102,11 @@ public class FrameBodyTIPL extends AbstractFrameBodyPairs implements ID3v24Frame
      * @param textEncoding
      * @param pairs
      */
-    public FrameBodyTIPL(byte textEncoding, List<Pair> pairs)
+    public FrameBodyTIPL(byte textEncoding, List<Pair<String, String>> pairs)
     {
         setObjectValue(DataTypes.OBJ_TEXT_ENCODING, textEncoding);
         PairedTextEncodedStringNullTerminated.ValuePairs values = new PairedTextEncodedStringNullTerminated.ValuePairs();
-        for(Pair next:pairs)
+        for(Pair<String, String> next:pairs)
         {
             values.add(next);
         }

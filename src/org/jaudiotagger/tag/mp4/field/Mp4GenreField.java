@@ -3,6 +3,7 @@ package org.jaudiotagger.tag.mp4.field;
 import org.jaudiotagger.tag.mp4.Mp4FieldKey;
 import org.jaudiotagger.tag.reference.GenreTypes;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
 /**
@@ -10,8 +11,7 @@ import java.util.ArrayList;
  *
  * <p>This class allows you to retrieve either the internal genreid, or the display value
  */
-public class Mp4GenreField extends Mp4TagTextNumberField
-{
+public class Mp4GenreField extends Mp4TagTextNumberField {
 
     /**
      * Precheck to see if the value is a valid genre or whether you should use a custom genre.
@@ -19,32 +19,37 @@ public class Mp4GenreField extends Mp4TagTextNumberField
      * @param genreId
      * @return
      */
-    public static boolean isValidGenre(String genreId)
-    {
+    public static boolean isValidGenre(String genreId) {
         //Is it an id (within old id3 range)      
-        try
-        {
+        try {
             short genreVal = Short.parseShort(genreId);
-            if ((genreVal - 1) <= GenreTypes.getMaxStandardGenreId())
-            {
+            if ((genreVal - 1) <= GenreTypes.getMaxStandardGenreId()) {
                 return true;
             }
-        }
-        catch (NumberFormatException nfe)
-        {
+        } catch (NumberFormatException nfe) {
             //Do Nothing test as String instead
         }
 
         //Is it the String value ?
         Integer id3GenreId = GenreTypes.getInstanceOf().getIdForValue(genreId);
-        if (id3GenreId != null)
-        {
-            if (id3GenreId <= GenreTypes.getMaxStandardGenreId())
-            {
+        if (id3GenreId != null) {
+            if (id3GenreId <= GenreTypes.getMaxStandardGenreId()) {
                 return true;
             }
         }
         return false;
+    }
+
+    public Mp4GenreField(byte[] data) {
+        super(Mp4FieldKey.GENRE.getFieldName(), bytesToData(data));
+        ByteBuffer buf = ByteBuffer.wrap(data);
+        numbers = new ArrayList<>();
+        numbers.add(buf.getShort());
+    }
+
+    private static String bytesToData(byte[] data) {
+        ByteBuffer buf = ByteBuffer.wrap(data);
+        return String.valueOf(buf.getShort());
     }
 
     /**
@@ -52,42 +57,36 @@ public class Mp4GenreField extends Mp4TagTextNumberField
      *
      * @param genreId key into ID3v1 list (offset by one) or String value in ID3list
      */
-    public Mp4GenreField(String genreId)
-    {
+    public Mp4GenreField(String genreId) {
         super(Mp4FieldKey.GENRE.getFieldName(), genreId);
 
         //Is it an id
-        try
-        {
+        try {
             short genreVal = Short.parseShort(genreId);
-            if (genreVal <= GenreTypes.getMaxStandardGenreId())
-            {
-                numbers = new ArrayList<Short>();
+            if (genreVal <= GenreTypes.getMaxStandardGenreId()) {
+                numbers = new ArrayList<>();
                 numbers.add(++genreVal);
                 return;
             }
+
             //Default
-            numbers = new ArrayList<Short>();
+            numbers = new ArrayList<>();
             numbers.add((short) (1));
             return;
-        }
-        catch (NumberFormatException nfe)
-        {
+        } catch (NumberFormatException nfe) {
             //Do Nothing test as String instead
         }
 
         //Is it the String value ?
         Integer id3GenreId = GenreTypes.getInstanceOf().getIdForValue(genreId);
-        if (id3GenreId != null)
-        {
-            if (id3GenreId <= GenreTypes.getMaxStandardGenreId())
-            {
-                numbers = new ArrayList<Short>();
+        if (id3GenreId != null) {
+            if (id3GenreId <= GenreTypes.getMaxStandardGenreId()) {
+                numbers = new ArrayList<>();
                 numbers.add((short) (id3GenreId + 1));
                 return;
             }
         }
-        numbers = new ArrayList<Short>();
+        numbers = new ArrayList<>();
         numbers.add((short) (1));
     }
 }

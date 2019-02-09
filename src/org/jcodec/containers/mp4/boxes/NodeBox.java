@@ -105,7 +105,7 @@ public class NodeBox extends Box {
     }
 
     protected void dump(StringBuilder sb) {
-        sb.append("{\"tag\":\"" + header.getFourcc() + "\",");
+        sb.append("{\"tag\":\"" + header.getFourcc() + "\", \"size\":" + estimateSize() + ",");
         sb.append("\"boxes\": [");
         dumpBoxes(sb);
         sb.append("]");

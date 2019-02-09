@@ -211,7 +211,7 @@ public abstract class AbstractFrameBodyPairs extends AbstractID3v2FrameBody impl
         PairedTextEncodedStringNullTerminated text = (PairedTextEncodedStringNullTerminated) getObject(DataTypes.OBJ_TEXT);
         StringBuilder sb = new StringBuilder();
         int count = 1;
-        for (Pair entry : text.getValue().getMapping())
+        for (Pair<String, String> entry : text.getValue().getMapping())
         {
             sb.append(entry.getKey() + '\0' + entry.getValue());
             if (count != getNumberOfPairs())

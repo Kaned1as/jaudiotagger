@@ -2480,7 +2480,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
                 }
                 else if (next instanceof AbstractFrameBodyPairs)
                 {
-                    for (Pair entry : ((AbstractFrameBodyPairs) next).getPairing().getMapping())
+                    for (Pair<String, String> entry : ((AbstractFrameBodyPairs) next).getPairing().getMapping())
                     {
                         if (entry.getKey().equals(formatKey.getSubId()))
                         {
@@ -2509,7 +2509,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
                 AbstractTagFrameBody next = ((AbstractID3v2Frame) li.next()).getBody();
                 if (next instanceof AbstractFrameBodyPairs)
                 {
-                    for (Pair entry : ((AbstractFrameBodyPairs) next).getPairing().getMapping())
+                    for (Pair<String, String> entry : ((AbstractFrameBodyPairs) next).getPairing().getMapping())
                     {
                         if(!StandardIPLSKey.isKey(entry.getKey()))
                         {
@@ -2765,7 +2765,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
                 else if (next instanceof FrameBodyTIPL)
                 {
                     PairedTextEncodedStringNullTerminated.ValuePairs pairs = ((FrameBodyTIPL) next).getPairing();
-                    ListIterator<Pair> pairIterator = pairs.getMapping().listIterator();
+                    ListIterator<Pair<String, String>> pairIterator = pairs.getMapping().listIterator();
                     while (pairIterator.hasNext())
                     {
                         Pair nextPair = pairIterator.next();
@@ -2784,7 +2784,7 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
                 else if (next instanceof FrameBodyIPLS)
                 {
                     PairedTextEncodedStringNullTerminated.ValuePairs pairs = ((FrameBodyIPLS) next).getPairing();
-                    ListIterator<Pair> pairIterator = pairs.getMapping().listIterator();
+                    ListIterator<Pair<String, String>> pairIterator = pairs.getMapping().listIterator();
                     while (pairIterator.hasNext())
                     {
                         Pair nextPair = pairIterator.next();
@@ -2817,10 +2817,10 @@ public abstract class AbstractID3v2Tag extends AbstractID3Tag implements Tag
                 if (next instanceof AbstractFrameBodyPairs)
                 {
                     PairedTextEncodedStringNullTerminated.ValuePairs pairs = ((AbstractFrameBodyPairs) next).getPairing();
-                    ListIterator<Pair> pairIterator = pairs.getMapping().listIterator();
+                    ListIterator<Pair<String, String>> pairIterator = pairs.getMapping().listIterator();
                     while (pairIterator.hasNext())
                     {
-                        Pair nextPair = pairIterator.next();
+                        Pair<String, String> nextPair = pairIterator.next();
                         if(!StandardIPLSKey.isKey(nextPair.getKey()))
                         {
                             pairIterator.remove();

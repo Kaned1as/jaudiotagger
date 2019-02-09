@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -150,7 +151,7 @@ public class Mp4TagReader {
         }
 
         //Reverse Dns Atom
-        Map<Integer, MetaValue> rawMeta = meta.getItunesMeta();
+        Map<Integer, List<MetaValue>> rawMeta = meta.getItunesMeta();
         Map<String, MetaValue> keyedMeta = meta.getKeyedMeta(); // TODO: unused, apple-specific
         Map<String, MetaValue> rdnsMeta = meta.getRdnsMeta();
         for (Mp4FieldKey key : Mp4FieldKey.values()) {
@@ -165,31 +166,33 @@ public class Mp4TagReader {
             }
 
             if (rawMeta.containsKey(nameCoded)) {
-                MetaValue metaValue = rawMeta.get(nameCoded);
-                switch (key) {
-                    case TRACK:
-                        tag.addField(new Mp4TrackField(metaValue.getData()));
-                        break;
-                    case DISCNUMBER:
-                        tag.addField(new Mp4DiscNoField(metaValue.getData()));
-                        break;
-                    case GENRE:
-                        tag.addField(new Mp4GenreField(metaValue.getString()));
-                        break;
-                    case ARTWORK:
-                        tag.addField(new Mp4TagCoverField(metaValue.getData()));
-                    default:
-                        switch (key.getSubClassFieldType()) {
-                            case TEXT:
-                                tag.addField(new Mp4TagTextField(key.getFieldName(), metaValue.toString()));
-                                break;
-                            case NUMBER:
-                            case BYTE:
-                                String number = String.valueOf(metaValue.getInt());
-                                tag.addField(new Mp4TagTextSingleNumberField(key.getFieldName(), number));
-                                break;
-                        }
-                        break;
+                for (MetaValue metaValue : rawMeta.get(nameCoded)) {
+                    switch (key) {
+                        case TRACK:
+                            tag.addField(new Mp4TrackField(metaValue.getData()));
+                            break;
+                        case DISCNUMBER:
+                            tag.addField(new Mp4DiscNoField(metaValue.getData()));
+                            break;
+                        case GENRE:
+                            tag.addField(new Mp4GenreField(metaValue.getData()));
+                            break;
+                        case ARTWORK:
+                            tag.addField(new Mp4TagCoverField(metaValue.getData()));
+                            break;
+                        default:
+                            switch (key.getSubClassFieldType()) {
+                                case TEXT:
+                                    tag.addField(new Mp4TagTextField(key.getFieldName(), metaValue.toString()));
+                                    break;
+                                case NUMBER:
+                                case BYTE:
+                                    String number = String.valueOf(metaValue.getInt());
+                                    tag.addField(new Mp4TagTextSingleNumberField(key.getFieldName(), number));
+                                    break;
+                            }
+                            break;
+                    }
                 }
             }
         }

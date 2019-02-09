@@ -19,6 +19,7 @@
 package org.jaudiotagger.audio.mp4;
 
 import org.jaudiotagger.audio.exceptions.CannotWriteException;
+import org.jaudiotagger.audio.generic.Utils;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.mp4.Mp4Tag;
 import org.jaudiotagger.tag.mp4.Mp4TagCreator;
@@ -113,25 +114,31 @@ public class Mp4TagWriter
     public void write(Tag tag, RandomAccessFile raf, RandomAccessFile rafTemp) throws CannotWriteException, IOException
     {
         logger.config("Started writing tag data");
-        MP4Util.Movie mp4 = MP4Util.parseFullMovieChannel(raf.getChannel());
+        try (FileChannel fi = raf.getChannel();
+             FileChannel fo = rafTemp.getChannel()) {
+            MP4Util.Movie mp4 = MP4Util.parseFullMovieChannel(fi);
 
-        IListBox ilst = tc.convert(tag);
+            IListBox ilst = tc.convert(tag);
 
-        UdtaBox udta = NodeBox.findFirst(mp4.getMoov(), UdtaBox.class, UdtaBox.fourcc());
-        if (udta == null) {
-            udta = UdtaBox.createUdtaBox();
-            mp4.getMoov().add(udta);
+            UdtaBox udta = NodeBox.findFirst(mp4.getMoov(), UdtaBox.class, UdtaBox.fourcc());
+            if (udta == null) {
+                udta = UdtaBox.createUdtaBox();
+                mp4.getMoov().add(udta);
+            }
+
+            UdtaMetaBox meta = NodeBox.findFirst(udta, UdtaMetaBox.class, UdtaMetaBox.fourcc());
+            if (meta == null) {
+                meta = UdtaMetaBox.createUdtaMetaBox();
+                udta.add(meta);
+            }
+            meta.replace(IListBox.fourcc(), ilst);
+
+            fi.position(0);
+            Utils.copy(fi, fo, raf.length());
+
+            fo.position(0);
+            new RelocateMP4Editor().modifyOrRelocate(fo, mp4.getMoov());
         }
-
-        UdtaMetaBox meta = NodeBox.findFirst(udta, UdtaMetaBox.class, UdtaMetaBox.fourcc());
-        if (meta == null) {
-            meta = UdtaMetaBox.createUdtaMetaBox();
-            udta.add(meta);
-        }
-        meta.replace(IListBox.fourcc(), ilst);
-
-        MP4Util.writeFullMovie(rafTemp.getChannel(), mp4);
-        raf.close();
     }
 
     /**

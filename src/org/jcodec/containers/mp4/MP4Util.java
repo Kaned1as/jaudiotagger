@@ -25,12 +25,14 @@ public class MP4Util {
     private static final Logger LOGGER = Logger.getLogger(MP4Util.class.getCanonicalName());
     
     public static class Movie {
-        private FileTypeBox ftyp;
-        private MovieBox moov;
+        private final FileTypeBox ftyp;
+        private final MovieBox moov;
+        private final List<Atom> others;
         
-        public Movie(FileTypeBox ftyp, MovieBox moov) {
+        public Movie(FileTypeBox ftyp, MovieBox moov, List<Atom> others) {
             this.ftyp = ftyp;
             this.moov = moov;
+            this.others = others;
         }
 
         public FileTypeBox getFtyp() {
@@ -39,6 +41,10 @@ public class MP4Util {
 
         public MovieBox getMoov() {
             return moov;
+        }
+
+        public List<Atom> getOthers() {
+            return others;
         }
     }
     
@@ -75,11 +81,17 @@ public class MP4Util {
 
     public static Movie parseFullMovieChannel(FileChannel input) throws IOException {
         FileTypeBox ftyp = null;
-        for (Atom atom : getRootAtoms(input)) {
+        List<Atom> rootAtoms = getRootAtoms(input);
+        Iterator<Atom> itr = rootAtoms.iterator();
+        while (itr.hasNext()) {
+            Atom atom = itr.next();
             if ("ftyp".equals(atom.getHeader().getFourcc())) {
                 ftyp = (FileTypeBox) atom.parseBox(input);
+                itr.remove();
             } else if ("moov".equals(atom.getHeader().getFourcc())) {
-                return new Movie(ftyp, (MovieBox) atom.parseBox(input));
+                MovieBox moov = (MovieBox) atom.parseBox(input);
+                itr.remove();
+                return new Movie(ftyp, moov, rootAtoms);
             }
         }
         return null;
@@ -234,12 +246,6 @@ public class MP4Util {
         } finally {
             if (input != null)
                 input.close();
-        }
-    }
-
-    public static void writeFullMovieToFile(File f, Movie movie) throws IOException {
-        try (FileChannel out = new FileOutputStream(f).getChannel()) {
-            writeFullMovie(out, movie);
         }
     }
 

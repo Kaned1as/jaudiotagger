@@ -53,11 +53,16 @@ public abstract class Box {
     }
 
     protected void dump(StringBuilder sb) {
-        sb.append("{\"tag\":\"" + header.getFourcc() + "\"}");
+        sb.append("{\"tag\":\"" + header.getFourcc() + "\", \"size\":" + estimateSize() + "}");
     }
 
     public static Box terminatorAtom() {
         return createLeafBox(new Header(new String(new byte[4])), ByteBuffer.allocate(0));
+    }
+
+    public static boolean containsBox(NodeBox box, String path) {
+        Box b = NodeBox.findFirstPath(box, Box.class, new String[] { path });
+        return b != null;
     }
 
     public static String[] path(String path) {
@@ -111,7 +116,7 @@ public abstract class Box {
 
         @Override
         protected void doWrite(ByteBuffer out) {
-            out.put(data);
+            out.put(getData());
         }
 
         @Override

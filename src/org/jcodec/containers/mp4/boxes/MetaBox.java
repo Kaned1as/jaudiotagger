@@ -57,8 +57,8 @@ public class MetaBox extends NodeBox {
         return null;
     }
 
-    public Map<Integer, MetaValue> getItunesMeta() {
-        Map<Integer, MetaValue> result = new LinkedHashMap<Integer, MetaValue>();
+    public Map<Integer, List<MetaValue>> getItunesMeta() {
+        Map<Integer, List<MetaValue>> result = new LinkedHashMap<>();
 
         IListBox ilst = NodeBox.findFirst(this, IListBox.class, IListBox.fourcc());
 
@@ -69,11 +69,14 @@ public class MetaBox extends NodeBox {
             Integer index = entry.getKey();
             if (index == null)
                 continue;
-            DataBox db = getDataBox(entry.getValue());
-            if (db == null)
-                continue;
-            MetaValue value = MetaValue.createOtherWithLocale(db.getType(), db.getLocale(), db.getData());
-            result.put(index, value);
+
+            for (Box box: entry.getValue()) {
+                if (box instanceof DataBox) {
+                    DataBox db = (DataBox) box;
+                    MetaValue value = MetaValue.createOtherWithLocale(db.getType(), db.getLocale(), db.getData());
+                    result.computeIfAbsent(index, idx -> new ArrayList<>()).add(value);
+                }
+            }
         }
         return result;
     }

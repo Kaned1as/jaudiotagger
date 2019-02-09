@@ -1,15 +1,7 @@
 package org.jaudiotagger.tag.mp4.field;
 
-import org.jaudiotagger.audio.generic.Utils;
-import org.jaudiotagger.audio.mp4.atom.Mp4BoxHeader;
 import org.jaudiotagger.tag.TagField;
 import org.jaudiotagger.tag.mp4.Mp4TagField;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 
 /**
  * Represents raw binary data
@@ -63,20 +55,6 @@ public class Mp4TagRawBinaryField extends Mp4TagField {
 
     public void copyContent(TagField field) {
         throw new UnsupportedOperationException("not done");
-    }
-
-    public byte[] getRawContent() throws UnsupportedEncodingException {
-        logger.fine("Getting Raw data for:" + getId());
-        try {
-            ByteArrayOutputStream outerbaos = new ByteArrayOutputStream();
-            outerbaos.write(Utils.getSizeBEInt32(Mp4BoxHeader.HEADER_LENGTH + dataSize));
-            outerbaos.write(getId().getBytes(Charset.forName("ISO-8859-1")));
-            outerbaos.write(dataBytes);
-            return outerbaos.toByteArray();
-        } catch (IOException ioe) {
-            //This should never happen as were not actually writing to/from a file
-            throw new RuntimeException(ioe);
-        }
     }
 
 }

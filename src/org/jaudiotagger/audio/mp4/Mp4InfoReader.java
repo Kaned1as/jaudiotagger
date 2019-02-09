@@ -21,16 +21,12 @@ package org.jaudiotagger.audio.mp4;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.CannotReadVideoException;
 import org.jaudiotagger.audio.generic.GenericAudioHeader;
-import org.jaudiotagger.audio.mp4.atom.*;
 import org.jaudiotagger.logging.ErrorMessage;
 import org.jcodec.containers.mp4.MP4Util;
 import org.jcodec.containers.mp4.boxes.*;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.channels.FileChannel;
 import java.util.logging.Logger;
 
 /**
