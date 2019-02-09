@@ -49,7 +49,12 @@ public class Mp4GenreField extends Mp4TagTextNumberField {
 
     private static String bytesToData(byte[] data) {
         ByteBuffer buf = ByteBuffer.wrap(data);
-        return String.valueOf(buf.getShort());
+        short genreId = buf.getShort();
+
+        if ((genreId - 1) <= GenreTypes.getMaxStandardGenreId()) {
+            return GenreTypes.getInstanceOf().getValueForId(genreId - 1);
+        }
+        return "Other";
     }
 
     /**
