@@ -81,7 +81,6 @@ public class DefaultBoxes extends Boxes {
         mappings.put(ChunkOffsetsBox.fourcc(), ChunkOffsetsBox.class);
         mappings.put("keys", KeysBox.class);
         mappings.put(IListBox.fourcc(), IListBox.class);
-        mappings.put("mvex", NodeBox.class);
         mappings.put("moof", NodeBox.class);
         mappings.put("traf", NodeBox.class);
         mappings.put("mfra", NodeBox.class);

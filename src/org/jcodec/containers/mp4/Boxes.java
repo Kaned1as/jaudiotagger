@@ -9,7 +9,7 @@ public abstract class Boxes {
     protected final Map<String, Class<? extends Box>> mappings;
 
     public Boxes() {
-        this.mappings = new HashMap<String, Class<? extends Box>>();
+        this.mappings = new HashMap<>();
     }
 
     public Class<? extends Box> toClass(String fourcc) {

@@ -72,7 +72,7 @@ public class InplaceMP4Editor {
                 if (buffer.remaining() < 8)
                     return false;
                 buffer.putInt(buffer.remaining());
-                buffer.put(new byte[] { 'f', 'r', 'e', 'e' });
+                buffer.put(Header.FOURCC_FREE);
             }
             buffer.flip();
             return true;

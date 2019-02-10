@@ -133,11 +133,26 @@ public class Mp4TagWriter
             }
             meta.replace(IListBox.fourcc(), ilst);
 
-            fi.position(0);
-            Utils.copy(fi, fo, raf.length());
 
-            fo.position(0);
-            new RelocateMP4Editor().modifyOrRelocate(fo, mp4.getMoov());
+
+            MovieExtendsBox mvex = NodeBox.findFirst(mp4.getMoov(), MovieExtendsBox.class, MovieExtendsBox.fourcc());
+            if (mvex != null) {
+                // segmented file
+                fo.position(0);
+                MP4Util.writeFullMovie(fo, mp4);
+
+                // copy segments
+                for (MP4Util.Atom atom : mp4.getOthers()) {
+                    atom.copy(fi, fo);
+                }
+            } else {
+                // non-segmented file, need to keep chunk offsets
+                fi.position(0);
+                Utils.copy(fi, fo, raf.length());
+
+                fo.position(0);
+                new RelocateMP4Editor().modifyOrRelocate(fo, mp4.getMoov());
+            }
         }
     }
 

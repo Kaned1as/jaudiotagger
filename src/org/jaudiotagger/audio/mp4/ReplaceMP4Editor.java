@@ -8,6 +8,7 @@ import org.jcodec.containers.mp4.boxes.MovieBox;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 
 /**
  * A full fledged MP4 editor.
@@ -22,26 +23,20 @@ import java.io.IOException;
  */
 public class ReplaceMP4Editor {
 
-    public void modifyOrReplace(File src, MovieBox edit) throws IOException {
-        boolean modify = new InplaceMP4Editor().modify(new FileInputStream(src).getChannel(), edit);
+    public void modifyOrReplace(FileChannel src, FileChannel dst, MovieBox edit) throws IOException {
+        boolean modify = new InplaceMP4Editor().modify(src, edit);
         if (!modify)
-            replace(src, edit);
+            copy(src, dst, edit);
     }
 
-    public void replace(File src, MovieBox edit) throws IOException {
-        File tmp = new File(src.getParentFile(), "." + src.getName());
-        copy(src, tmp, edit);
-        tmp.renameTo(src);
-    }
-
-    public void copy(File src, File dst, MovieBox edit) throws IOException {
-        final Movie movie = MP4Util.createRefFullMovieFromFile(src);
+    public void copy(FileChannel src, FileChannel dst, MovieBox edit) throws IOException {
+        final Movie movie = MP4Util.parseFullMovieChannel(src);
 
         for (Box box: edit.getBoxes()) {
             movie.getMoov().replaceBox(box);
         }
 
         Flattern fl = new Flattern();
-        fl.flattern(movie, dst);
+        fl.flatternChannel(movie, dst);
     }
 }

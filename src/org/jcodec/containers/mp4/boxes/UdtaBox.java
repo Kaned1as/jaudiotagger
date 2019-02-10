@@ -18,17 +18,14 @@ public class UdtaBox extends NodeBox {
 
     @Override
     public void setFactory(final IBoxFactory _factory) {
-        factory = new IBoxFactory() {
-            @Override
-            public Box newBox(Header header) {
-                if (header.getFourcc().equals(UdtaMetaBox.fourcc())) {
-                    UdtaMetaBox box = new UdtaMetaBox(header);
-                    box.setFactory(_factory);
-                    return box;
-                }
-
-                return _factory.newBox(header);
+        factory = header -> {
+            if (header.getFourcc().equals(UdtaMetaBox.fourcc())) {
+                UdtaMetaBox box = new UdtaMetaBox(header);
+                box.setFactory(_factory);
+                return box;
             }
+
+            return _factory.newBox(header);
         };
     }
 
