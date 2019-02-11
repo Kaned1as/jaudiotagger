@@ -2,9 +2,10 @@ package org.jcodec.containers.mp4.boxes;
 
 
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 
 import org.jaudiotagger.audio.generic.Utils;
+import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
 
 /**
  * This class is part of JCodec ( www.jcodec.org ) This software is distributed
@@ -48,7 +49,7 @@ public class ColorExtension extends Box {
 
     @Override
     public void doWrite(ByteBuffer out) {
-        out.put(type.getBytes(StandardCharsets.US_ASCII));
+        out.put(type.getBytes(Charset.forName(TextEncoding.CHARSET_US_ASCII)));
         out.putShort(primariesIndex);
         out.putShort(transferFunctionIndex);
         out.putShort(matrixIndex);

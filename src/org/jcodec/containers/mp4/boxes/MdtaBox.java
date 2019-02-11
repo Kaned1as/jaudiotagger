@@ -1,9 +1,10 @@
 package org.jcodec.containers.mp4.boxes;
 
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 
 import org.jaudiotagger.audio.generic.Utils;
+import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
 
 /**
  * This class is part of JCodec ( www.jcodec.org ) This software is distributed
@@ -29,7 +30,7 @@ public class MdtaBox extends Box {
 
     @Override
     public void parse(ByteBuffer buf) {
-        key = new String(Utils.toArray(Utils.readBuf(buf)), StandardCharsets.US_ASCII);
+        key = new String(Utils.toArray(Utils.readBuf(buf)), Charset.forName(TextEncoding.CHARSET_US_ASCII));
     }
 
     public String getKey() {
@@ -43,7 +44,7 @@ public class MdtaBox extends Box {
 
     @Override
     public int estimateSize() {
-        return key.getBytes(StandardCharsets.US_ASCII).length;
+        return key.getBytes(Charset.forName(TextEncoding.CHARSET_US_ASCII)).length;
     }
     
     public static String fourcc() {

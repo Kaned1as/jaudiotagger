@@ -1,11 +1,12 @@
 package org.jcodec.containers.mp4.boxes;
 
 import org.jaudiotagger.audio.generic.Utils;
+import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
 import org.jcodec.containers.mp4.Boxes;
 import org.jcodec.containers.mp4.IBoxFactory;
 
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 
 public class ReverseDnsBox extends NodeBox {
 
@@ -118,12 +119,12 @@ public class ReverseDnsBox extends NodeBox {
         @Override
         protected void doWrite(ByteBuffer out) {
             out.putInt(0);
-            out.put(issuer.getBytes(StandardCharsets.US_ASCII));
+            out.put(issuer.getBytes(Charset.forName(TextEncoding.CHARSET_US_ASCII)));
         }
 
         @Override
         public int estimateSize() {
-            return 8 + 4 + issuer.getBytes(StandardCharsets.US_ASCII).length;
+            return 8 + 4 + issuer.getBytes(Charset.forName(TextEncoding.CHARSET_US_ASCII)).length;
         }
 
         public static String fourcc() {
@@ -164,12 +165,12 @@ public class ReverseDnsBox extends NodeBox {
         @Override
         protected void doWrite(ByteBuffer out) {
             out.putInt(0);
-            out.put(name.getBytes(StandardCharsets.US_ASCII));
+            out.put(name.getBytes(Charset.forName(TextEncoding.CHARSET_US_ASCII)));
         }
 
         @Override
         public int estimateSize() {
-            return 8 + 4 + name.getBytes(StandardCharsets.US_ASCII).length;
+            return 8 + 4 + name.getBytes(Charset.forName(TextEncoding.CHARSET_US_ASCII)).length;
         }
 
         public static String fourcc() {

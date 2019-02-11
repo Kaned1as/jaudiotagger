@@ -20,6 +20,7 @@ package org.jaudiotagger.audio.mp4;
 
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.logging.ErrorMessage;
+import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
 import org.jaudiotagger.tag.mp4.Mp4FieldKey;
 import org.jaudiotagger.tag.mp4.Mp4Tag;
 import org.jaudiotagger.tag.mp4.field.*;
@@ -30,11 +31,10 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-
-import static java.nio.charset.StandardCharsets.*;
 
 /**
  * Reads metadata from mp4,
@@ -155,7 +155,7 @@ public class Mp4TagReader {
         Map<String, MetaValue> keyedMeta = meta.getKeyedMeta(); // TODO: unused, apple-specific
         Map<String, MetaValue> rdnsMeta = meta.getRdnsMeta();
         for (Mp4FieldKey key : Mp4FieldKey.values()) {
-            byte[] nameBytes = key.getFieldName().getBytes(ISO_8859_1);
+            byte[] nameBytes = key.getFieldName().getBytes(Charset.forName(TextEncoding.CHARSET_ISO_8859_1));
             Integer nameCoded = ByteBuffer.wrap(nameBytes).getInt();
 
             if (rdnsMeta.containsKey(key.getFieldName())) {

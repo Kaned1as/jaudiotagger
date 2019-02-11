@@ -61,7 +61,11 @@ public class InplaceMP4Editor {
             moovBox.replaceBox(box);
         }
 
-        return rewriteBox(moovBuffer, moovBox);
+        if (!rewriteBox(moovBuffer, moovBox))
+            return false;
+
+        replaceBox(fi, moovAtom, moovBuffer);
+        return true;
     }
 
     private boolean rewriteBox(ByteBuffer buffer, Box box) {
@@ -91,6 +95,11 @@ public class InplaceMP4Editor {
         Header header = Header.read(oldMov);
         Box box = Box.parseBox(oldMov, header, BoxFactory.getDefault());
         return box;
+    }
+
+    private void replaceBox(FileChannel fi, Atom atom, ByteBuffer buffer) throws IOException {
+        fi.position(atom.getOffset());
+        fi.write(buffer);
     }
 
     private Atom getMoov(FileChannel f) throws IOException {

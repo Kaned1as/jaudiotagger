@@ -1,9 +1,10 @@
 package org.jcodec.containers.mp4.boxes;
 
 import org.jaudiotagger.audio.generic.Utils;
+import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
 
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 
 /**
  * This class is part of JCodec ( www.jcodec.org ) This software is distributed
@@ -77,6 +78,6 @@ public class TimecodeMediaInfoBox extends FullBox {
 
     @Override
     public int estimateSize() {
-        return 32 + 1 + name.getBytes(StandardCharsets.US_ASCII).length;
+        return 32 + 1 + name.getBytes(Charset.forName(TextEncoding.CHARSET_US_ASCII)).length;
     }
 }

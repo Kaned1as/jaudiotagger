@@ -1,9 +1,10 @@
 package org.jcodec.containers.mp4.boxes;
 
 import org.jaudiotagger.audio.generic.Utils;
+import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
 
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 
 /**
  * This class is part of JCodec ( www.jcodec.org ) This software is distributed
@@ -30,17 +31,17 @@ public class NameBox extends Box {
     }
 
     public void parse(ByteBuffer input) {
-        name = Utils.readNullTermStringCharset(input, StandardCharsets.US_ASCII);
+        name = Utils.readNullTermStringCharset(input, Charset.forName(TextEncoding.CHARSET_US_ASCII));
     }
 
     protected void doWrite(ByteBuffer out) {
-        out.put(name.getBytes(StandardCharsets.US_ASCII));
+        out.put(name.getBytes(Charset.forName(TextEncoding.CHARSET_US_ASCII)));
         out.putInt(0);
     }
     
     @Override
     public int estimateSize() {
-        return 12 + name.getBytes(StandardCharsets.US_ASCII).length;
+        return 12 + name.getBytes(Charset.forName(TextEncoding.CHARSET_US_ASCII)).length;
     }
 
     public String getName() {

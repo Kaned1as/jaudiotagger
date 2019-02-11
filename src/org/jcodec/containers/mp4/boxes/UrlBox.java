@@ -1,9 +1,10 @@
 package org.jcodec.containers.mp4.boxes;
 
 import org.jaudiotagger.audio.generic.Utils;
+import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
 
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 
 /**
  * This class is part of JCodec ( www.jcodec.org ) This software is distributed
@@ -35,7 +36,7 @@ public class UrlBox extends FullBox {
         super.parse(input);
         if ((flags & 0x1) != 0)
             return;
-        url = Utils.readNullTermStringCharset(input, StandardCharsets.UTF_8);
+        url = Utils.readNullTermStringCharset(input, Charset.forName(TextEncoding.CHARSET_UTF_8));
     }
 
     @Override
@@ -43,7 +44,7 @@ public class UrlBox extends FullBox {
         super.doWrite(out);
 
         if (url != null) {
-            Utils.write(out, ByteBuffer.wrap(url.getBytes(StandardCharsets.UTF_8)));
+            Utils.write(out, ByteBuffer.wrap(url.getBytes(Charset.forName(TextEncoding.CHARSET_UTF_8))));
             out.put((byte) 0);
         }
     }
@@ -53,7 +54,7 @@ public class UrlBox extends FullBox {
         int sz = 13;
 
         if (url != null) {
-            sz += url.getBytes(StandardCharsets.UTF_8).length;
+            sz += url.getBytes(Charset.forName(TextEncoding.CHARSET_UTF_8)).length;
         }
         return sz;
     }

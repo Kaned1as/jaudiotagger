@@ -1,13 +1,14 @@
 package org.jcodec.containers.mp4.boxes;
 
 import org.jaudiotagger.audio.generic.Utils;
+import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.logging.Logger;
 
 /**
@@ -103,7 +104,7 @@ public class Header {
             out.putInt(1);
         else
             out.putInt((int) size);
-        byte[] bt = fourcc.getBytes(StandardCharsets.US_ASCII);
+        byte[] bt = fourcc.getBytes(Charset.forName(TextEncoding.CHARSET_US_ASCII));
         if(bt != null && bt.length == 4)
             out.put(bt);
         else

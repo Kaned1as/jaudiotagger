@@ -19,6 +19,7 @@
 package org.jaudiotagger.audio.generic;
 
 import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
 import org.jaudiotagger.utils.FileTypeUtil;
 
 import java.io.*;
@@ -28,7 +29,6 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -246,12 +246,12 @@ public class Utils
         final int len = Utils.u(bb.get()); //Read as unsigned value
         final byte[] buf = new byte[len];
         bb.get(buf);
-        return new String(buf, 0, len, StandardCharsets.ISO_8859_1);
+        return new String(buf, 0, len, Charset.forName(TextEncoding.CHARSET_US_ASCII));
     }
 
     public static void writePascalString(ByteBuffer buffer, String name) {
         buffer.put((byte) name.length());
-        buffer.put(name.getBytes(StandardCharsets.US_ASCII));
+        buffer.put(name.getBytes(Charset.forName(TextEncoding.CHARSET_US_ASCII)));
     }
 
     /**
@@ -455,11 +455,11 @@ public class Utils
     }
 
     public static String reinterpretIntAsString(Integer i) {
-        return new String(ByteBuffer.allocate(4).putInt(i).array(), StandardCharsets.US_ASCII);
+        return new String(ByteBuffer.allocate(4).putInt(i).array(), Charset.forName(TextEncoding.CHARSET_ISO_8859_1));
     }
 
     public static Integer reinterpretStringAsInt(String str) {
-        return ByteBuffer.wrap(str.getBytes(StandardCharsets.ISO_8859_1)).getInt();
+        return ByteBuffer.wrap(str.getBytes(Charset.forName(TextEncoding.CHARSET_ISO_8859_1))).getInt();
     }
 
     public static ByteBuffer readBuf(ByteBuffer buffer) {

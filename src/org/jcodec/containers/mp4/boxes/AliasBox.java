@@ -1,9 +1,10 @@
 package org.jcodec.containers.mp4.boxes;
 
 import org.jaudiotagger.audio.generic.Utils;
+import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
 
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,7 +68,10 @@ public class AliasBox extends FullBox {
         }
 
         public String toString() {
-            return new String(data, 0, len, (type == 14 || type == 15) ? StandardCharsets.UTF_16 : StandardCharsets.UTF_8);
+            Charset charset = Charset.forName((type == 14 || type == 15)
+                    ? TextEncoding.CHARSET_UTF_16
+                    : TextEncoding.CHARSET_UTF_8);
+            return new String(data, 0, len, charset);
         }
     }
 
@@ -116,7 +120,7 @@ public class AliasBox extends FullBox {
         super.doWrite(out);
         if ((flags & 0x1) != 0) // self ref
             return;
-        out.put(type.getBytes(StandardCharsets.US_ASCII), 0, 4);
+        out.put(type.getBytes(Charset.forName(TextEncoding.CHARSET_US_ASCII)), 0, 4);
         out.putShort(recordSize);
         out.putShort(version);
         out.putShort(kind);
@@ -128,8 +132,8 @@ public class AliasBox extends FullBox {
         Utils.writePascalString(out, fileName);
         out.putInt(fileNumber);
         out.putInt(createdLocalDate);
-        out.put(fileTypeName.getBytes(StandardCharsets.US_ASCII), 0, 4);
-        out.put(creatorName.getBytes(StandardCharsets.US_ASCII), 0, 4);
+        out.put(fileTypeName.getBytes(Charset.forName(TextEncoding.CHARSET_US_ASCII)), 0, 4);
+        out.put(creatorName.getBytes(Charset.forName(TextEncoding.CHARSET_US_ASCII)), 0, 4);
         out.putShort(nlvlFrom);
         out.putShort(nlvlTo);
         out.putInt(volumeAttributes);

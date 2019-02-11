@@ -46,6 +46,7 @@ public class TextEncoding extends AbstractIntStringValuePair
     public static final String CHARSET_UTF_16 = "UTF-16";        //Want to use x-UTF-16LE-BOM but not always available
     public static final String CHARSET_UTF_16BE = "UTF-16BE";
     public static final String CHARSET_UTF_8 = "UTF-8";
+    public static final String CHARSET_US_ASCII = "US-ASCII";
 
     //Supported ID3 charset ids
     public static final byte ISO_8859_1 = 0;

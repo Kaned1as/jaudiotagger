@@ -1,9 +1,10 @@
 package org.jcodec.containers.mp4.boxes;
 
 import org.jaudiotagger.audio.generic.Utils;
+import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
 
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -58,11 +59,11 @@ public class SegmentTypeBox extends Box {
     }
 
     public void doWrite(ByteBuffer out) {
-        out.put(majorBrand.getBytes(StandardCharsets.US_ASCII));
+        out.put(majorBrand.getBytes(Charset.forName(TextEncoding.CHARSET_US_ASCII)));
         out.putInt(minorVersion);
 
         for (String string : compBrands) {
-            out.put(string.getBytes(StandardCharsets.US_ASCII));
+            out.put(string.getBytes(Charset.forName(TextEncoding.CHARSET_US_ASCII)));
         }
     }
 
@@ -71,7 +72,7 @@ public class SegmentTypeBox extends Box {
         int sz = 13;
 
         for (String string : compBrands) {
-            sz += string.getBytes(StandardCharsets.US_ASCII).length;
+            sz += string.getBytes(Charset.forName(TextEncoding.CHARSET_US_ASCII)).length;
         }
         return sz;
     }

@@ -1,8 +1,10 @@
 package org.jcodec.containers.mp4.boxes;
 
+import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.charset.StandardCharsets;
+import java.nio.charset.Charset;
 
 /**
  * This class is part of JCodec ( www.jcodec.org ) This software is distributed
@@ -45,7 +47,7 @@ public class MetaValue {
     }
 
     public static MetaValue createString(String value) {
-        return new MetaValue(1, 0, value.getBytes(StandardCharsets.UTF_8));
+        return new MetaValue(1, 0, value.getBytes(Charset.forName(TextEncoding.CHARSET_US_ASCII)));
     }
 
     public static MetaValue createOther(int type, byte[] data) {
@@ -92,9 +94,9 @@ public class MetaValue {
 
     public String getString() {
         if (type == TYPE_STRING_UTF8)
-            return new String(data, StandardCharsets.UTF_8);
+            return new String(data, Charset.forName(TextEncoding.CHARSET_UTF_8));
         if (type == TYPE_STRING_UTF16) {
-            return new String(data, StandardCharsets.UTF_16BE);
+            return new String(data, Charset.forName(TextEncoding.CHARSET_UTF_16BE));
         }
         return null;
     }

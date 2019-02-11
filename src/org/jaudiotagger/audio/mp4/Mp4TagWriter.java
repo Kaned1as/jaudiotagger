@@ -133,8 +133,6 @@ public class Mp4TagWriter
             }
             meta.replace(IListBox.fourcc(), ilst);
 
-
-
             MovieExtendsBox mvex = NodeBox.findFirst(mp4.getMoov(), MovieExtendsBox.class, MovieExtendsBox.fourcc());
             if (mvex != null) {
                 // segmented file
