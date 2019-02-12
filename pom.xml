@@ -24,7 +24,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.jthink</groupId>
     <artifactId>jaudiotagger</artifactId>
-    <version>2.3.3</version>
+    <version>2.3.4</version>
     <packaging>jar</packaging>
     <name>jaudiotagger</name>
     <description>
@@ -76,7 +76,7 @@
         <dependency>
             <groupId>com.squareup.okio</groupId>
             <artifactId>okio</artifactId>
-            <version>2.2.2</version>
+            <version>1.17.3</version>
         </dependency>
         <dependency>
             <groupId>com.google.android</groupId>
@@ -161,6 +161,6 @@
         <connection>scm:git:https://github.com/Adonai/jaudiotagger-android.git</connection>
         <developerConnection>scm:git:git@github.com/Adonai/jaudiotagger-android.git</developerConnection>
         <url>https://github.com/Adonai/jaudiotagger-android</url>
-        <tag>jaudiotagger-2.3.3</tag>
+        <tag>jaudiotagger-2.3.4</tag>
     </scm>
 </project>

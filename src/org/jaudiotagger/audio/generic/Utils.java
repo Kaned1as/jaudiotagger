@@ -246,12 +246,12 @@ public class Utils
         final int len = Utils.u(bb.get()); //Read as unsigned value
         final byte[] buf = new byte[len];
         bb.get(buf);
-        return new String(buf, 0, len, Charset.forName(TextEncoding.CHARSET_US_ASCII));
+        return new String(buf, 0, len, Charset.forName(TextEncoding.CHARSET_ISO_8859_1));
     }
 
     public static void writePascalString(ByteBuffer buffer, String name) {
         buffer.put((byte) name.length());
-        buffer.put(name.getBytes(Charset.forName(TextEncoding.CHARSET_US_ASCII)));
+        buffer.put(name.getBytes(Charset.forName(TextEncoding.CHARSET_ISO_8859_1)));
     }
 
     /**
