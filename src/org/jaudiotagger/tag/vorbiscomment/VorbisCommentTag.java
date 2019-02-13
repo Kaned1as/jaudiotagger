@@ -25,13 +25,13 @@ import org.jaudiotagger.logging.ErrorMessage;
 import org.jaudiotagger.tag.*;
 import org.jaudiotagger.tag.images.Artwork;
 import org.jaudiotagger.tag.images.ArtworkFactory;
-import org.jaudiotagger.tag.vorbiscomment.util.Base64Coder;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.EnumMap;
 import java.util.List;
 
@@ -436,8 +436,7 @@ public class VorbisCommentTag extends AbstractTag {
      */
     public byte[] getArtworkBinaryData() {
         String base64data = this.getFirst(VorbisCommentFieldKey.COVERART);
-        byte[] rawdata = Base64Coder.decode(base64data.toCharArray());
-        return rawdata;
+        return Base64.getDecoder().decode(base64data);
     }
 
     /**
@@ -502,14 +501,12 @@ public class VorbisCommentTag extends AbstractTag {
         for (TagField tagField : metadataBlockPics) {
 
             try {
-                byte[] imageBinaryData = Base64Coder.decode(((TagTextField) tagField).getContent());
+                byte[] imageBinaryData = Base64.getDecoder().decode(((TagTextField) tagField).getContent());
                 MetadataBlockDataPicture coverArt = new MetadataBlockDataPicture(ByteBuffer.wrap(imageBinaryData));
                 Artwork artwork = ArtworkFactory.createArtworkFromMetadataBlockDataPicture(coverArt);
                 artworkList.add(artwork);
-            } catch (IOException ioe) {
+            } catch (IOException | InvalidFrameException ioe) {
                 throw new RuntimeException(ioe);
-            } catch (InvalidFrameException ife) {
-                throw new RuntimeException(ife);
             }
         }
         return artworkList;
@@ -557,8 +554,7 @@ public class VorbisCommentTag extends AbstractTag {
      */
     public TagField createField(Artwork artwork) throws FieldDataInvalidException {
         try {
-            char[] testdata = Base64Coder.encode(createMetadataBlockDataPicture(artwork).getRawContent());
-            String base64image = new String(testdata);
+            String base64image = Base64.getEncoder().encodeToString(createMetadataBlockDataPicture(artwork).getRawContent());
             TagField imageTagField = createField(VorbisCommentFieldKey.METADATA_BLOCK_PICTURE, base64image);
             return imageTagField;
         } catch (UnsupportedEncodingException uee) {
@@ -607,8 +603,7 @@ public class VorbisCommentTag extends AbstractTag {
      */
     @Deprecated
     public void setArtworkField(byte[] data, String mimeType) {
-        char[] testdata = Base64Coder.encode(data);
-        String base64image = new String(testdata);
+        String base64image = Base64.getEncoder().encodeToString(data);
         VorbisCommentTagField dataField = new VorbisCommentTagField(VorbisCommentFieldKey.COVERART.getFieldName(), base64image);
         VorbisCommentTagField mimeField = new VorbisCommentTagField(VorbisCommentFieldKey.COVERARTMIME.getFieldName(), mimeType);
 

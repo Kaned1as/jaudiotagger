@@ -8,7 +8,6 @@ import org.jaudiotagger.audio.ogg.util.OggPageHeader;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.TagField;
 import org.jaudiotagger.tag.TagOptionSingleton;
-import org.jaudiotagger.tag.vorbiscomment.util.Base64Coder;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -18,6 +17,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.RandomAccessFile;
+import java.util.Base64;
 import java.util.List;
 
 /**
@@ -109,8 +109,7 @@ public class VorbisWriteTagTest {
             RandomAccessFile imageFile = new RandomAccessFile(new File("testdata", "coverart.png"), "r");
             byte[] imagedata = new byte[(int) imageFile.length()];
             imageFile.read(imagedata);
-            char[] testdata = Base64Coder.encode(imagedata);
-            String base64image = new String(testdata);
+            String base64image = Base64.getEncoder().encodeToString(imagedata);
             tag.setField(tag.createField(VorbisCommentFieldKey.COVERART, base64image));
             tag.setField(tag.createField(VorbisCommentFieldKey.COVERARTMIME, "image/png"));
 
@@ -210,8 +209,8 @@ public class VorbisWriteTagTest {
             Assert.assertEquals("image/png", vorbisTag.getFirst(VorbisCommentFieldKey.COVERARTMIME));
             Assert.assertEquals(base64image, vorbisTag.getFirst(VorbisCommentFieldKey.COVERART));
             BufferedImage bi = ImageIO.read(ImageIO
-                    .createImageInputStream(new ByteArrayInputStream(Base64Coder.
-                            decode(vorbisTag.getFirst(VorbisCommentFieldKey.COVERART).toCharArray()))));
+                    .createImageInputStream(new ByteArrayInputStream(Base64.getDecoder().
+                            decode(vorbisTag.getFirst(VorbisCommentFieldKey.COVERART)))));
             Assert.assertNotNull(bi);
 
 
@@ -253,8 +252,7 @@ public class VorbisWriteTagTest {
             RandomAccessFile imageFile = new RandomAccessFile(new File("testdata", "coverart.bmp"), "r");
             byte[] imagedata = new byte[(int) imageFile.length()];
             imageFile.read(imagedata);
-            char[] testdata = Base64Coder.encode(imagedata);
-            String base64image = new String(testdata);
+            String base64image = Base64.getEncoder().encodeToString(imagedata);
             tag.setField(tag.createField(VorbisCommentFieldKey.COVERART, base64image));
             tag.setField(tag.createField(VorbisCommentFieldKey.COVERARTMIME, "image/png"));
 
@@ -471,8 +469,7 @@ public class VorbisWriteTagTest {
             RandomAccessFile imageFile = new RandomAccessFile(new File("testdata", "coverart.bmp"), "r");
             byte[] imagedata = new byte[(int) imageFile.length()];
             imageFile.read(imagedata);
-            char[] testdata = Base64Coder.encode(imagedata);
-            String base64image = new String(testdata);
+            String base64image = Base64.getEncoder().encodeToString(imagedata);
             tag.setField(tag.createField(VorbisCommentFieldKey.COVERART, base64image));
             tag.setField(tag.createField(VorbisCommentFieldKey.COVERARTMIME, "image/png"));
 
