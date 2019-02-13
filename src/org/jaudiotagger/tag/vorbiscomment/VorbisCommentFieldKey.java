@@ -76,6 +76,7 @@ public enum VorbisCommentFieldKey
     ISRC("ISRC",EnumSet.of(Tagger.XIPH,Tagger.PICARD,Tagger.JAIKOZ)),
     IS_CLASSICAL("IS_CLASSICAL",EnumSet.of(Tagger.PICARD,Tagger.JAIKOZ)),
     IS_SOUNDTRACK("IS_SOUNDTRACK",EnumSet.of(Tagger.PICARD,Tagger.JAIKOZ)),
+    ITUNES_GROUPING("ITUNES_GROUPING", EnumSet.of(Tagger.ITUNES)),
     KEY("KEY"),
     LABEL("LABEL",EnumSet.of(Tagger.PICARD,Tagger.JAIKOZ)),
     LANGUAGE("LANGUAGE"),

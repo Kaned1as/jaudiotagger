@@ -6,7 +6,6 @@ import org.jaudiotagger.logging.Hex;
 import org.jaudiotagger.tag.*;
 import org.jaudiotagger.tag.id3.*;
 import org.jaudiotagger.tag.images.Artwork;
-import org.jaudiotagger.tag.reference.ID3V2Version;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;

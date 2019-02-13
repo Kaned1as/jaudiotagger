@@ -116,6 +116,7 @@ public enum AsfFieldKey
     IS_CLASSICAL("IS_CLASSICAL", false),
     IS_COMPILATION("WM/IsCompilation", false),
     IS_SOUNDTRACK("IS_SOUNDTRACK", false),
+    ITUNES_GROUPING("ITUNES_GROUPING", false),
     LANGUAGE("WM/Language", true),
     LYRICIST("WM/Writer", true),
     LYRICS("WM/Lyrics", false),
