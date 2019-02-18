@@ -19,8 +19,7 @@ import java.util.logging.Logger;
  *                    create.
  * @author Christian Laireiter
  */
-abstract class ChunkContainerReader<ChunkType extends ChunkContainer> implements ChunkReader
-{
+abstract class ChunkContainerReader<ChunkType extends ChunkContainer> implements ChunkReader {
 
     /**
      * Logger
@@ -59,11 +58,9 @@ abstract class ChunkContainerReader<ChunkType extends ChunkContainer> implements
      *                      GUID) will handled only once, if a reader is available, other
      *                      chunks will be discarded.
      */
-    protected ChunkContainerReader(final List<Class<? extends ChunkReader>> toRegister, final boolean readChunkOnce)
-    {
+    protected ChunkContainerReader(final List<Class<? extends ChunkReader>> toRegister, final boolean readChunkOnce) {
         this.eachChunkOnce = readChunkOnce;
-        for (final Class<? extends ChunkReader> curr : toRegister)
-        {
+        for (final Class<? extends ChunkReader> curr : toRegister) {
             register(curr);
         }
     }
@@ -74,10 +71,8 @@ abstract class ChunkContainerReader<ChunkType extends ChunkContainer> implements
      * @param stream stream to test.
      * @throws IllegalArgumentException If stream does not meet the requirements.
      */
-    protected void checkStream(final InputStream stream) throws IllegalArgumentException
-    {
-        if (this.hasFailingReaders && !stream.markSupported())
-        {
+    protected void checkStream(final InputStream stream) throws IllegalArgumentException {
+        if (this.hasFailingReaders && !stream.markSupported()) {
             throw new IllegalArgumentException("Stream has to support mark/reset.");
         }
     }
@@ -105,8 +100,7 @@ abstract class ChunkContainerReader<ChunkType extends ChunkContainer> implements
      * @return an appropriate reader implementation, <code>null</code> if not
      * {@linkplain #register(Class) registered}.
      */
-    protected ChunkReader getReader(final GUID guid)
-    {
+    protected ChunkReader getReader(final GUID guid) {
         return this.readerMap.get(guid);
     }
 
@@ -116,8 +110,7 @@ abstract class ChunkContainerReader<ChunkType extends ChunkContainer> implements
      * @param guid GUID which identifies the chunk to be read.
      * @return <code>true</code> if a reader is available.
      */
-    protected boolean isReaderAvailable(final GUID guid)
-    {
+    protected boolean isReaderAvailable(final GUID guid) {
         return this.readerMap.containsKey(guid);
     }
 
@@ -135,12 +128,10 @@ abstract class ChunkContainerReader<ChunkType extends ChunkContainer> implements
      *                                  {@linkplain ChunkReader#canFail() fail} and the stream source
      *                                  doesn't support mark/reset.
      */
-    public ChunkType read(final GUID guid, final InputStream stream, final long chunkStart) throws IOException, IllegalArgumentException
-    {
+    public ChunkType read(final GUID guid, final InputStream stream, final long chunkStart) throws IOException, IllegalArgumentException {
         checkStream(stream);
         final CountingInputStream cis = new CountingInputStream(stream);
-        if (!Arrays.asList(getApplyingIds()).contains(guid))
-        {
+        if (!Arrays.asList(getApplyingIds()).contains(guid)) {
             throw new IllegalArgumentException("provided GUID is not supported by this reader.");
         }
         // For Know the file pointer pointed to an ASF header chunk.
@@ -157,8 +148,7 @@ abstract class ChunkContainerReader<ChunkType extends ChunkContainer> implements
         /*
          * Now reading header of chuncks.
          */
-        while (currentPosition < result.getChunkEnd())
-        {
+        while (currentPosition < result.getChunkEnd()) {
             final GUID currentGUID = Utils.readGUID(cis);
             final boolean skip = this.eachChunkOnce && (!isReaderAvailable(currentGUID) || !alreadyRead.add(currentGUID));
             Chunk chunk;
@@ -166,30 +156,22 @@ abstract class ChunkContainerReader<ChunkType extends ChunkContainer> implements
              * If one reader tells it could fail (new method), then check the
              * input stream for mark/reset. And use it if failed.
              */
-            if (!skip && isReaderAvailable(currentGUID))
-            {
+            if (!skip && isReaderAvailable(currentGUID)) {
                 final ChunkReader reader = getReader(currentGUID);
-                if (reader.canFail())
-                {
+                if (reader.canFail()) {
                     cis.mark(READ_LIMIT);
                 }
                 chunk = getReader(currentGUID).read(currentGUID, cis, currentPosition);
-            }
-            else
-            {
+            } else {
                 chunk = ChunkHeaderReader.getInstance().read(currentGUID, cis, currentPosition);
             }
-            if (chunk == null)
-            {
+            if (chunk == null) {
                 /*
                  * Reader failed
                  */
                 cis.reset();
-            }
-            else
-            {
-                if (!skip)
-                {
+            } else {
+                if (!skip) {
                     result.addChunk(chunk);
                 }
                 currentPosition = chunk.getChunkEnd();
@@ -208,22 +190,15 @@ abstract class ChunkContainerReader<ChunkType extends ChunkContainer> implements
      * @param <T>        The actual reader implementation.
      * @param toRegister chunk reader which is to be registered.
      */
-    private <T extends ChunkReader> void register(final Class<T> toRegister)
-    {
-        try
-        {
+    private <T extends ChunkReader> void register(final Class<T> toRegister) {
+        try {
             final T reader = toRegister.newInstance();
-            for (final GUID curr : reader.getApplyingIds())
-            {
+            for (final GUID curr : reader.getApplyingIds()) {
                 this.readerMap.put(curr, reader);
             }
-        }
-        catch (InstantiationException e)
-        {
+        } catch (InstantiationException e) {
             LOGGER.severe(e.getMessage());
-        }
-        catch (IllegalAccessException e)
-        {
+        } catch (IllegalAccessException e) {
             LOGGER.severe(e.getMessage());
         }
     }

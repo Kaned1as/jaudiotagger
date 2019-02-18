@@ -17,23 +17,22 @@ import java.util.List;
 /**
  * This class is part of JCodec ( www.jcodec.org ) This software is distributed
  * under FreeBSD License
- * 
+ * <p>
  * Self contained movie creator
- * 
+ *
  * @author The JCodec project
- * 
  */
 public class Flattern {
 
 
     public List<ProgressListener> listeners;
-    
+
     public Flattern() {
         this.listeners = new ArrayList<ProgressListener>();
     }
 
     public interface ProgressListener {
-        public void trigger(int progress);
+        void trigger(int progress);
     }
 
     public void addProgressListener(ProgressListener listener) {
@@ -47,14 +46,14 @@ public class Flattern {
             throw new IllegalArgumentException("movie should be reference");
         out.position(0);
         MP4Util.writeFullMovie(out, movie);
-        
+
         int extraSpace = calcSpaceReq(moov);
         ByteBuffer buf = ByteBuffer.allocate(extraSpace);
         out.write(buf);
 
         long mdatOff = out.position();
         writeHeader(Header.createHeader("mdat", 0x100000001L), out);
-        
+
         FileChannel[][] inputs = getInputs(moov);
 
         TrakBox[] tracks = moov.getTracks();
@@ -101,7 +100,7 @@ public class Flattern {
             writers[i].apply();
         }
         long mdatSize = out.position() - mdatOff;
-        
+
         out.position(0);
         MP4Util.writeFullMovie(out, movie);
 

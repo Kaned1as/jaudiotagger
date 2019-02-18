@@ -1,26 +1,25 @@
 /**
- *  @author : Paul Taylor
- *  @author : Eric Farng
- *
- *  Version @version:$Id$
- *
- *  MusicTag Copyright (C)2003,2004
- *
- *  This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser
- *  General Public  License as published by the Free Software Foundation; either version 2.1 of the License,
- *  or (at your option) any later version.
- *
- *  This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
- *  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU Lesser General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public License along with this library; if not,
- *  you can get a copy from http://www.opensource.org/licenses/lgpl-license.php or write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- *
+ * @author : Paul Taylor
+ * @author : Eric Farng
+ * <p>
+ * Version @version:$Id$
+ * <p>
+ * MusicTag Copyright (C)2003,2004
+ * <p>
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser
+ * General Public  License as published by the Free Software Foundation; either version 2.1 of the License,
+ * or (at your option) any later version.
+ * <p>
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not,
+ * you can get a copy from http://www.opensource.org/licenses/lgpl-license.php or write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * <p>
  * Description:
  * People List
- *
  */
 package org.jaudiotagger.tag.id3.framebody;
 
@@ -39,14 +38,12 @@ import java.util.List;
  * function and every even is an name or a comma delimited list of names.
  *
  */
-public class FrameBodyIPLS extends AbstractFrameBodyPairs implements ID3v23FrameBody
-{
+public class FrameBodyIPLS extends AbstractFrameBodyPairs implements ID3v23FrameBody {
 
     /**
      * Creates a new FrameBodyIPLS datatype.
      */
-    public FrameBodyIPLS()
-    {
+    public FrameBodyIPLS() {
         super();
     }
 
@@ -56,13 +53,11 @@ public class FrameBodyIPLS extends AbstractFrameBodyPairs implements ID3v23Frame
      * @param textEncoding
      * @param text
      */
-    public FrameBodyIPLS(byte textEncoding, String text)
-    {
+    public FrameBodyIPLS(byte textEncoding, String text) {
         super(textEncoding, text);
     }
 
-    public FrameBodyIPLS(FrameBodyIPLS body)
-    {
+    public FrameBodyIPLS(FrameBodyIPLS body) {
         setObjectValue(DataTypes.OBJ_TEXT_ENCODING, body.getTextEncoding());
         setObjectValue(DataTypes.OBJ_TEXT, body.getPairing());
     }
@@ -74,8 +69,7 @@ public class FrameBodyIPLS extends AbstractFrameBodyPairs implements ID3v23Frame
      * @param frameSize
      * @throws InvalidTagException
      */
-    public FrameBodyIPLS(ByteBuffer byteBuffer, int frameSize) throws InvalidTagException
-    {
+    public FrameBodyIPLS(ByteBuffer byteBuffer, int frameSize) throws InvalidTagException {
         super(byteBuffer, frameSize);
     }
 
@@ -84,8 +78,7 @@ public class FrameBodyIPLS extends AbstractFrameBodyPairs implements ID3v23Frame
      *
      * @param body
      */
-    public FrameBodyIPLS(FrameBodyTIPL body)
-    {
+    public FrameBodyIPLS(FrameBodyTIPL body) {
         setObjectValue(DataTypes.OBJ_TEXT_ENCODING, body.getTextEncoding());
         setObjectValue(DataTypes.OBJ_TEXT, body.getPairing());
     }
@@ -96,12 +89,10 @@ public class FrameBodyIPLS extends AbstractFrameBodyPairs implements ID3v23Frame
      * @param textEncoding
      * @param pairs
      */
-    public FrameBodyIPLS(byte textEncoding, List<Pair<String, String>> pairs)
-    {
+    public FrameBodyIPLS(byte textEncoding, List<Pair<String, String>> pairs) {
         setObjectValue(DataTypes.OBJ_TEXT_ENCODING, textEncoding);
         PairedTextEncodedStringNullTerminated.ValuePairs values = new PairedTextEncodedStringNullTerminated.ValuePairs();
-        for(Pair<String, String> next:pairs)
-        {
+        for (Pair<String, String> next : pairs) {
             values.add(next);
         }
         setObjectValue(DataTypes.OBJ_TEXT, values);
@@ -112,8 +103,7 @@ public class FrameBodyIPLS extends AbstractFrameBodyPairs implements ID3v23Frame
      *
      * @return the ID3v2 frame identifier  for this frame type
      */
-    public String getIdentifier()
-    {
+    public String getIdentifier() {
         return ID3v23Frames.FRAME_ID_V3_INVOLVED_PEOPLE;
     }
 

@@ -142,9 +142,8 @@ public class Mp4TagReader {
      * @param tag
      * @param meta
      * @return
-     * @throws UnsupportedEncodingException
      */
-    private void createMp4Field(Mp4Tag tag, MetaBox meta, IListBox ilst) throws UnsupportedEncodingException {
+    private void createMp4Field(Mp4Tag tag, MetaBox meta, IListBox ilst) {
         //Header with no data #JAUDIOTAGGER-463
         if (ilst.getValues().isEmpty()) {
             return;

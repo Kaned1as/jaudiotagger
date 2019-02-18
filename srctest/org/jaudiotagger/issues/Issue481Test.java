@@ -15,8 +15,7 @@ import java.io.File;
  */
 public class Issue481Test extends AbstractTestCase
 {
-    public void testReadYear() throws Exception
-    {
+    public void testReadYear() {
         File orig = new File("testdata", "test139.mp3");
         if (!orig.isFile())
         {

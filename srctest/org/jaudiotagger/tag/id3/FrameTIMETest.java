@@ -9,8 +9,7 @@ import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
  */
 public class FrameTIMETest extends AbstractTestCase
 {
-    public void testID3Specific() throws Exception
-    {
+    public void testID3Specific() {
         Exception e=null;
         try
         {
@@ -33,8 +32,7 @@ public class FrameTIMETest extends AbstractTestCase
         assertNull(e);
     }
 
-    public void testConvertingPartialTime() throws Exception
-       {
+    public void testConvertingPartialTime() {
            Exception e=null;
            try
            {

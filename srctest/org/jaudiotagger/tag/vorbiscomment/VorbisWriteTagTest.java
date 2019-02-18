@@ -99,7 +99,7 @@ public class VorbisWriteTagTest {
 
 
             //Vorbis Only keys
-            tag.setField(((VorbisCommentTag) tag).createField(VorbisCommentFieldKey.DESCRIPTION, "description"));
+            tag.setField(tag.createField(VorbisCommentFieldKey.DESCRIPTION, "description"));
 
             //tag.setField(tag.createField(FieldKey.ENCODER,"encoder"));
             tag.setVendor("encoder");
@@ -156,7 +156,7 @@ public class VorbisWriteTagTest {
             Assert.assertEquals("3", tag.getFirst(FieldKey.DISC_TOTAL));
 
             //Cast to format specific tag
-            VorbisCommentTag vorbisTag = (VorbisCommentTag) tag;
+            VorbisCommentTag vorbisTag = tag;
             //Lookup by vorbis comment key
             Assert.assertEquals("AUTHOR", vorbisTag.getFirst(VorbisCommentFieldKey.ARTIST));
             Assert.assertEquals("ALBUM", vorbisTag.getFirst(VorbisCommentFieldKey.ALBUM));

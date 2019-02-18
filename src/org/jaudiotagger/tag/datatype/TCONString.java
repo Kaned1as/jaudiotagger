@@ -1,12 +1,8 @@
 package org.jaudiotagger.tag.datatype;
 
 
-import org.jaudiotagger.tag.TagOptionSingleton;
 import org.jaudiotagger.tag.id3.AbstractTagFrameBody;
 
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -14,8 +10,7 @@ import java.util.List;
 /**
  * Overrides in order to properly support the ID3v23 implemenation of TCON
  */
-public class TCONString extends TextEncodedStringSizeTerminated
-{
+public class TCONString extends TextEncodedStringSizeTerminated {
     private boolean isNullSeperateMultipleValues = true;
 
 
@@ -25,8 +20,7 @@ public class TCONString extends TextEncodedStringSizeTerminated
      * @param identifier identifies the frame type
      * @param frameBody
      */
-    public TCONString(String identifier, AbstractTagFrameBody frameBody)
-    {
+    public TCONString(String identifier, AbstractTagFrameBody frameBody) {
         super(identifier, frameBody);
     }
 
@@ -35,15 +29,12 @@ public class TCONString extends TextEncodedStringSizeTerminated
      *
      * @param object
      */
-    public TCONString(TCONString object)
-    {
+    public TCONString(TCONString object) {
         super(object);
     }
 
-    public boolean equals(Object obj)
-    {
-        if(this==obj)
-        {
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
         }
         return obj instanceof TCONString && super.equals(obj);
@@ -55,13 +46,11 @@ public class TCONString extends TextEncodedStringSizeTerminated
      * some frames such as TCON have there own method and should not null separate values. This can be controlled
      * by this field.
      */
-    public boolean isNullSeperateMultipleValues()
-    {
+    public boolean isNullSeperateMultipleValues() {
         return isNullSeperateMultipleValues;
     }
 
-    public void setNullSeperateMultipleValues(boolean nullSeperateMultipleValues)
-    {
+    public void setNullSeperateMultipleValues(boolean nullSeperateMultipleValues) {
         isNullSeperateMultipleValues = nullSeperateMultipleValues;
     }
 
@@ -72,24 +61,18 @@ public class TCONString extends TextEncodedStringSizeTerminated
      * @param value
      */
     @Override
-    public void addValue(String value)
-    {
+    public void addValue(String value) {
         //For ID3v24 we separate each value by a null
-        if(isNullSeperateMultipleValues())
-        {
+        if (isNullSeperateMultipleValues()) {
             setValue(this.value + "\u0000" + value);
-        }
-        else
-        {
+        } else {
             //For ID3v23 if they pass a numeric value in brackets this indicates a mapping to an ID3v2 genre and
             //can be seen as a refinement and therefore do not need the non-standard (for ID3v23) null seperator
-            if(value.startsWith("("))
-            {
+            if (value.startsWith("(")) {
                 setValue(this.value + value);
             }
             //but if just text we need to separate some way so we do using null separator
-            else
-            {
+            else {
                 setValue(this.value + "\u0000" + value);
             }
         }
@@ -100,8 +83,7 @@ public class TCONString extends TextEncodedStringSizeTerminated
      *
      * @return number of values held, usually this will be one.
      */
-    public int getNumberOfValues()
-    {
+    public int getNumberOfValues() {
         return getValues().size();
     }
 
@@ -112,20 +94,17 @@ public class TCONString extends TextEncodedStringSizeTerminated
      * @return the nth value
      * @throws IndexOutOfBoundsException if value does not exist
      */
-    public String getValueAtIndex(int index)
-    {
+    public String getValueAtIndex(int index) {
         //Split String into separate components
         List values = getValues();
         return (String) values.get(index);
     }
 
-    public static List<String> splitV23(String value)
-    {
+    public static List<String> splitV23(String value) {
         String[] valuesarray = value.replaceAll("(\\(\\d+\\)|\\(RX\\)|\\(CR\\)\\w*)", "$1\u0000").split("\u0000");
         List<String> values = Arrays.asList(valuesarray);
         //Read only list so if empty have to create new list
-        if (values.size() == 0)
-        {
+        if (values.size() == 0) {
             values = new ArrayList<String>(1);
             values.add("");
         }
@@ -133,18 +112,13 @@ public class TCONString extends TextEncodedStringSizeTerminated
     }
 
     /**
-     *
      * @return list of all values
      */
-    public List<String> getValues()
-    {
-        if(isNullSeperateMultipleValues())
-        {
+    public List<String> getValues() {
+        if (isNullSeperateMultipleValues()) {
             return splitByNullSeperator((String) value);
-        }
-        else
-        {
-            return splitV23((String)value);
+        } else {
+            return splitV23((String) value);
         }
     }
 
@@ -153,14 +127,11 @@ public class TCONString extends TextEncodedStringSizeTerminated
      *
      * @return
      */
-    public String getValueWithoutTrailingNull()
-    {
+    public String getValueWithoutTrailingNull() {
         List<String> values = getValues();
         StringBuffer sb = new StringBuffer();
-        for(int i=0;i<values.size();i++)
-        {
-            if(i!=0)
-            {
+        for (int i = 0; i < values.size(); i++) {
+            if (i != 0) {
                 sb.append("\u0000");
             }
             sb.append(values.get(i));

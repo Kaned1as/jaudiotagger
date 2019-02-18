@@ -10,8 +10,7 @@ import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
  */
 public class FrameTEXTTest extends AbstractTestCase
 {
-    public void testGenericv22() throws Exception
-    {
+    public void testGenericv22() {
         Exception e=null;
         try
         {
@@ -28,8 +27,7 @@ public class FrameTEXTTest extends AbstractTestCase
         assertNull(e);
     }
 
-    public void testID3Specificv22() throws Exception
-    {
+    public void testID3Specificv22() {
         Exception e=null;
         try
         {
@@ -48,8 +46,7 @@ public class FrameTEXTTest extends AbstractTestCase
         assertNull(e);
     }
 
-    public void testGenericv23() throws Exception
-    {
+    public void testGenericv23() {
         Exception e=null;
         try
         {
@@ -66,8 +63,7 @@ public class FrameTEXTTest extends AbstractTestCase
         assertNull(e);
     }
 
-    public void testID3Specificv23() throws Exception
-    {
+    public void testID3Specificv23() {
         Exception e=null;
         try
         {
@@ -86,8 +82,7 @@ public class FrameTEXTTest extends AbstractTestCase
         assertNull(e);
     }
 
-    public void testGenericv24() throws Exception
-       {
+    public void testGenericv24() {
            Exception e=null;
            try
            {
@@ -104,8 +99,7 @@ public class FrameTEXTTest extends AbstractTestCase
            assertNull(e);
        }
 
-       public void testID3Specificv24() throws Exception
-       {
+       public void testID3Specificv24() {
            Exception e=null;
            try
            {

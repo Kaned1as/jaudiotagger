@@ -65,7 +65,7 @@ public class FlacHeaderTest extends TestCase
 
             //Image
             MetadataBlockDataPicture image = tag.getImages().get(0);
-            assertEquals((int) PictureTypes.DEFAULT_ID, (int) image.getPictureType());
+            assertEquals((int) PictureTypes.DEFAULT_ID, image.getPictureType());
             assertEquals("image/png", image.getMimeType());
             assertFalse(image.isImageUrl());
             assertEquals("", image.getImageUrl());
@@ -78,7 +78,7 @@ public class FlacHeaderTest extends TestCase
 
             //Image Link
             image = tag.getImages().get(1);
-            assertEquals(7, (int) image.getPictureType());
+            assertEquals(7, image.getPictureType());
             assertEquals("-->", image.getMimeType());
             assertTrue(image.isImageUrl());
             assertEquals("coverart.gif", new String(image.getImageData(), 0, image.getImageData().length, Charset.forName("ISO-8859-1")));
@@ -89,7 +89,7 @@ public class FlacHeaderTest extends TestCase
             f.commit();
             f = AudioFileIO.read(testFile);
             image = tag.getImages().get(2);
-            assertEquals(3, (int) image.getPictureType());
+            assertEquals(3, image.getPictureType());
             assertEquals("-->", image.getMimeType());
             assertTrue(image.isImageUrl());
             assertEquals("../testdata/coverart.jpg", new String(image.getImageData(), 0, image.getImageData().length, Charset.forName("ISO-8859-1")));

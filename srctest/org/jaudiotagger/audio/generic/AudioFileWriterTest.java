@@ -38,26 +38,26 @@ public class AudioFileWriterTest extends TestCase {
     }
 
     @Override
-    protected void tearDown() throws Exception {
+    protected void tearDown() {
         if (audioFile.getFile().exists()) {
             audioFile.getFile().delete();
         }
     }
 
-    public void testSizeHasIncreased() throws CannotWriteException, IOException, InterruptedException {
+    public void testSizeHasIncreased() throws CannotWriteException {
         sizeHasChanged(200);
     }
 
-    public void testSizeHasDecreased() throws CannotWriteException, IOException, InterruptedException {
+    public void testSizeHasDecreased() throws CannotWriteException {
         sizeHasChanged(-200);
     }
 
-    public void testSizeHasIncreasedWithFileIdentityPreserved() throws CannotWriteException, IOException, InterruptedException {
+    public void testSizeHasIncreasedWithFileIdentityPreserved() throws CannotWriteException {
         TagOptionSingleton.getInstance().setPreserveFileIdentity(true);
         sizeHasChanged(200);
     }
 
-    public void testSizeHasDecreasedWithFileIdentityPreserved() throws CannotWriteException, IOException, InterruptedException {
+    public void testSizeHasDecreasedWithFileIdentityPreserved() throws CannotWriteException {
         TagOptionSingleton.getInstance().setPreserveFileIdentity(true);
         sizeHasChanged(-200);
     }
@@ -141,12 +141,12 @@ public class AudioFileWriterTest extends TestCase {
         }
 
         @Override
-        protected void deleteTag(final Tag tag, final RandomAccessFile raf, final RandomAccessFile tempRaf) throws CannotReadException, CannotWriteException, IOException {
+        protected void deleteTag(final Tag tag, final RandomAccessFile raf, final RandomAccessFile tempRaf) {
             // not implemented
         }
 
         @Override
-        protected void writeTag(final AudioFile audioFile, final Tag tag, final RandomAccessFile raf, final RandomAccessFile rafTemp) throws CannotReadException, CannotWriteException, IOException {
+        protected void writeTag(final AudioFile audioFile, final Tag tag, final RandomAccessFile raf, final RandomAccessFile rafTemp) throws IOException {
             // dummy code, just copy from raf to rafTemp
             final long length = raf.length();
             raf.getChannel().transferTo(0, length, rafTemp.getChannel());

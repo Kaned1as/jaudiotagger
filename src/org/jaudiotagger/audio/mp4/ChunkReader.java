@@ -9,9 +9,8 @@ import java.util.Arrays;
 /**
  * This class is part of JCodec ( www.jcodec.org ) This software is distributed
  * under FreeBSD License
- * 
- * @author The JCodec project
  *
+ * @author The JCodec project
  */
 public class ChunkReader {
     private int curChunk;

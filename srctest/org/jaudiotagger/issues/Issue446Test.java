@@ -36,7 +36,7 @@ public class Issue446Test extends AbstractTestCase
         Iterator<AbstractID3v2Frame> i = v24Tag.getFrameOfType("TXXX");
         while(i.hasNext())
         {
-            FrameBodyTXXX fb = (FrameBodyTXXX)((AbstractID3v2Frame)i.next()).getBody();
+            FrameBodyTXXX fb = (FrameBodyTXXX) i.next().getBody();
             if(fb.getDescription().equals("replaygain_track_peak"))
             {
                 System.out.println(fb.getText());

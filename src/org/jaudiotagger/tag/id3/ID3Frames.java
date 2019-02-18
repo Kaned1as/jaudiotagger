@@ -24,14 +24,13 @@ import java.util.TreeSet;
 
 /**
  * Subclasses Defines ID3 frames for their Tag Version
- *
+ * <p>
  * Here we specify how frames are mapped between different Tag Versions
  *
  * @author Paul Taylor
  * @version $Id$
  */
-public abstract class ID3Frames extends AbstractStringStringValuePair
-{
+public abstract class ID3Frames extends AbstractStringStringValuePair {
     /**
      * Holds frames whereby multiple occurences are allowed
      */
@@ -64,21 +63,21 @@ public abstract class ID3Frames extends AbstractStringStringValuePair
 
     /**
      * If file changes discard these frames
+     *
      * @param frameID
      * @return
      */
-    public boolean isDiscardIfFileAltered(String frameID)
-    {
+    public boolean isDiscardIfFileAltered(String frameID) {
         return discardIfFileAlteredFrames.contains(frameID);
     }
 
     /**
      * Are multiple occurrences of frame allowed
+     *
      * @param frameID
      * @return
      */
-    public boolean isMultipleAllowed(String frameID)
-    {
+    public boolean isMultipleAllowed(String frameID) {
         return multipleFrames.contains(frameID);
     }
 
@@ -86,21 +85,19 @@ public abstract class ID3Frames extends AbstractStringStringValuePair
      * @param frameID
      * @return true if frames with this id are part of the specification
      */
-    public boolean isSupportedFrames(String frameID)
-    {
+    public boolean isSupportedFrames(String frameID) {
         return supportedFrames.contains(frameID);
     }
 
-    public TreeSet<String> getSupportedFrames()
-    {
+    public TreeSet<String> getSupportedFrames() {
         return supportedFrames;
     }
+
     /**
      * @param frameID
      * @return true if frames with this id are considered common
      */
-    public boolean isCommon(String frameID)
-    {
+    public boolean isCommon(String frameID) {
         return commonFrames.contains(frameID);
     }
 
@@ -108,8 +105,7 @@ public abstract class ID3Frames extends AbstractStringStringValuePair
      * @param frameID
      * @return true if frames with this id are binary (non textual data)
      */
-    public boolean isBinary(String frameID)
-    {
+    public boolean isBinary(String frameID) {
         return binaryFrames.contains(frameID);
     }
 
@@ -118,8 +114,7 @@ public abstract class ID3Frames extends AbstractStringStringValuePair
      * @param frameID
      * @return true if frame is a known extension
      */
-    public boolean isExtensionFrames(String frameID)
-    {
+    public boolean isExtensionFrames(String frameID) {
         return extensionFrames.contains(frameID);
     }
 
@@ -138,8 +133,7 @@ public abstract class ID3Frames extends AbstractStringStringValuePair
     public static final Map<String, String> forcev24Tov23 = new LinkedHashMap<String, String>();
 
 
-    private static void loadID3v23ID3v24Mapping()
-    {
+    private static void loadID3v23ID3v24Mapping() {
         // Define the mapping from v23 to v24 only maps values where
         // the v23 ID is not a v24 ID and where the translation from v23 to v24
         // ID does not affect the framebody.
@@ -173,8 +167,7 @@ public abstract class ID3Frames extends AbstractStringStringValuePair
 
     }
 
-    private static void loadID3v22ID3v23Mapping()
-    {
+    private static void loadID3v22ID3v23Mapping() {
         Iterator<String> iterator;
         String key;
         String value;
@@ -260,8 +253,7 @@ public abstract class ID3Frames extends AbstractStringStringValuePair
 
         // v23 to v22 The translation is both way
         iterator = convertv22Tov23.keySet().iterator();
-        while (iterator.hasNext())
-        {
+        while (iterator.hasNext()) {
             key = iterator.next();
             value = convertv22Tov23.get(key);
             convertv23Tov22.put(value, key);
@@ -280,8 +272,7 @@ public abstract class ID3Frames extends AbstractStringStringValuePair
         forcev23Tov22.put(ID3v23Frames.FRAME_ID_V3_ATTACHED_PICTURE, ID3v22Frames.FRAME_ID_V2_ATTACHED_PICTURE);
     }
 
-    static
-    {
+    static {
         loadID3v22ID3v23Mapping();
         loadID3v23ID3v24Mapping();
     }

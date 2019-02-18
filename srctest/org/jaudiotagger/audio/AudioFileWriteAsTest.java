@@ -47,8 +47,7 @@ public class AudioFileWriteAsTest extends AbstractTestCase {
         assertEquals(LANGUAGE, af.getTag().getFirst(FieldKey.LANGUAGE));
     }
 
-    public void testWriteAsWithNull() throws Exception
-    {
+    public void testWriteAsWithNull() {
         try {
             AudioFileIO.writeAs(af, null);
         } catch (CannotWriteException e) {

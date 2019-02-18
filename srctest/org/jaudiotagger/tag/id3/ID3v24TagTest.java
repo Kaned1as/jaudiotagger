@@ -238,7 +238,7 @@ public class ID3v24TagTest extends TestCase
         //TODO .. but we need a neater generic method
 
 
-        assertEquals(1,((AbstractID3v2Tag)f.getTag()).getFieldCount());
+        assertEquals(1, f.getTag().getFieldCount());
         tagFields = f.getTag().getFields(FieldKey.ALBUM_ARTIST_SORT);
         assertEquals(1,tagFields.size());
         f.commit();
@@ -248,7 +248,7 @@ public class ID3v24TagTest extends TestCase
         assertEquals("artist2",f.getTag().getValue(FieldKey.ALBUM_ARTIST_SORT,1));
         assertEquals(1,f.getTag().getFieldCount());
         assertEquals(2,f.getTag().getFieldCountIncludingSubValues());
-        assertEquals(1,((AbstractID3v2Tag)f.getTag()).getFieldCount());
+        assertEquals(1, f.getTag().getFieldCount());
         tagFields = f.getTag().getFields(FieldKey.ALBUM_ARTIST_SORT);
         assertEquals(1,tagFields.size());
     }
@@ -318,14 +318,14 @@ public class ID3v24TagTest extends TestCase
         f.getTag().addField(FieldKey.URL_OFFICIAL_RELEASE_SITE,"http://www,test.org");
         assertEquals(1,f.getTag().getFields(FieldKey.URL_OFFICIAL_RELEASE_SITE).size());
         assertEquals(1,f.getTag().getFieldCount());
-        assertEquals(1,((AbstractID3v2Tag)f.getTag()).getFieldCount());
+        assertEquals(1, f.getTag().getFieldCount());
         tagFields = f.getTag().getFields(FieldKey.URL_OFFICIAL_RELEASE_SITE);
         //assertEquals(1,tagFields.size());
         f.commit();
         f = AudioFileIO.read(testFile);
         assertEquals(1,f.getTag().getFields(FieldKey.URL_OFFICIAL_RELEASE_SITE).size());
         assertEquals(1,f.getTag().getFieldCount());
-        assertEquals(1,((AbstractID3v2Tag)f.getTag()).getFieldCount());
+        assertEquals(1, f.getTag().getFieldCount());
         tagFields = f.getTag().getFields(FieldKey.URL_OFFICIAL_RELEASE_SITE);
         assertEquals(1,tagFields.size());
     }

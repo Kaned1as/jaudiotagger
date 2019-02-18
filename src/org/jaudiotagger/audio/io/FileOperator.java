@@ -30,11 +30,11 @@ import java.nio.channels.FileChannel;
  * source} and {@linkplain Okio#sink(java.io.File) file sink} this class offers:
  *
  * <ul>
- *   <li><strong>Read/write:</strong> read and write using the same operator.
- *   <li><strong>Random access:</strong> access any position within the file.
- *   <li><strong>Shared channels:</strong> read and write a file channel that's shared between
- *       multiple operators. Note that although the underlying {@code FileChannel} may be shared,
- *       each {@code FileOperator} should not be.
+ * <li><strong>Read/write:</strong> read and write using the same operator.
+ * <li><strong>Random access:</strong> access any position within the file.
+ * <li><strong>Shared channels:</strong> read and write a file channel that's shared between
+ * multiple operators. Note that although the underlying {@code FileChannel} may be shared,
+ * each {@code FileOperator} should not be.
  * </ul>
  */
 @SuppressWarnings("unused")
@@ -49,7 +49,9 @@ public final class FileOperator {
         this.fileChannel = fileChannel;
     }
 
-    /** Write {@code byteCount} bytes from {@code source} to the file at {@code pos}. */
+    /**
+     * Write {@code byteCount} bytes from {@code source} to the file at {@code pos}.
+     */
     public void write(long pos, Buffer source, long byteCount) throws IOException {
         if (byteCount < 0 || byteCount > source.size()) {
             throw new IndexOutOfBoundsException();

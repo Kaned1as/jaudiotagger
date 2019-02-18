@@ -1,17 +1,17 @@
 /*
  * Entagged Audio Tag library
  * Copyright (c) 2003-2005 Raphaël Slinckx <raphael@slinckx.net>
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- *  
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -94,8 +94,7 @@ import java.util.logging.Logger;
  * |--- mdat
  * </pre>
  */
-public class Mp4TagWriter
-{
+public class Mp4TagWriter {
     // Logger Object
     public static Logger logger = Logger.getLogger("org.jaudiotagger.tag.mp4");
 
@@ -111,8 +110,7 @@ public class Mp4TagWriter
      * @throws CannotWriteException
      * @throws IOException
      */
-    public void write(Tag tag, RandomAccessFile raf, RandomAccessFile rafTemp) throws CannotWriteException, IOException
-    {
+    public void write(Tag tag, RandomAccessFile raf, RandomAccessFile rafTemp) throws CannotWriteException, IOException {
         logger.config("Started writing tag data");
         try (FileChannel fi = raf.getChannel();
              FileChannel fo = rafTemp.getChannel()) {
@@ -163,16 +161,12 @@ public class Mp4TagWriter
      * @param rafTemp
      * @throws IOException
      */
-    public void delete(RandomAccessFile raf, RandomAccessFile rafTemp) throws IOException
-    {
+    public void delete(RandomAccessFile raf, RandomAccessFile rafTemp) throws IOException {
         Mp4Tag tag = new Mp4Tag();
 
-        try
-        {
+        try {
             write(tag, raf, rafTemp);
-        }
-        catch (CannotWriteException cwe)
-        {
+        } catch (CannotWriteException cwe) {
             throw new IOException(cwe.getMessage());
         }
     }

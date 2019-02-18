@@ -1,22 +1,21 @@
 /**
- *  @author : Paul Taylor
- *
- *  Version @version:$Id$
- *
- *  MusicTag Copyright (C)2003,2004
- *
- *  This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser
- *  General Public  License as published by the Free Software Foundation; either version 2.1 of the License,
- *  or (at your option) any later version.
- *
- *  This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
- *  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU Lesser General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public License along with this library; if not,
- *  you can get a copy from http://www.opensource.org/licenses/lgpl-license.php or write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- *
+ * @author : Paul Taylor
+ * <p>
+ * Version @version:$Id$
+ * <p>
+ * MusicTag Copyright (C)2003,2004
+ * <p>
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser
+ * General Public  License as published by the Free Software Foundation; either version 2.1 of the License,
+ * or (at your option) any later version.
+ * <p>
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not,
+ * you can get a copy from http://www.opensource.org/licenses/lgpl-license.php or write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 package org.jaudiotagger.logging;
 
@@ -27,10 +26,9 @@ import java.text.StringCharacterIterator;
  * For Formatting the metadata contents of a file in an XML format
  *
  * This could provide the basis of a representation of a files metadata, which can then be manipulated to
-* to create technical reports.
-*/
-public class XMLTagDisplayFormatter extends AbstractTagDisplayFormatter
-{
+ * to create technical reports.
+ */
+public class XMLTagDisplayFormatter extends AbstractTagDisplayFormatter {
     private static XMLTagDisplayFormatter formatter;
 
     protected static final String xmlOpenStart = "<";
@@ -44,8 +42,7 @@ public class XMLTagDisplayFormatter extends AbstractTagDisplayFormatter
 
     StringBuffer sb = new StringBuffer();
 
-    public XMLTagDisplayFormatter()
-    {
+    public XMLTagDisplayFormatter() {
 
     }
 
@@ -54,13 +51,11 @@ public class XMLTagDisplayFormatter extends AbstractTagDisplayFormatter
      * @param xmlName
      * @return
      */
-    public static String xmlOpen(String xmlName)
-    {
+    public static String xmlOpen(String xmlName) {
         return xmlOpenStart + xmlName + xmlOpenEnd;
     }
 
-    public static String xmlOpenHeading(String name, String data)
-    {
+    public static String xmlOpenHeading(String name, String data) {
         return (xmlOpen(name + " id=\"" + data + "\""));
     }
 
@@ -71,20 +66,15 @@ public class XMLTagDisplayFormatter extends AbstractTagDisplayFormatter
      * @param xmlData
      * @return
      */
-    public static String xmlCData(String xmlData)
-    {
+    public static String xmlCData(String xmlData) {
         char tempChar;
         StringBuffer replacedString = new StringBuffer();
-        for (int i = 0; i < xmlData.length(); i++)
-        {
+        for (int i = 0; i < xmlData.length(); i++) {
             tempChar = xmlData.charAt(i);
-            if ((Character.isLetterOrDigit(tempChar)) || (Character.isSpaceChar(tempChar)))
-            {
+            if ((Character.isLetterOrDigit(tempChar)) || (Character.isSpaceChar(tempChar))) {
                 replacedString.append(tempChar);
-            }
-            else
-            {
-                replacedString.append("&#x").append(Integer.toString(Character.codePointAt(xmlData,i),16));
+            } else {
+                replacedString.append("&#x").append(Integer.toString(Character.codePointAt(xmlData, i), 16));
             }
         }
         return xmlCDataTagOpen + replacedString + xmlCDataTagClose;
@@ -95,66 +85,52 @@ public class XMLTagDisplayFormatter extends AbstractTagDisplayFormatter
      * @param xmlName
      * @return
      */
-    public static String xmlClose(String xmlName)
-    {
+    public static String xmlClose(String xmlName) {
         return xmlCloseStart + xmlName + xmlCloseEnd;
     }
 
-    public static String xmlSingleTag(String data)
-    {
+    public static String xmlSingleTag(String data) {
         return xmlOpenStart + data + xmlSingleTagClose;
     }
 
-    public static String xmlFullTag(String xmlName, String data)
-    {
+    public static String xmlFullTag(String xmlName, String data) {
         return xmlOpen(xmlName) + xmlCData(data) + xmlClose(xmlName);
     }
 
 
-    public void openHeadingElement(String type, String value)
-    {
-        if (value.length() == 0)
-        {
+    public void openHeadingElement(String type, String value) {
+        if (value.length() == 0) {
             sb.append(xmlOpen(type));
-        }
-        else
-        {
+        } else {
             sb.append(xmlOpenHeading(type, replaceXMLCharacters(value)));
         }
     }
 
-    public void openHeadingElement(String type, boolean value)
-    {
+    public void openHeadingElement(String type, boolean value) {
         openHeadingElement(type, String.valueOf(value));
     }
 
-    public void openHeadingElement(String type, int value)
-    {
+    public void openHeadingElement(String type, int value) {
         openHeadingElement(type, String.valueOf(value));
     }
 
-    public void closeHeadingElement(String type)
-    {
+    public void closeHeadingElement(String type) {
         sb.append(xmlClose(type));
     }
 
-    public void addElement(String type, String value)
-    {
+    public void addElement(String type, String value) {
         sb.append(xmlFullTag(type, replaceXMLCharacters(value)));
     }
 
-    public void addElement(String type, int value)
-    {
+    public void addElement(String type, int value) {
         addElement(type, String.valueOf(value));
     }
 
-    public void addElement(String type, boolean value)
-    {
+    public void addElement(String type, boolean value) {
         addElement(type, String.valueOf(value));
     }
 
-    public String toString()
-    {
+    public String toString() {
         return sb.toString();
     }
 
@@ -165,27 +141,24 @@ public class XMLTagDisplayFormatter extends AbstractTagDisplayFormatter
      * @param xmlData
      * @return
      */
-    public static String replaceXMLCharacters(String xmlData)
-    {
+    public static String replaceXMLCharacters(String xmlData) {
         StringBuffer sb = new StringBuffer();
         StringCharacterIterator sCI = new StringCharacterIterator(xmlData);
-        for (char c = sCI.first(); c != CharacterIterator.DONE; c = sCI.next())
-        {
-            switch (c)
-            {
-                case'&':
+        for (char c = sCI.first(); c != CharacterIterator.DONE; c = sCI.next()) {
+            switch (c) {
+                case '&':
                     sb.append("&amp;");
                     break;
-                case'<':
+                case '<':
                     sb.append("&lt;");
                     break;
-                case'>':
+                case '>':
                     sb.append("&gt;");
                     break;
-                case'"':
+                case '"':
                     sb.append("&quot;");
                     break;
-                case'\'':
+                case '\'':
                     sb.append("&apos;");
                     break;
 

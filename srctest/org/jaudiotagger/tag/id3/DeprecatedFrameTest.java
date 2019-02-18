@@ -56,7 +56,7 @@ public class DeprecatedFrameTest extends AbstractTestCase
         assertTrue(v24frame.getBody() instanceof FrameBodyDeprecated);
 
         //Save as V23
-        ID3v23Tag v23Tag = new ID3v23Tag((AbstractID3v2Tag) v24Tag);
+        ID3v23Tag v23Tag = new ID3v23Tag(v24Tag);
         mp3File.setID3v2Tag(v23Tag);
         mp3File.save();
 
@@ -76,7 +76,7 @@ public class DeprecatedFrameTest extends AbstractTestCase
         assertTrue(v24frame.getBody() instanceof FrameBodyDeprecated);
 
         //Save as V23
-        ID3v23Tag v23Tag = new ID3v23Tag((AbstractID3v2Tag) v24Tag);
+        ID3v23Tag v23Tag = new ID3v23Tag(v24Tag);
         mp3File.setID3v2Tag(v23Tag);
         mp3File.save();
 

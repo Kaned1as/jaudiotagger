@@ -24,8 +24,7 @@ import static org.jaudiotagger.audio.SupportedFileFormat.*;
  */
 public class SupportedFileFormatTest extends TestCase
 {
-    public void testFromExtension() throws Exception
-    {
+    public void testFromExtension() {
         Map<String, SupportedFileFormat> expectedMap = new HashMap<>();
         expectedMap.put("ogg", OGG);
         expectedMap.put("mp3", MP3);

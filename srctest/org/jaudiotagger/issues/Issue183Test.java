@@ -13,8 +13,7 @@ import java.io.File;
  */
 public class Issue183Test extends AbstractTestCase
 {
-    public void testReadCorruptOgg() throws Exception
-    {
+    public void testReadCorruptOgg() {
         File orig = new File("testdata", "test508.ogg");
         if (!orig.isFile())
         {

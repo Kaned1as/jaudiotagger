@@ -14,36 +14,28 @@ import java.util.logging.Level;
  * Represents a data type that allow multiple Strings but they should be paired as key values, i.e should be 2,4,6..
  * But keys are not unique so we don't store as a map, so could have same key pointing to two different values
  * such as two ENGINEER keys
- *
  */
-public class PairedTextEncodedStringNullTerminated extends AbstractDataType
-{
-    public PairedTextEncodedStringNullTerminated(String identifier, AbstractTagFrameBody frameBody)
-    {
+public class PairedTextEncodedStringNullTerminated extends AbstractDataType {
+    public PairedTextEncodedStringNullTerminated(String identifier, AbstractTagFrameBody frameBody) {
         super(identifier, frameBody);
         value = new PairedTextEncodedStringNullTerminated.ValuePairs();
     }
 
-    public PairedTextEncodedStringNullTerminated(TextEncodedStringSizeTerminated object)
-    {
+    public PairedTextEncodedStringNullTerminated(TextEncodedStringSizeTerminated object) {
         super(object);
         value = new PairedTextEncodedStringNullTerminated.ValuePairs();
     }
 
-    public PairedTextEncodedStringNullTerminated(PairedTextEncodedStringNullTerminated object)
-    {
+    public PairedTextEncodedStringNullTerminated(PairedTextEncodedStringNullTerminated object) {
         super(object);
     }
 
-    public boolean equals(Object obj)
-    {
-        if (obj == this)
-        {
+    public boolean equals(Object obj) {
+        if (obj == this) {
             return true;
         }
 
-        if (!(obj instanceof PairedTextEncodedStringNullTerminated))
-        {
+        if (!(obj instanceof PairedTextEncodedStringNullTerminated)) {
             return false;
         }
 
@@ -52,13 +44,12 @@ public class PairedTextEncodedStringNullTerminated extends AbstractDataType
         return EqualsUtil.areEqual(value, that.value);
     }
 
-      /**
+    /**
      * Returns the size in bytes of this dataType when written to file
      *
      * @return size of this dataType
      */
-    public int getSize()
-    {
+    public int getSize() {
         return size;
     }
 
@@ -67,13 +58,10 @@ public class PairedTextEncodedStringNullTerminated extends AbstractDataType
      *
      * @return
      */
-    public boolean canBeEncoded()
-    {
-        for (Pair<String, String> entry : ((ValuePairs) value).mapping)
-        {
+    public boolean canBeEncoded() {
+        for (Pair<String, String> entry : ((ValuePairs) value).mapping) {
             TextEncodedStringNullTerminated next = new TextEncodedStringNullTerminated(identifier, frameBody, entry.getValue());
-            if (!next.canBeEncoded())
-            {
+            if (!next.canBeEncoded()) {
                 return false;
             }
         }
@@ -89,66 +77,53 @@ public class PairedTextEncodedStringNullTerminated extends AbstractDataType
      * @param offset in the array to start reading from
      * @throws InvalidDataTypeException if unable to find any null terminated Strings
      */
-    public void readByteArray(byte[] arr, int offset) throws InvalidDataTypeException
-    {
+    public void readByteArray(byte[] arr, int offset) throws InvalidDataTypeException {
         logger.finer("Reading PairTextEncodedStringNullTerminated from array from offset:" + offset);
         //Continue until unable to read a null terminated String
-        while (true)
-        {
-            try
-            {
+        while (true) {
+            try {
                 //Read Key
                 TextEncodedStringNullTerminated key = new TextEncodedStringNullTerminated(identifier, frameBody);
                 key.readByteArray(arr, offset);
-                size   += key.getSize();
+                size += key.getSize();
                 offset += key.getSize();
-                if (key.getSize() == 0)
-                {
+                if (key.getSize() == 0) {
                     break;
                 }
 
-                try
-                {
+                try {
                     //Read Value
                     TextEncodedStringNullTerminated result = new TextEncodedStringNullTerminated(identifier, frameBody);
                     result.readByteArray(arr, offset);
-                    size   += result.getSize();
+                    size += result.getSize();
                     offset += result.getSize();
-                    if (result.getSize() == 0)
-                    {
+                    if (result.getSize() == 0) {
                         break;
                     }
                     //Add to value
-                    ((ValuePairs) value).add((String) key.getValue(),(String) result.getValue());
-                }
-                catch (InvalidDataTypeException idte)
-                {
+                    ((ValuePairs) value).add((String) key.getValue(), (String) result.getValue());
+                } catch (InvalidDataTypeException idte) {
                     //Value may not be null terminated if it is the last value
                     //Read Value
-                    if(offset>=arr.length)
-                    {
+                    if (offset >= arr.length) {
                         break;
                     }
                     TextEncodedStringSizeTerminated result = new TextEncodedStringSizeTerminated(identifier, frameBody);
                     result.readByteArray(arr, offset);
-                    size   += result.getSize();
+                    size += result.getSize();
                     offset += result.getSize();
-                    if (result.getSize() == 0)
-                    {
+                    if (result.getSize() == 0) {
                         break;
                     }
                     //Add to value
-                    ((ValuePairs) value).add((String) key.getValue(),(String) result.getValue());
+                    ((ValuePairs) value).add((String) key.getValue(), (String) result.getValue());
                     break;
                 }
-            }
-            catch (InvalidDataTypeException idte)
-            {
+            } catch (InvalidDataTypeException idte) {
                 break;
             }
 
-            if (size == 0)
-            {
+            if (size == 0) {
                 logger.warning("No null terminated Strings found");
                 throw new InvalidDataTypeException("No null terminated Strings found");
             }
@@ -162,16 +137,13 @@ public class PairedTextEncodedStringNullTerminated extends AbstractDataType
      *
      * @return byteBuffer that should be written to file to persist this dataType.
      */
-    public byte[] writeByteArray()
-    {
+    public byte[] writeByteArray() {
         logger.finer("Writing PairTextEncodedStringNullTerminated");
 
         int localSize = 0;
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        try
-        {
-            for (Pair<String, String> pair : ((ValuePairs) value).mapping)
-            {
+        try {
+            for (Pair<String, String> pair : ((ValuePairs) value).mapping) {
                 {
                     TextEncodedStringNullTerminated next = new TextEncodedStringNullTerminated(identifier, frameBody, pair.getKey());
                     buffer.write(next.writeByteArray());
@@ -183,9 +155,7 @@ public class PairedTextEncodedStringNullTerminated extends AbstractDataType
                     localSize += next.getSize();
                 }
             }
-        }
-        catch (IOException ioe)
-        {
+        } catch (IOException ioe) {
             //This should never happen because the write is internal with the JVM it is not to a file
             logger.log(Level.SEVERE, "IOException in MultipleTextEncodedStringNullTerminated when writing byte array", ioe);
             throw new RuntimeException(ioe);
@@ -198,35 +168,31 @@ public class PairedTextEncodedStringNullTerminated extends AbstractDataType
         return buffer.toByteArray();
     }
 
-    public String toString()
-    {
+    public String toString() {
         return value.toString();
     }
 
     /**
      * This holds the values held by this PairedTextEncodedDataType, always held as pairs of values
      */
-    public static class ValuePairs
-    {
+    public static class ValuePairs {
         private List<Pair<String, String>> mapping = new ArrayList<>();
 
-        public ValuePairs()
-        {
+        public ValuePairs() {
             super();
         }
 
-        public void add(Pair pair)
-        {
+        public void add(Pair pair) {
             mapping.add(pair);
         }
+
         /**
          * Add String Data type to the value list
          *
          * @param value to add to the list
          */
-        public void add(String key, String value)
-        {
-            mapping.add(new Pair(key,value));
+        public void add(String key, String value) {
+            mapping.add(new Pair(key, value));
         }
 
 
@@ -235,16 +201,14 @@ public class PairedTextEncodedStringNullTerminated extends AbstractDataType
          *
          * @return the list of values
          */
-        public List<Pair<String, String>> getMapping()
-        {
+        public List<Pair<String, String>> getMapping() {
             return mapping;
         }
 
         /**
          * @return no of values
          */
-        public int getNumberOfValues()
-        {
+        public int getNumberOfValues() {
             return mapping.size();
         }
 
@@ -253,15 +217,12 @@ public class PairedTextEncodedStringNullTerminated extends AbstractDataType
          *
          * @return a string representation of the value
          */
-        public String toString()
-        {
+        public String toString() {
             StringBuffer sb = new StringBuffer();
-            for(Pair<String, String> next:mapping)
-            {
-                sb.append(next.getKey()+':'+next.getValue()+',');
+            for (Pair<String, String> next : mapping) {
+                sb.append(next.getKey() + ':' + next.getValue() + ',');
             }
-            if(sb.length()>0)
-            {
+            if (sb.length() > 0) {
                 sb.setLength(sb.length() - 1);
             }
             return sb.toString();
@@ -270,20 +231,16 @@ public class PairedTextEncodedStringNullTerminated extends AbstractDataType
         /**
          * @return no of values
          */
-        public int getNumberOfPairs()
-        {
+        public int getNumberOfPairs() {
             return mapping.size();
         }
 
-        public boolean equals(Object obj)
-        {
-            if (obj == this)
-            {
+        public boolean equals(Object obj) {
+            if (obj == this) {
                 return true;
             }
 
-            if (!(obj instanceof ValuePairs))
-            {
+            if (!(obj instanceof ValuePairs)) {
                 return false;
             }
 
@@ -293,8 +250,7 @@ public class PairedTextEncodedStringNullTerminated extends AbstractDataType
         }
     }
 
-    public ValuePairs getValue()
-    {
+    public ValuePairs getValue() {
         return (ValuePairs) value;
     }
 }

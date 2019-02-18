@@ -143,10 +143,7 @@ public class Header {
             return false;
         Header other = (Header) obj;
         if (fourcc == null) {
-            if (other.fourcc != null)
-                return false;
-        } else if (!fourcc.equals(other.fourcc))
-            return false;
-        return true;
+            return other.fourcc == null;
+        } else return fourcc.equals(other.fourcc);
     }
 }

@@ -184,7 +184,7 @@ public class FrameTSO2Test extends AbstractTestCase
         ID3v23Tag tag = new ID3v23Tag();
         tag.setFrame(FrameTSO2Test.getV23InitialisedFrame());
 
-        mp3File.setID3v2TagOnly((ID3v23Tag) tag);
+        mp3File.setID3v2TagOnly(tag);
         mp3File.save();
 
         //Reload and convert from v23 to v22 and save
@@ -214,7 +214,7 @@ public class FrameTSO2Test extends AbstractTestCase
         ((FrameBodyTSO2) id3v22frame.getBody()).setText(FrameBodyTSO2Test.ALBUM_ARTIST_SORT);
         tag.setFrame(id3v22frame);
 
-        mp3File.setID3v2TagOnly((ID3v22Tag) tag);
+        mp3File.setID3v2TagOnly(tag);
         mp3File.save();
 
         //Reload and convert from v22 to v24 and save

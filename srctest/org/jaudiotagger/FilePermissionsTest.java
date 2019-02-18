@@ -78,7 +78,7 @@ public class FilePermissionsTest {
     }
 
     private static void setFieldAndCommit(File testFile, boolean performPreCheck) throws CannotReadException,
-            IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException, FieldDataInvalidException,
+            IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException,
             CannotWriteException {
         TagOptionSingleton.getInstance().setCheckIsWritable(performPreCheck);
         try {

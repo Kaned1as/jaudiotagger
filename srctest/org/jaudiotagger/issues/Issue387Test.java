@@ -14,8 +14,7 @@ import java.io.RandomAccessFile;
  */
 public class Issue387Test extends AbstractTestCase
 {
-    public void testIssue() throws Exception
-    {
+    public void testIssue() {
         Exception caught = null;
         try
         {

@@ -12,8 +12,7 @@ import java.io.File;
  */
 public class Issue468Test extends AbstractTestCase
 {
-    public void testReadFlac() throws Exception
-    {
+    public void testReadFlac() {
         Exception ex=null;
         try
         {

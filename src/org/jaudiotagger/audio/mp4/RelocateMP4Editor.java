@@ -8,8 +8,6 @@ import org.jcodec.containers.mp4.boxes.Box;
 import org.jcodec.containers.mp4.boxes.Header;
 import org.jcodec.containers.mp4.boxes.MovieBox;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -17,16 +15,15 @@ import java.util.logging.Logger;
 
 /**
  * Parses MP4 file, applies the edit and saves the result in a new file.
- *
+ * <p>
  * Relocates the movie header to the end of the file if necessary.
- * 
+ *
  * @author The JCodec project
- * 
  */
 public class RelocateMP4Editor {
 
     public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.mp4.writer");
-    
+
     public void modifyOrRelocate(FileChannel src, MovieBox edit) throws IOException {
         boolean modify = new InplaceMP4Editor().modify(src, edit);
         if (!modify)
@@ -38,7 +35,7 @@ public class RelocateMP4Editor {
         ByteBuffer moovBuffer = fetchBox(fi, moovAtom);
         MovieBox moovBox = (MovieBox) parseBox(moovBuffer);
 
-        for (Box box: edit.getBoxes()) {
+        for (Box box : edit.getBoxes()) {
             moovBox.replaceBox(box);
         }
 

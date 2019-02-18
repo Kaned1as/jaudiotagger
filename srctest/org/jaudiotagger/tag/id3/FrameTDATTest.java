@@ -19,8 +19,7 @@ import java.io.File;
  */
 public class FrameTDATTest extends AbstractTestCase
 {
-    public void testID3Specific() throws Exception
-    {
+    public void testID3Specific() {
         Exception e=null;
         try
         {
@@ -43,8 +42,7 @@ public class FrameTDATTest extends AbstractTestCase
         assertNull(e);
     }
 
-    public void testID3SpecificWithYearAndTime() throws Exception
-    {
+    public void testID3SpecificWithYearAndTime() {
         Exception e=null;
         try
         {
@@ -97,8 +95,7 @@ public class FrameTDATTest extends AbstractTestCase
         assertNull(e);
     }
 
-    public void testConvertingPartialDate() throws Exception
-    {
+    public void testConvertingPartialDate() {
         Exception e=null;
         try
         {

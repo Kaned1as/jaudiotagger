@@ -42,8 +42,7 @@ public class NetworkTest extends AbstractTestCase
         }
     }
 
-    public void testNetworkSpeed() throws Exception
-    {
+    public void testNetworkSpeed() {
         Exception caught = null;
         try
         {

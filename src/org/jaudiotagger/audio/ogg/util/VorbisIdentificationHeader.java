@@ -1,17 +1,17 @@
 /*
  * Entagged Audio Tag library
  * Copyright (c) 2003-2005 Raphaël Slinckx <raphael@slinckx.net>
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- *  
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -26,13 +26,13 @@ import java.util.logging.Logger;
 
 /**
  * Vorbis Identification header
- *
+ * <p>
  * From http://xiph.org/vorbis/doc/Vorbis_I_spec.html#id326710
- *
+ * <p>
  * The identification header is a short header of only a few fields used to declare the stream definitively as Vorbis,
  * and provide a few externally relevant pieces of information about the audio stream. The identification header is
  * coded as follows:
- *
+ * <p>
  * 1) [vorbis_version] = read 32 bits as unsigned integer
  * 2) [audio_channels] = read 8 bit integer as unsigned
  * 3) [audio_sample_rate] = read 32 bits as unsigned integer
@@ -42,14 +42,13 @@ import java.util.logging.Logger;
  * 7) [blocksize_0] = 2 exponent (read 4 bits as unsigned integer)
  * 8) [blocksize_1] = 2 exponent (read 4 bits as unsigned integer)
  * 9) [framing_flag] = read one bit
- *
+ * <p>
  * $Id$
  *
  * @author Raphael Slinckx (KiKiDonK)
  * @version 16 d�cembre 2003
  */
-public class VorbisIdentificationHeader implements VorbisHeader
-{
+public class VorbisIdentificationHeader implements VorbisHeader {
     // Logger Object
     public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.ogg.atom");
 
@@ -78,58 +77,48 @@ public class VorbisIdentificationHeader implements VorbisHeader
     public static final int FIELD_FRAMING_FLAG_LENGTH = 1;
 
 
-    public VorbisIdentificationHeader(byte[] vorbisData)
-    {
+    public VorbisIdentificationHeader(byte[] vorbisData) {
         decodeHeader(vorbisData);
     }
 
 
-    public int getChannelNumber()
-    {
+    public int getChannelNumber() {
         return audioChannels;
     }
 
 
-    public String getEncodingType()
-    {
+    public String getEncodingType() {
         return VorbisVersion.values()[vorbisVersion].toString();
     }
 
 
-    public int getSamplingRate()
-    {
+    public int getSamplingRate() {
         return audioSampleRate;
     }
 
-    public int getNominalBitrate()
-    {
+    public int getNominalBitrate() {
         return bitrateNominal;
     }
 
-    public int getMaxBitrate()
-    {
+    public int getMaxBitrate() {
         return bitrateMaximal;
     }
 
-    public int getMinBitrate()
-    {
+    public int getMinBitrate() {
         return bitrateMinimal;
     }
 
-    public boolean isValid()
-    {
+    public boolean isValid() {
         return isValid;
     }
 
 
-    public void decodeHeader(byte[] b)
-    {
+    public void decodeHeader(byte[] b) {
         int packetType = b[FIELD_PACKET_TYPE_POS];
         logger.fine("packetType" + packetType);
         String vorbis = new String(b, VorbisHeader.FIELD_CAPTURE_PATTERN_POS, VorbisHeader.FIELD_CAPTURE_PATTERN_LENGTH, Charset.forName("ISO-8859-1"));
 
-        if (packetType == VorbisPacketType.IDENTIFICATION_HEADER.getType() && vorbis.equals(CAPTURE_PATTERN))
-        {
+        if (packetType == VorbisPacketType.IDENTIFICATION_HEADER.getType() && vorbis.equals(CAPTURE_PATTERN)) {
             this.vorbisVersion = b[7] + (b[8] << 8) + (b[9] << 16) + (b[10] << 24);
             logger.fine("vorbisVersion" + vorbisVersion);
             this.audioChannels = u(b[FIELD_AUDIO_CHANNELS_POS]);
@@ -147,16 +136,14 @@ public class VorbisIdentificationHeader implements VorbisHeader
 
             int framingFlag = b[FIELD_FRAMING_FLAG_POS];
             logger.fine("framingFlag" + framingFlag);
-            if (framingFlag != 0)
-            {
+            if (framingFlag != 0) {
                 isValid = true;
             }
 
         }
     }
 
-    private int u(int i)
-    {
+    private int u(int i) {
         return i & 0xFF;
     }
 }

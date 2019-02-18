@@ -1,17 +1,17 @@
 /*
  * Entagged Audio Tag library
  * Copyright (c) 2004-2005 Christian Laireiter <liree@web.de>
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- *  
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -27,8 +27,7 @@ import java.math.BigInteger;
  *
  * @author Christian Laireiter
  */
-public final class AudioStreamChunk extends StreamChunk
-{
+public final class AudioStreamChunk extends StreamChunk {
     /**
      * Stores the hex values of codec identifiers to their descriptions. <br>
      */
@@ -102,48 +101,42 @@ public final class AudioStreamChunk extends StreamChunk
      *
      * @param chunkLen Length of the entire chunk (including guid and size)
      */
-    public AudioStreamChunk(final BigInteger chunkLen)
-    {
+    public AudioStreamChunk(final BigInteger chunkLen) {
         super(GUID.GUID_AUDIOSTREAM, chunkLen);
     }
 
     /**
      * @return Returns the averageBytesPerSec.
      */
-    public long getAverageBytesPerSec()
-    {
+    public long getAverageBytesPerSec() {
         return this.averageBytesPerSec;
     }
 
     /**
      * @return Returns the bitsPerSample.
      */
-    public int getBitsPerSample()
-    {
+    public int getBitsPerSample() {
         return this.bitsPerSample;
     }
 
     /**
      * @return Returns the blockAlignment.
      */
-    public long getBlockAlignment()
-    {
+    public long getBlockAlignment() {
         return this.blockAlignment;
     }
 
     /**
      * @return Returns the channelCount.
      */
-    public long getChannelCount()
-    {
+    public long getChannelCount() {
         return this.channelCount;
     }
 
     /**
      * @return Returns the codecData.
      */
-    public byte[] getCodecData()
-    {
+    public byte[] getCodecData() {
         return this.codecData.clone();
     }
 
@@ -154,24 +147,18 @@ public final class AudioStreamChunk extends StreamChunk
      *
      * @return A description for the used codec.
      */
-    public String getCodecDescription()
-    {
+    public String getCodecDescription() {
         final StringBuilder result = new StringBuilder(Long.toHexString(getCompressionFormat()));
         String furtherDesc = " (Unknown)";
-        for (final String[] aCODEC_DESCRIPTIONS : CODEC_DESCRIPTIONS)
-        {
-            if (aCODEC_DESCRIPTIONS[0].equalsIgnoreCase(result.toString()))
-            {
+        for (final String[] aCODEC_DESCRIPTIONS : CODEC_DESCRIPTIONS) {
+            if (aCODEC_DESCRIPTIONS[0].equalsIgnoreCase(result.toString())) {
                 furtherDesc = aCODEC_DESCRIPTIONS[1];
                 break;
             }
         }
-        if (result.length() % 2 == 0)
-        {
+        if (result.length() % 2 == 0) {
             result.insert(0, "0x");
-        }
-        else
-        {
+        } else {
             result.insert(0, "0x0");
         }
         result.append(furtherDesc);
@@ -181,16 +168,14 @@ public final class AudioStreamChunk extends StreamChunk
     /**
      * @return Returns the compressionFormat.
      */
-    public long getCompressionFormat()
-    {
+    public long getCompressionFormat() {
         return this.compressionFormat;
     }
 
     /**
      * @return Returns the errorConcealment.
      */
-    public GUID getErrorConcealment()
-    {
+    public GUID getErrorConcealment() {
         return this.errorConcealment;
     }
 
@@ -201,16 +186,14 @@ public final class AudioStreamChunk extends StreamChunk
      *
      * @return amount of bits per second in kilo bits.
      */
-    public int getKbps()
-    {
+    public int getKbps() {
         return (int) getAverageBytesPerSec() * 8 / 1000;
     }
 
     /**
      * @return Returns the samplingRate.
      */
-    public long getSamplingRate()
-    {
+    public long getSamplingRate() {
         return this.samplingRate;
     }
 
@@ -220,8 +203,7 @@ public final class AudioStreamChunk extends StreamChunk
      *
      * @return <code>true</code> if error concealment is used.
      */
-    public boolean isErrorConcealed()
-    {
+    public boolean isErrorConcealed() {
         return getErrorConcealment().equals(GUID.GUID_AUDIO_ERROR_CONCEALEMENT_INTERLEAVED);
     }
 
@@ -229,8 +211,7 @@ public final class AudioStreamChunk extends StreamChunk
      * {@inheritDoc}
      */
     @Override
-    public String prettyPrint(final String prefix)
-    {
+    public String prettyPrint(final String prefix) {
         final StringBuilder result = new StringBuilder(super.prettyPrint(prefix));
         result.append(prefix).append("  |-> Audio info:").append(Utils.LINE_SEPARATOR);
         result.append(prefix).append("  |  : Bitrate : ").append(getKbps()).append(Utils.LINE_SEPARATOR);
@@ -243,8 +224,7 @@ public final class AudioStreamChunk extends StreamChunk
     /**
      * @param avgeBytesPerSec The averageBytesPerSec to set.
      */
-    public void setAverageBytesPerSec(final long avgeBytesPerSec)
-    {
+    public void setAverageBytesPerSec(final long avgeBytesPerSec) {
         this.averageBytesPerSec = avgeBytesPerSec;
     }
 
@@ -253,8 +233,7 @@ public final class AudioStreamChunk extends StreamChunk
      *
      * @param bps
      */
-    public void setBitsPerSample(final int bps)
-    {
+    public void setBitsPerSample(final int bps) {
         this.bitsPerSample = bps;
     }
 
@@ -263,16 +242,14 @@ public final class AudioStreamChunk extends StreamChunk
      *
      * @param align
      */
-    public void setBlockAlignment(final long align)
-    {
+    public void setBlockAlignment(final long align) {
         this.blockAlignment = align;
     }
 
     /**
      * @param channels The channelCount to set.
      */
-    public void setChannelCount(final long channels)
-    {
+    public void setChannelCount(final long channels) {
         this.channelCount = channels;
     }
 
@@ -281,10 +258,8 @@ public final class AudioStreamChunk extends StreamChunk
      *
      * @param codecSpecificData
      */
-    public void setCodecData(final byte[] codecSpecificData)
-    {
-        if (codecSpecificData == null)
-        {
+    public void setCodecData(final byte[] codecSpecificData) {
+        if (codecSpecificData == null) {
             throw new IllegalArgumentException();
         }
         this.codecData = codecSpecificData.clone();
@@ -293,8 +268,7 @@ public final class AudioStreamChunk extends StreamChunk
     /**
      * @param cFormatCode The compressionFormat to set.
      */
-    public void setCompressionFormat(final long cFormatCode)
-    {
+    public void setCompressionFormat(final long cFormatCode) {
         this.compressionFormat = cFormatCode;
     }
 
@@ -303,16 +277,14 @@ public final class AudioStreamChunk extends StreamChunk
      *
      * @param errConc the type of error concealment the audio stream is stored as.
      */
-    public void setErrorConcealment(final GUID errConc)
-    {
+    public void setErrorConcealment(final GUID errConc) {
         this.errorConcealment = errConc;
     }
 
     /**
      * @param sampRate The samplingRate to set.
      */
-    public void setSamplingRate(final long sampRate)
-    {
+    public void setSamplingRate(final long sampRate) {
         this.samplingRate = sampRate;
     }
 }

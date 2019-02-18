@@ -13,8 +13,7 @@ import java.io.FileNotFoundException;
  */
 public class Issue005Test extends AbstractTestCase
 {
-    public void testReadingNonExistentFile() throws Exception
-    {
+    public void testReadingNonExistentFile() {
         Exception e=null;
         try
         {
@@ -28,8 +27,7 @@ public class Issue005Test extends AbstractTestCase
         assertTrue(e instanceof FileNotFoundException);
     }
 
-    public void testReadingNonExistentFileMp3() throws Exception
-    {
+    public void testReadingNonExistentFileMp3() {
         Exception e=null;
         try
         {
@@ -43,8 +41,7 @@ public class Issue005Test extends AbstractTestCase
         assertTrue(e instanceof FileNotFoundException);
     }
 
-    public void testReadingNonExistentFileFlac() throws Exception
-    {
+    public void testReadingNonExistentFileFlac() {
         Exception e=null;
         try
         {
@@ -60,8 +57,7 @@ public class Issue005Test extends AbstractTestCase
         assertTrue(e instanceof FileNotFoundException);
     }
 
-    public void testReadingNonExistentFileOgg() throws Exception
-    {
+    public void testReadingNonExistentFileOgg() {
         Exception e=null;
         try
         {
@@ -77,8 +73,7 @@ public class Issue005Test extends AbstractTestCase
         assertTrue(e instanceof FileNotFoundException);
     }
 
-    public void testReadingNonExistentFileM4a() throws Exception
-    {
+    public void testReadingNonExistentFileM4a() {
         Exception e=null;
         try
         {
@@ -94,8 +89,7 @@ public class Issue005Test extends AbstractTestCase
         assertTrue(e instanceof FileNotFoundException);
     }
 
-    public void testReadingNonExistentFileWma() throws Exception
-    {
+    public void testReadingNonExistentFileWma() {
         Exception e=null;
         try
         {
@@ -111,8 +105,7 @@ public class Issue005Test extends AbstractTestCase
         assertTrue(e instanceof FileNotFoundException);
     }
 
-    public void testReadingNonExistentFileWav() throws Exception
-    {
+    public void testReadingNonExistentFileWav() {
         Exception e=null;
         try
         {

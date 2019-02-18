@@ -15,26 +15,23 @@ import java.util.logging.LogRecord;
  * within your jre/lib folder and  modify as follows
  * e.g java.util.logging.ConsoleHandler.formatter = org.jaudiotagger.logging.LogFormatter
  */
-public final class LogFormatter extends Formatter
-{
+public final class LogFormatter extends Formatter {
     private boolean isObsfucated = false;
     public static final String ACTION_PERFORMED = "actionPerformed";
 
     // Line separator string.  This is the value of the line.separator
     // property at the moment that the SimpleFormatter was created.
-    private final String lineSeparator = (String) java.security.AccessController.doPrivileged(new sun.security.action.
+    private final String lineSeparator = java.security.AccessController.doPrivileged(new sun.security.action.
             GetPropertyAction("line.separator"));
 
     private final SimpleDateFormat sfDateOut = new SimpleDateFormat("dd/MM/yyyy HH.mm.ss:");
     private final Date date = new Date();
 
-    public LogFormatter()
-    {
+    public LogFormatter() {
 
     }
 
-    public final String format(final LogRecord record)
-    {
+    public final String format(final LogRecord record) {
         final StringBuffer sb = new StringBuffer();
 
         date.setTime(record.getMillis());
@@ -43,16 +40,12 @@ public final class LogFormatter extends Formatter
 
         String recordName;
 
-        if (record.getSourceClassName() != null)
-        {
+        if (record.getSourceClassName() != null) {
             recordName = record.getSourceClassName() + ":" + record.getSourceMethodName();
-        }
-        else
-        {
+        } else {
             recordName = record.getLoggerName() + ":";
         }
-        if (recordName != null)
-        {
+        if (recordName != null) {
             sb.append(recordName);
             sb.append(":");
         }
@@ -62,18 +55,14 @@ public final class LogFormatter extends Formatter
         sb.append(message);
         sb.append(lineSeparator);
 
-        if (record.getThrown() != null)
-        {
-            try
-            {
+        if (record.getThrown() != null) {
+            try {
                 final StringWriter sw = new StringWriter();
                 final PrintWriter pw = new PrintWriter(sw);
                 record.getThrown().printStackTrace(pw);
                 pw.close();
                 sb.append(sw.toString());
-            }
-            catch (Exception ex)
-            {
+            } catch (Exception ex) {
             }
         }
         return sb.toString();

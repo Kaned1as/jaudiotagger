@@ -24,40 +24,32 @@ import org.jaudiotagger.audio.generic.Utils;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.id3.AbstractID3v2Tag;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
 /**
  * Write/delete tag info for Dsf file
  */
-public class DsfFileWriter extends AudioFileWriter2
-{
-    protected void writeTag(Tag tag, FileChannel fc, final String fileName) throws CannotWriteException
-    {
-        try
-        {
+public class DsfFileWriter extends AudioFileWriter2 {
+    protected void writeTag(Tag tag, FileChannel fc, final String fileName) throws CannotWriteException {
+        try {
             DsdChunk dsd = DsdChunk.readChunk(Utils.readFileDataIntoBufferLE(fc, DsdChunk.DSD_HEADER_LENGTH));
-            if (dsd != null)
-            {
-                if (dsd.getMetadataOffset() > 0)
-                {
+            if (dsd != null) {
+                if (dsd.getMetadataOffset() > 0) {
                     fc.position(dsd.getMetadataOffset());
                     ID3Chunk id3Chunk = ID3Chunk.readChunk(Utils.readFileDataIntoBufferLE(fc, (int) (fc.size() - fc.position())));
-                    if (id3Chunk != null)
-                    {
+                    if (id3Chunk != null) {
                         //Remove Existing tag
                         fc.position(dsd.getMetadataOffset());
                         final ByteBuffer bb = convert((AbstractID3v2Tag) tag);
                         fc.write(bb);
-                    }
-                    else
-                    {
+                    } else {
                         throw new CannotWriteException(fileName + "Could not find existing ID3v2 Tag");
                     }
-                }
-                else
-                {
+                } else {
                     //Write new tag and new offset and size
                     fc.position(fc.size());
                     dsd.setMetadataOffset(fc.size());
@@ -68,9 +60,7 @@ public class DsfFileWriter extends AudioFileWriter2
                     fc.write(dsd.write());
                 }
             }
-        }
-        catch(IOException ioe)
-        {
+        } catch (IOException ioe) {
             throw new CannotWriteException(ioe.getMessage());
         }
     }
@@ -82,18 +72,14 @@ public class DsfFileWriter extends AudioFileWriter2
      * @return
      * @throws UnsupportedEncodingException
      */
-    public ByteBuffer convert(final AbstractID3v2Tag tag) throws UnsupportedEncodingException
-    {
-        try
-        {
+    public ByteBuffer convert(final AbstractID3v2Tag tag) throws UnsupportedEncodingException {
+        try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             long existingTagSize = tag.getSize();
 
             //If existingTag is uneven size lets make it even
-            if( existingTagSize > 0)
-            {
-                if(Utils.isOddLength(existingTagSize))
-                {
+            if (existingTagSize > 0) {
+                if (Utils.isOddLength(existingTagSize)) {
                     existingTagSize++;
                 }
             }
@@ -103,8 +89,7 @@ public class DsfFileWriter extends AudioFileWriter2
 
             //If the tag is now odd because we needed to increase size and the data made it odd sized
             //we redo adding a padding byte to make it even
-            if((baos.toByteArray().length & 1)!=0)
-            {
+            if ((baos.toByteArray().length & 1) != 0) {
                 int newSize = baos.toByteArray().length + 1;
                 baos = new ByteArrayOutputStream();
                 tag.write(baos, newSize);
@@ -112,9 +97,7 @@ public class DsfFileWriter extends AudioFileWriter2
             final ByteBuffer buf = ByteBuffer.wrap(baos.toByteArray());
             buf.rewind();
             return buf;
-        }
-        catch (IOException ioe)
-        {
+        } catch (IOException ioe) {
             //Should never happen as not writing to file at this point
             throw new RuntimeException(ioe);
         }
@@ -130,19 +113,14 @@ public class DsfFileWriter extends AudioFileWriter2
      * @throws IOException
      */
     @Override
-    protected void deleteTag(Tag tag, FileChannel fc, final String fileName) throws CannotWriteException
-    {
-        try
-        {
+    protected void deleteTag(Tag tag, FileChannel fc, final String fileName) throws CannotWriteException {
+        try {
             DsdChunk dsd = DsdChunk.readChunk(Utils.readFileDataIntoBufferLE(fc, DsdChunk.DSD_HEADER_LENGTH));
-            if (dsd != null)
-            {
-                if (dsd.getMetadataOffset() > 0)
-                {
+            if (dsd != null) {
+                if (dsd.getMetadataOffset() > 0) {
                     fc.position(dsd.getMetadataOffset());
                     ID3Chunk id3Chunk = ID3Chunk.readChunk(Utils.readFileDataIntoBufferLE(fc, (int) (fc.size() - fc.position())));
-                    if (id3Chunk != null)
-                    {
+                    if (id3Chunk != null) {
                         fc.truncate(dsd.getMetadataOffset());
                         //set correct value for fileLength and zero offset
                         dsd.setMetadataOffset(0);
@@ -150,16 +128,12 @@ public class DsfFileWriter extends AudioFileWriter2
                         fc.position(0);
                         fc.write(dsd.write());
                     }
-                }
-                else
-                {
+                } else {
                     //Do Nothing;
                 }
             }
-        }
-        catch(IOException ioe)
-        {
-            throw new CannotWriteException(fileName + ":"+ioe.getMessage());
+        } catch (IOException ioe) {
+            throw new CannotWriteException(fileName + ":" + ioe.getMessage());
         }
     }
 

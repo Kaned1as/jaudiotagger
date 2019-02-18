@@ -15,8 +15,7 @@ import java.io.RandomAccessFile;
  */
 public class Issue463Test extends AbstractTestCase
 {
-    public void testReadMp4() throws Exception
-    {
+    public void testReadMp4() {
         Exception ex=null;
         try
         {

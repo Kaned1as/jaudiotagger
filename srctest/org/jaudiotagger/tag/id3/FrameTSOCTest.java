@@ -185,7 +185,7 @@ public class FrameTSOCTest extends AbstractTestCase
         ID3v23Tag tag = new ID3v23Tag();
         tag.setFrame(FrameTSOCTest.getV23InitialisedFrame());
 
-        mp3File.setID3v2TagOnly((ID3v23Tag) tag);
+        mp3File.setID3v2TagOnly(tag);
         mp3File.save();
 
         //Reload and convert from v23 to v22 and save
@@ -215,7 +215,7 @@ public class FrameTSOCTest extends AbstractTestCase
         ((FrameBodyTSOC) id3v22frame.getBody()).setText(FrameBodyTSOCTest.COMPOSER_SORT);
         tag.setFrame(id3v22frame);
 
-        mp3File.setID3v2TagOnly((ID3v22Tag) tag);
+        mp3File.setID3v2TagOnly(tag);
         mp3File.save();
 
         //Reload and convert from v22 to v24 and save

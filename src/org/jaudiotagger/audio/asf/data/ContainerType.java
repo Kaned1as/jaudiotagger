@@ -16,8 +16,7 @@ import java.util.List;
  *
  * @author Christian Laireiter
  */
-public enum ContainerType
-{
+public enum ContainerType {
 
     /**
      * The descriptor is used in the content branding object (chunk)
@@ -60,8 +59,7 @@ public enum ContainerType
      * @param high
      * @return <code>true</code> if in correct order.
      */
-    public static boolean areInCorrectOrder(final ContainerType low, final ContainerType high)
-    {
+    public static boolean areInCorrectOrder(final ContainerType low, final ContainerType high) {
         final List<ContainerType> asList = Arrays.asList(getOrdered());
         return asList.indexOf(low) <= asList.indexOf(high);
     }
@@ -72,8 +70,7 @@ public enum ContainerType
      *
      * @return capability ordered types
      */
-    public static ContainerType[] getOrdered()
-    {
+    public static ContainerType[] getOrdered() {
         return new ContainerType[]{CONTENT_DESCRIPTION, CONTENT_BRANDING, EXTENDED_CONTENT, METADATA_OBJECT, METADATA_LIBRARY_OBJECT};
     }
 
@@ -132,16 +129,12 @@ public enum ContainerType
      * @param language       see {@link #languageEnabled}
      * @param multiValue     see {@link #multiValued}
      */
-    private ContainerType(final GUID guid, final int maxDataLenBits, final boolean guidAllowed, final boolean stream, final boolean language, final boolean multiValue)
-    {
+    ContainerType(final GUID guid, final int maxDataLenBits, final boolean guidAllowed, final boolean stream, final boolean language, final boolean multiValue) {
         this.containerGUID = guid;
         this.maximumDataLength = BigInteger.valueOf(2).pow(maxDataLenBits).subtract(BigInteger.ONE);
-        if (this.maximumDataLength.compareTo(BigInteger.valueOf(Long.MAX_VALUE)) <= 0)
-        {
+        if (this.maximumDataLength.compareTo(BigInteger.valueOf(Long.MAX_VALUE)) <= 0) {
             this.perfMaxDataLen = this.maximumDataLength.longValue();
-        }
-        else
-        {
+        } else {
             this.perfMaxDataLen = -1;
         }
         this.guidEnabled = guidAllowed;
@@ -160,11 +153,9 @@ public enum ContainerType
      * @param stream   stream number
      * @param language language index
      */
-    public void assertConstraints(final String name, final byte[] data, final int type, final int stream, final int language)
-    {
+    public void assertConstraints(final String name, final byte[] data, final int type, final int stream, final int language) {
         final RuntimeException result = checkConstraints(name, data, type, stream, language);
-        if (result != null)
-        {
+        if (result != null) {
             throw result;
         }
     }
@@ -181,41 +172,31 @@ public enum ContainerType
      * @param language language index
      * @return <code>null</code> if everything is fine.
      */
-    public RuntimeException checkConstraints(final String name, final byte[] data, final int type, final int stream, final int language)
-    {
+    public RuntimeException checkConstraints(final String name, final byte[] data, final int type, final int stream, final int language) {
         RuntimeException result = null;
         // TODO generate tests
-        if (name == null || data == null)
-        {
+        if (name == null || data == null) {
             result = new IllegalArgumentException("Arguments must not be null.");
-        }
-        else
-        {
-            if (!Utils.isStringLengthValidNullSafe(name))
-            {
+        } else {
+            if (!Utils.isStringLengthValidNullSafe(name)) {
                 result = new IllegalArgumentException(ErrorMessage.WMA_LENGTH_OF_STRING_IS_TOO_LARGE.getMsg(name.length()));
             }
         }
-        if (result == null && !isWithinValueRange(data.length))
-        {
+        if (result == null && !isWithinValueRange(data.length)) {
             result = new IllegalArgumentException(ErrorMessage.WMA_LENGTH_OF_DATA_IS_TOO_LARGE.getMsg(data.length, getMaximumDataLength(), getContainerGUID().getDescription()));
         }
-        if (result == null && (stream < 0 || stream > MetadataDescriptor.MAX_STREAM_NUMBER || (!isStreamNumberEnabled() && stream != 0)))
-        {
+        if (result == null && (stream < 0 || stream > MetadataDescriptor.MAX_STREAM_NUMBER || (!isStreamNumberEnabled() && stream != 0))) {
             final String streamAllowed = isStreamNumberEnabled() ? "0 to 127" : "0";
             result = new IllegalArgumentException(ErrorMessage.WMA_INVALID_STREAM_REFERNCE.getMsg(stream, streamAllowed, getContainerGUID().getDescription()));
         }
-        if (result == null && type == MetadataDescriptor.TYPE_GUID && !isGuidEnabled())
-        {
+        if (result == null && type == MetadataDescriptor.TYPE_GUID && !isGuidEnabled()) {
             result = new IllegalArgumentException(ErrorMessage.WMA_INVALID_GUID_USE.getMsg(getContainerGUID().getDescription()));
         }
-        if (result == null && ((language != 0 && !isLanguageEnabled()) || (language < 0 || language >= MetadataDescriptor.MAX_LANG_INDEX)))
-        {
+        if (result == null && ((language != 0 && !isLanguageEnabled()) || (language < 0 || language >= MetadataDescriptor.MAX_LANG_INDEX))) {
             final String langAllowed = isStreamNumberEnabled() ? "0 to 126" : "0";
             result = new IllegalArgumentException(ErrorMessage.WMA_INVALID_LANGUAGE_USE.getMsg(language, getContainerGUID().getDescription(), langAllowed));
         }
-        if (result == null && this == CONTENT_DESCRIPTION && type != MetadataDescriptor.TYPE_STRING)
-        {
+        if (result == null && this == CONTENT_DESCRIPTION && type != MetadataDescriptor.TYPE_STRING) {
             result = new IllegalArgumentException(ErrorMessage.WMA_ONLY_STRING_IN_CD.getMsg());
         }
         return result;
@@ -224,32 +205,28 @@ public enum ContainerType
     /**
      * @return the containerGUID
      */
-    public GUID getContainerGUID()
-    {
+    public GUID getContainerGUID() {
         return this.containerGUID;
     }
 
     /**
      * @return the maximumDataLength
      */
-    public BigInteger getMaximumDataLength()
-    {
+    public BigInteger getMaximumDataLength() {
         return this.maximumDataLength;
     }
 
     /**
      * @return the guidEnabled
      */
-    public boolean isGuidEnabled()
-    {
+    public boolean isGuidEnabled() {
         return this.guidEnabled;
     }
 
     /**
      * @return the languageEnabled
      */
-    public boolean isLanguageEnabled()
-    {
+    public boolean isLanguageEnabled() {
         return this.languageEnabled;
     }
 
@@ -261,24 +238,21 @@ public enum ContainerType
      * @return <code>true</code> if size restrictions for binary data are met
      * with this container type.
      */
-    public boolean isWithinValueRange(final long value)
-    {
+    public boolean isWithinValueRange(final long value) {
         return (this.perfMaxDataLen == -1 || this.perfMaxDataLen >= value) && value >= 0;
     }
 
     /**
      * @return the multiValued
      */
-    public boolean isMultiValued()
-    {
+    public boolean isMultiValued() {
         return this.multiValued;
     }
 
     /**
      * @return the streamEnabled
      */
-    public boolean isStreamNumberEnabled()
-    {
+    public boolean isStreamNumberEnabled() {
         return this.streamEnabled;
     }
 }

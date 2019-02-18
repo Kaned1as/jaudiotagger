@@ -200,7 +200,7 @@ public class VorbisImageTest extends AbstractTestCase
         {
             File testFile = AbstractTestCase.copyAudioToTmp("testnewlineimage.small.ogg");
             AudioFile f = AudioFileIO.read(testFile);
-            List<Artwork> artwork = ((VorbisCommentTag) f.getTag()).getArtworkList();
+            List<Artwork> artwork = f.getTag().getArtworkList();
             assertEquals(1, artwork.size());
             final Artwork next = artwork.iterator().next();
             final FileOutputStream fos = new FileOutputStream(new File("test.jpg"));

@@ -4,13 +4,13 @@ package org.jaudiotagger.audio.generic;
 //import java.nio.file.Files;
 //import java.nio.file.Path;
 //import java.nio.file.attribute.*;
+
 import java.util.logging.Logger;
 
 /**
  * Outputs permissions to try and identify why we dont have permissions to read/write file
  */
-public class Permissions
-{
+public class Permissions {
     public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.generic");
 
     // ==Android==

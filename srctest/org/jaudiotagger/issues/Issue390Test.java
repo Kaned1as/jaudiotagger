@@ -14,8 +14,7 @@ import java.io.File;
  */
 public class Issue390Test extends AbstractTestCase
 {
-    public void testIssue() throws Exception
-    {
+    public void testIssue() {
         Exception caught = null;
         try
         {

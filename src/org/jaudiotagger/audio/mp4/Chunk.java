@@ -3,9 +3,8 @@ package org.jaudiotagger.audio.mp4;
 /**
  * This class is part of JCodec ( www.jcodec.org ) This software is distributed
  * under FreeBSD License
- * 
- * @author The JCodec project
  *
+ * @author The JCodec project
  */
 public class Chunk {
     private long offset;
@@ -18,7 +17,7 @@ public class Chunk {
     private int entry;
 
     public Chunk(long offset, long startTv, int sampleCount, int sampleSize, int[] sampleSizes, int sampleDur,
-            int[] sampleDurs, int entry) {
+                 int[] sampleDurs, int entry) {
         this.offset = offset;
         this.startTv = startTv;
         this.sampleCount = sampleCount;

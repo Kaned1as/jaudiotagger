@@ -214,7 +214,7 @@ public class FrameRVADAndRVA2Test extends AbstractTestCase
         //..Notes (uses v22Frame but frame body will be the v23/24 version)
         tag.setFrame(getV22InitialisedFrame());
 
-        mp3File.setID3v2TagOnly((ID3v22Tag) tag);
+        mp3File.setID3v2TagOnly(tag);
         mp3File.save();
 
         //Reload and convert from v22 to v24 and save

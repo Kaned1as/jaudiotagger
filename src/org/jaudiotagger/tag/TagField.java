@@ -1,17 +1,17 @@
 /*
  * Entagged Audio Tag library
  * Copyright (c) 2003-2005 Raphaël Slinckx <raphael@slinckx.net>
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- *  
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -27,15 +27,14 @@ import java.io.UnsupportedEncodingException;
  *
  * @author Rapha�l Slinckx
  */
-public interface TagField
-{
+public interface TagField {
 
     /**
      * This method copies the data of the given field to the current data.<br>
      *
      * @param field The field containing the data to be taken.
      */
-    public void copyContent(TagField field);
+    void copyContent(TagField field);
 
     /**
      * Returns the Id of the represented tag field.<br>
@@ -45,7 +44,7 @@ public interface TagField
      *
      * @return Unique identifier for the fields type. (title, artist...)
      */
-    public String getId();
+    String getId();
 
     /**
      * This method delivers the binary representation of the fields data in
@@ -57,7 +56,7 @@ public interface TagField
      *                                      a specific charset encoding. In these cases an
      *                                      {@link UnsupportedEncodingException} may occur.
      */
-    public byte[] getRawContent() throws UnsupportedEncodingException;
+    byte[] getRawContent() throws UnsupportedEncodingException;
 
     /**
      * Determines whether the represented field contains (is made up of) binary
@@ -66,13 +65,13 @@ public interface TagField
      * readable if this method returns <code>false</code>.
      *
      * @return <code>true</code> if field represents binary data (not human
-     *         readable).
+     * readable).
      */
-    public boolean isBinary();
+    boolean isBinary();
 
     /**
      * This method will set the field to represent binary data.<br>
-     *
+     * <p>
      * Some implementations may support conversions.<br>
      * As of now (Octobre 2005) there is no implementation really using this
      * method to perform useful operations.
@@ -81,11 +80,11 @@ public interface TagField
      *          //@deprecated As for now is of no use. Implementations should use another
      *          //            way of setting this property.
      */
-    public void isBinary(boolean b);
+    void isBinary(boolean b);
 
     /**
      * Identifies a field to be of common use.<br>
-     *
+     * <p>
      * Some software may differ between common and not common fields. A common
      * one is for sure the title field. A web link may not be of common use for
      * tagging. However some file formats, or future development of users
@@ -93,14 +92,14 @@ public interface TagField
      *
      * @return <code>true</code> if the field is of common use.
      */
-    public boolean isCommon();
+    boolean isCommon();
 
     /**
      * Determines whether the content of the field is empty.<br>
      *
      * @return <code>true</code> if no data is stored (or empty String).
      */
-    public boolean isEmpty();
+    boolean isEmpty();
 
     /**
      * This method returns a human readable description of the fields contents.<br>
@@ -110,5 +109,5 @@ public interface TagField
      *
      * @return Description of the fields content.
      */
-    public String toString();
+    String toString();
 }

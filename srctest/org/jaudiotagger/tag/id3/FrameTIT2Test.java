@@ -10,8 +10,7 @@ import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
  */
 public class FrameTIT2Test extends AbstractTestCase
 {
-    public void testGeneric() throws Exception
-    {
+    public void testGeneric() {
         Exception e=null;
         try
         {
@@ -28,8 +27,7 @@ public class FrameTIT2Test extends AbstractTestCase
         assertNull(e);
     }
 
-    public void testID3Specific() throws Exception
-    {
+    public void testID3Specific() {
         Exception e=null;
         try
         {

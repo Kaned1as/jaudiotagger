@@ -1,25 +1,24 @@
 /**
- *  @author : Paul Taylor
- *  @author : Eric Farng
- *
- *  Version @version:$Id$
- *
- *  MusicTag Copyright (C)2003,2004
- *
- *  This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser
- *  General Public  License as published by the Free Software Foundation; either version 2.1 of the License,
- *  or (at your option) any later version.
- *
- *  This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
- *  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU Lesser General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public License along with this library; if not,
- *  you can get a copy from http://www.opensource.org/licenses/lgpl-license.php or write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- *
+ * @author : Paul Taylor
+ * @author : Eric Farng
+ * <p>
+ * Version @version:$Id$
+ * <p>
+ * MusicTag Copyright (C)2003,2004
+ * <p>
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser
+ * General Public  License as published by the Free Software Foundation; either version 2.1 of the License,
+ * or (at your option) any later version.
+ * <p>
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not,
+ * you can get a copy from http://www.opensource.org/licenses/lgpl-license.php or write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * <p>
  * Description:
- *
  */
 package org.jaudiotagger.tag.datatype;
 
@@ -29,8 +28,7 @@ import org.jaudiotagger.tag.id3.AbstractTagFrameBody;
 import java.nio.charset.Charset;
 
 
-public class Lyrics3TimeStamp extends AbstractDataType
-{
+public class Lyrics3TimeStamp extends AbstractDataType {
     /**
      *
      */
@@ -45,8 +43,7 @@ public class Lyrics3TimeStamp extends AbstractDataType
      * Todo this is wrong
      * @param s
      */
-    public void readString(String s)
-    {
+    public void readString(String s) {
     }
 
     /**
@@ -55,54 +52,46 @@ public class Lyrics3TimeStamp extends AbstractDataType
      * @param identifier
      * @param frameBody
      */
-    public Lyrics3TimeStamp(String identifier, AbstractTagFrameBody frameBody)
-    {
+    public Lyrics3TimeStamp(String identifier, AbstractTagFrameBody frameBody) {
         super(identifier, frameBody);
     }
 
-    public Lyrics3TimeStamp(String identifier)
-    {
+    public Lyrics3TimeStamp(String identifier) {
         super(identifier, null);
     }
 
-    public Lyrics3TimeStamp(Lyrics3TimeStamp copy)
-    {
+    public Lyrics3TimeStamp(Lyrics3TimeStamp copy) {
         super(copy);
         this.minute = copy.minute;
         this.second = copy.second;
     }
 
-    public void setMinute(long minute)
-    {
+    public void setMinute(long minute) {
         this.minute = minute;
     }
 
     /**
      * @return
      */
-    public long getMinute()
-    {
+    public long getMinute() {
         return minute;
     }
 
-    public void setSecond(long second)
-    {
+    public void setSecond(long second) {
         this.second = second;
     }
 
     /**
      * @return
      */
-    public long getSecond()
-    {
+    public long getSecond() {
         return second;
     }
 
     /**
      * @return
      */
-    public int getSize()
-    {
+    public int getSize() {
         return 7;
     }
 
@@ -112,8 +101,7 @@ public class Lyrics3TimeStamp extends AbstractDataType
      * @param timeStamp
      * @param timeStampFormat
      */
-    public void setTimeStamp(long timeStamp, byte timeStampFormat)
-    {
+    public void setTimeStamp(long timeStamp, byte timeStampFormat) {
         /**
          * @todo convert both types of formats
          */
@@ -126,17 +114,14 @@ public class Lyrics3TimeStamp extends AbstractDataType
      * @param obj
      * @return
      */
-    public boolean equals(Object obj)
-    {
-        if (!(obj instanceof Lyrics3TimeStamp))
-        {
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Lyrics3TimeStamp)) {
             return false;
         }
 
         Lyrics3TimeStamp object = (Lyrics3TimeStamp) obj;
 
-        if (this.minute != object.minute)
-        {
+        if (this.minute != object.minute) {
             return false;
         }
 
@@ -150,27 +135,21 @@ public class Lyrics3TimeStamp extends AbstractDataType
      * @throws NullPointerException
      * @throws IndexOutOfBoundsException
      */
-    public void readString(String timeStamp, int offset)
-    {
-        if (timeStamp == null)
-        {
+    public void readString(String timeStamp, int offset) {
+        if (timeStamp == null) {
             throw new NullPointerException("Image is null");
         }
 
-        if ((offset < 0) || (offset >= timeStamp.length()))
-        {
+        if ((offset < 0) || (offset >= timeStamp.length())) {
             throw new IndexOutOfBoundsException("Offset to timeStamp is out of bounds: offset = " + offset + ", timeStamp.length()" + timeStamp.length());
         }
 
         timeStamp = timeStamp.substring(offset);
 
-        if (timeStamp.length() == 7)
-        {
+        if (timeStamp.length() == 7) {
             minute = Integer.parseInt(timeStamp.substring(1, 3));
             second = Integer.parseInt(timeStamp.substring(4, 6));
-        }
-        else
-        {
+        } else {
             minute = 0;
             second = 0;
         }
@@ -179,27 +158,21 @@ public class Lyrics3TimeStamp extends AbstractDataType
     /**
      * @return
      */
-    public String toString()
-    {
+    public String toString() {
         return writeString();
     }
 
     /**
      * @return
      */
-    public String writeString()
-    {
+    public String writeString() {
         String str;
         str = "[";
 
-        if (minute < 0)
-        {
+        if (minute < 0) {
             str += "00";
-        }
-        else
-        {
-            if (minute < 10)
-            {
+        } else {
+            if (minute < 10) {
                 str += '0';
             }
 
@@ -208,14 +181,10 @@ public class Lyrics3TimeStamp extends AbstractDataType
 
         str += ':';
 
-        if (second < 0)
-        {
+        if (second < 0) {
             str += "00";
-        }
-        else
-        {
-            if (second < 10)
-            {
+        } else {
+            if (second < 10) {
                 str += '0';
             }
 
@@ -227,13 +196,11 @@ public class Lyrics3TimeStamp extends AbstractDataType
         return str;
     }
 
-    public void readByteArray(byte[] arr, int offset) throws InvalidDataTypeException
-    {
+    public void readByteArray(byte[] arr, int offset) throws InvalidDataTypeException {
         readString(arr.toString(), offset);
     }
 
-    public byte[] writeByteArray()
-    {
+    public byte[] writeByteArray() {
         return writeString().getBytes(Charset.forName("ISO-8859-1"));
     }
 

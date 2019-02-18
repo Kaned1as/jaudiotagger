@@ -16,8 +16,7 @@ import java.io.File;
  */
 public class Issue411Test extends AbstractTestCase
 {
-    public void testIssue() throws Exception
-    {
+    public void testIssue() {
         TagOptionSingleton.getInstance().setWriteMp3GenresAsText(false);
         Exception caught = null;
         try
@@ -59,8 +58,7 @@ public class Issue411Test extends AbstractTestCase
         assertNull(caught);
     }
 
-    public void testIssue2() throws Exception
-    {
+    public void testIssue2() {
         TagOptionSingleton.getInstance().setWriteMp3GenresAsText(false);
 
         Exception caught = null;
@@ -94,8 +92,7 @@ public class Issue411Test extends AbstractTestCase
         assertNull(caught);
     }
 
-    public void testIssue3() throws Exception
-    {
+    public void testIssue3() {
         TagOptionSingleton.getInstance().setWriteMp3GenresAsText(false);
 
         Exception caught = null;
@@ -129,8 +126,7 @@ public class Issue411Test extends AbstractTestCase
         assertNull(caught);
     }
 
-    public void testIssue4() throws Exception
-    {
+    public void testIssue4() {
         TagOptionSingleton.getInstance().setWriteMp3GenresAsText(false);
 
         Exception caught = null;
@@ -165,8 +161,7 @@ public class Issue411Test extends AbstractTestCase
         assertNull(caught);
     }
 
-    public void testIssue5() throws Exception
-    {
+    public void testIssue5() {
         TagOptionSingleton.getInstance().setWriteMp3GenresAsText(false);
 
         Exception caught = null;
@@ -209,8 +204,7 @@ public class Issue411Test extends AbstractTestCase
         assertNull(caught);
     }
 
-    public void testDeletions() throws Exception
-    {
+    public void testDeletions() {
         TagOptionSingleton.getInstance().setWriteMp3GenresAsText(false);
 
         Exception caught = null;

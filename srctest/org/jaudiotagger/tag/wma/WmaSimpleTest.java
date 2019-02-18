@@ -17,6 +17,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -539,12 +540,12 @@ public class WmaSimpleTest extends AbstractTestCase
                 {
                     if (mimeType == null)
                     {
-                        mimeType = new String(tagField.getRawContent(), 5, (count) - 5, "UTF-16LE");
+                        mimeType = new String(tagField.getRawContent(), 5, (count) - 5, StandardCharsets.UTF_16LE);
                         endOfMimeType = count + 2;
                     }
                     else if (name == null)
                     {
-                        name = new String(tagField.getRawContent(), endOfMimeType, count - endOfMimeType, "UTF-16LE");
+                        name = new String(tagField.getRawContent(), endOfMimeType, count - endOfMimeType, StandardCharsets.UTF_16LE);
                         endOfName = count + 2;
                         break;
                     }
@@ -623,12 +624,12 @@ public class WmaSimpleTest extends AbstractTestCase
                 {
                     if (mimeType == null)
                     {
-                        mimeType = new String(tagField.getRawContent(), 5, (count) - 5, "UTF-16LE");
+                        mimeType = new String(tagField.getRawContent(), 5, (count) - 5, StandardCharsets.UTF_16LE);
                         endOfMimeType = count + 2;
                     }
                     else if (name == null)
                     {
-                        name = new String(tagField.getRawContent(), endOfMimeType, count - endOfMimeType, "UTF-16LE");
+                        name = new String(tagField.getRawContent(), endOfMimeType, count - endOfMimeType, StandardCharsets.UTF_16LE);
                         endOfName = count + 2;
                         break;
                     }
@@ -705,12 +706,12 @@ public class WmaSimpleTest extends AbstractTestCase
                 {
                     if (mimeType == null)
                     {
-                        mimeType = new String(tagField.getRawContent(), 5, (count) - 5, "UTF-16LE");
+                        mimeType = new String(tagField.getRawContent(), 5, (count) - 5, StandardCharsets.UTF_16LE);
                         endOfMimeType = count + 2;
                     }
                     else if (name == null)
                     {
-                        name = new String(tagField.getRawContent(), endOfMimeType, count - endOfMimeType, "UTF-16LE");
+                        name = new String(tagField.getRawContent(), endOfMimeType, count - endOfMimeType, StandardCharsets.UTF_16LE);
                         endOfName = count + 2;
                         break;
                     }
@@ -793,12 +794,12 @@ public class WmaSimpleTest extends AbstractTestCase
                 {
                     if (mimeType == null)
                     {
-                        mimeType = new String(tagField.getRawContent(), 5, (count) - 5, "UTF-16LE");
+                        mimeType = new String(tagField.getRawContent(), 5, (count) - 5, StandardCharsets.UTF_16LE);
                         endOfMimeType = count + 2;
                     }
                     else if (name == null)
                     {
-                        name = new String(tagField.getRawContent(), endOfMimeType, count - endOfMimeType, "UTF-16LE");
+                        name = new String(tagField.getRawContent(), endOfMimeType, count - endOfMimeType, StandardCharsets.UTF_16LE);
                         endOfName = count + 2;
                         break;
                     }

@@ -13,8 +13,7 @@ import java.io.File;
  */
 public class Issue404Test extends AbstractTestCase
 {
-    public void testWritingTooLongTempFile() throws Exception
-    {
+    public void testWritingTooLongTempFile() {
         File origFile = new File("testdata", "test3811111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111...........................................................m4a");
         if (!origFile.isFile())
         {

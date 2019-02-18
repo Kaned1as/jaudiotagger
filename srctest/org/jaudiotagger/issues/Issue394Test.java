@@ -10,8 +10,7 @@ import org.jaudiotagger.tag.id3.ID3v24Tag;
 
 public class Issue394Test extends AbstractTestCase
 {
-    public void testCreatingID3v1TagfromID3v2tagWithMultipleComments() throws Exception
-    {
+    public void testCreatingID3v1TagfromID3v2tagWithMultipleComments() {
         Exception caught = null;
         try
         {

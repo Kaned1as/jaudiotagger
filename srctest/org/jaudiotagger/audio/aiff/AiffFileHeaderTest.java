@@ -31,7 +31,7 @@ public class AiffFileHeaderTest extends TestCase {
         aiffFile.delete();
     }
 
-    public void testInvalidFormatType() throws IOException, CannotReadException {
+    public void testInvalidFormatType() throws IOException {
         final int size = 5762;
         final File aiffFile = createAIFF("FORM", "COOL", size);
 
@@ -45,7 +45,7 @@ public class AiffFileHeaderTest extends TestCase {
         aiffFile.delete();
     }
 
-    public void testInvalidFormat1() throws IOException, CannotReadException {
+    public void testInvalidFormat1() throws IOException {
         final int size = 34242;
         final File aiffFile = createAIFF("FURM", "AIFF", size);
 
@@ -60,7 +60,7 @@ public class AiffFileHeaderTest extends TestCase {
     }
 
 
-    public void testInvalidFormat2() throws IOException, CannotReadException {
+    public void testInvalidFormat2() throws IOException {
         final int size = 34234;
         final File aiffFile = createAIFF("FORMA", "AIFF", size);
 

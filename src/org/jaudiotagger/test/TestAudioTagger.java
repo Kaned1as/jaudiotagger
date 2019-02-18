@@ -1,22 +1,22 @@
 /**
  * @author : Paul Taylor
- *
+ * <p>
  * Version @version:$Id$
- *
+ * <p>
  * Jaudiotagger Copyright (C)2004,2005
- *
+ * <p>
  * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser
  * General Public  License as published by the Free Software Foundation; either version 2.1 of the License,
  * or (at your option) any later version.
- *
+ * <p>
  * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
  * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU Lesser General Public License along with this library; if not,
  * you can get a copy from http://www.opensource.org/licenses/lgpl-license.php or write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- *
+ * <p>
  * Description:
  */
 package org.jaudiotagger.test;
@@ -32,28 +32,22 @@ import java.util.Date;
  * Simple class that will attempt to recusively read all files within a directory, flags
  * errors that occur.
  */
-public class TestAudioTagger
-{
+public class TestAudioTagger {
 
-    public static void main(final String[] args)
-    {
+    public static void main(final String[] args) {
         TestAudioTagger test = new TestAudioTagger();
 
-        if (args.length == 0)
-        {
+        if (args.length == 0) {
             System.err.println("usage TestAudioTagger Dirname");
             System.err.println("      You must enter the root directory");
             System.exit(1);
-        }
-        else if (args.length > 1)
-        {
+        } else if (args.length > 1) {
             System.err.println("usage TestAudioTagger Dirname");
             System.err.println("      Only one parameter accepted");
             System.exit(1);
         }
         File rootDir = new File(args[0]);
-        if (!rootDir.isDirectory())
-        {
+        if (!rootDir.isDirectory()) {
             System.err.println("usage TestAudioTagger Dirname");
             System.err.println("      Directory " + args[0] + " could not be found");
             System.exit(1);
@@ -78,21 +72,15 @@ public class TestAudioTagger
      * Recursive function to scan directory
      * @param dir
      */
-    private void scanSingleDir(final File dir)
-    {
+    private void scanSingleDir(final File dir) {
 
         final File[] audioFiles = dir.listFiles(new AudioFileFilter(false));
-        if (audioFiles.length > 0)
-        {
-            for (File audioFile : audioFiles)
-            {
+        if (audioFiles.length > 0) {
+            for (File audioFile : audioFiles) {
                 count++;
-                try
-                {
+                try {
                     AudioFileIO.read(audioFile);
-                }
-                catch (Throwable t)
-                {
+                } catch (Throwable t) {
                     System.err.println("Unable to read record:" + count + ":" + audioFile.getPath());
                     failed++;
                     t.printStackTrace();
@@ -101,20 +89,16 @@ public class TestAudioTagger
         }
 
         final File[] audioFileDirs = dir.listFiles(new DirFilter());
-        if (audioFileDirs.length > 0)
-        {
-            for (File audioFileDir : audioFileDirs)
-            {
+        if (audioFileDirs.length > 0) {
+            for (File audioFileDir : audioFileDirs) {
                 scanSingleDir(audioFileDir);
             }
         }
     }
 
 
-    public final class DirFilter implements java.io.FileFilter
-    {
-        public DirFilter()
-        {
+    public final class DirFilter implements java.io.FileFilter {
+        public DirFilter() {
 
         }
 
@@ -127,8 +111,7 @@ public class TestAudioTagger
          * @param file the file to test
          * @return true if this file or directory should be accepted
          */
-        public final boolean accept(final java.io.File file)
-        {
+        public final boolean accept(final java.io.File file) {
             return file.isDirectory();
         }
 

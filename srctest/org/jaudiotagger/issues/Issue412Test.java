@@ -17,8 +17,7 @@ import java.io.File;
  */
 public class Issue412Test extends AbstractTestCase
 {
-    public void testTXXXSameDescription() throws Exception
-    {
+    public void testTXXXSameDescription() {
         Exception caught = null;
         try
         {
@@ -59,8 +58,7 @@ public class Issue412Test extends AbstractTestCase
         assertNull(caught);
     }
 
-    public void testTXXXDifferentDescription() throws Exception
-    {
+    public void testTXXXDifferentDescription() {
         Exception caught = null;
         try
         {
@@ -107,8 +105,7 @@ public class Issue412Test extends AbstractTestCase
         assertNull(caught);
     }
 
-    public void testWXXXSameDescription() throws Exception
-    {
+    public void testWXXXSameDescription() {
         Exception caught = null;
         try
         {
@@ -149,8 +146,7 @@ public class Issue412Test extends AbstractTestCase
         assertNull(caught);
     }
 
-    public void testTXXXSameDescriptionMultiples() throws Exception
-    {
+    public void testTXXXSameDescriptionMultiples() {
         Exception caught = null;
         try
         {
@@ -193,8 +189,7 @@ public class Issue412Test extends AbstractTestCase
         assertNull(caught);
     }
 
-    public void testWXXXSameDescriptionMultiples() throws Exception
-    {
+    public void testWXXXSameDescriptionMultiples() {
         Exception caught = null;
         try
         {
@@ -238,8 +233,7 @@ public class Issue412Test extends AbstractTestCase
     }
 
 
-    public void testTCOMMultiples() throws Exception
-    {
+    public void testTCOMMultiples() {
         Exception caught = null;
         try
         {

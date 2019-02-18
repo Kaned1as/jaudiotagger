@@ -12,8 +12,7 @@ import java.io.File;
  */
 public class Issue161Test extends AbstractTestCase
 {
-    public void testReadID3() throws Exception
-    {
+    public void testReadID3() {
         File orig = new File("testdata", "test159.mp3");
         if (!orig.isFile())
         {

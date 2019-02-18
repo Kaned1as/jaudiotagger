@@ -459,8 +459,8 @@ public class NewInterfaceTest extends TestCase
         af.getTag().addField(tag.createArtworkField(imagedata, "image/png"));
         af.commit();
         af = AudioFileIO.read(testFile);
-        assertEquals(1, ((ID3v24Tag) af.getTag()).getFields(FieldKey.COVER_ART).size());
-        assertEquals(1, ((ID3v24Tag) af.getTag()).getFields(ID3v24FieldKey.COVER_ART.getFieldName()).size());
+        assertEquals(1, af.getTag().getFields(FieldKey.COVER_ART).size());
+        assertEquals(1, af.getTag().getFields(ID3v24FieldKey.COVER_ART.getFieldName()).size());
         //TODO This isnt very user friendly
         TagField tagField = af.getTag().getFirstField(ID3v24FieldKey.COVER_ART.getFieldName());
         assertEquals("image/png::18545",((TagTextField)af.getTag().getFirstField(FieldKey.COVER_ART)).getContent());
@@ -1101,7 +1101,7 @@ public class NewInterfaceTest extends TestCase
             assertNull(tag.getFrame("TXXX"));
 
             af.getTag().setField(af.getTag().createField(FieldKey.MUSICBRAINZ_ARTISTID, "abcdef-ghijklmn"));
-            ((ID3v24Tag) af.getTag()).deleteField(FieldKey.MUSICBRAINZ_ARTISTID);
+            af.getTag().deleteField(FieldKey.MUSICBRAINZ_ARTISTID);
             assertNull(tag.getFrame("TXXX"));
 
         }
@@ -1284,7 +1284,7 @@ public class NewInterfaceTest extends TestCase
         {
             mp3file = new MP3File(testFile);
             //deleteField multiple frames starting make change to file
-            ((ID3v24Tag) mp3file.getID3v2Tag()).removeFrameOfType("PRIV");
+            mp3file.getID3v2Tag().removeFrameOfType("PRIV");
 
         }
         catch (Exception e)

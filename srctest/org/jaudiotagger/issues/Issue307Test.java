@@ -15,8 +15,7 @@ public class Issue307Test extends AbstractTestCase
 {
     public static int countExceptions =0;
 
-    public void testMultiThreadedMP3HeaderAccess() throws Exception
-    {
+    public void testMultiThreadedMP3HeaderAccess() {
         File orig = new File("testdata", "test71.mp3");
         if (!orig.isFile())
         {
@@ -42,7 +41,7 @@ public class Issue307Test extends AbstractTestCase
             ex.printStackTrace();
         }
         assertNull(e);
-        FrameBodyIPLS frameBody = (FrameBodyIPLS)(((ID3v23Frame)((ID3v23Tag)mp3File.getTag()).getFirstField("IPLS")).getBody());
+        FrameBodyIPLS frameBody = (FrameBodyIPLS)(((ID3v23Tag)mp3File.getTag()).getFirstField("IPLS").getBody());
         assertEquals(3,frameBody.getNumberOfPairs());
         assertEquals("producer",frameBody.getKeyAtIndex(0));
         assertEquals("Tom Wilson",frameBody.getValueAtIndex(0));

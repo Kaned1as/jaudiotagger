@@ -98,7 +98,7 @@ public class Unicode24NullTerminatedTagTest extends TestCase
         FrameBodyCOMM commFrameBody = (FrameBodyCOMM) frameBody;
 
         //String borodin = "\u0411\u043e\u0440\u043e\u0434\u0438\u043d";
-        byte UTF8_ENCODING = (byte) TextEncoding.UTF_8;
+        byte UTF8_ENCODING = TextEncoding.UTF_8;
         String language = "eng";
         String comment = "some comment here";
         String description = "cc";

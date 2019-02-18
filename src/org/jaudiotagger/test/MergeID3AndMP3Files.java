@@ -9,28 +9,22 @@ import java.util.Date;
  * only actually expected to contain id3 tags), merge them with a given mp3 and write them to the provided
  * output folder (which must already exist)
  */
-public class MergeID3AndMP3Files
-{
+public class MergeID3AndMP3Files {
 
-    public static void main(final String[] args)
-    {
+    public static void main(final String[] args) {
         MergeID3AndMP3Files test = new MergeID3AndMP3Files();
 
-        if (args.length == 0)
-        {
+        if (args.length == 0) {
             System.err.println("usage MergeID3AndMP3Files FromDir ToDir mp3File");
             System.err.println("      You must enter the from dir,outputdir and the mp3file to append");
             System.exit(1);
-        }
-        else if (args.length != 3)
-        {
+        } else if (args.length != 3) {
             System.err.println("usage MergeID3AndMP3Files FromDir ToDir mp3File");
             System.err.println("      Only three parameters accepted");
             System.exit(1);
         }
         File rootDir = new File(args[0]);
-        if (!rootDir.isDirectory())
-        {
+        if (!rootDir.isDirectory()) {
             System.err.println("usage MergeID3AndMP3Files FromDir ToDir mp3File");
             System.err.println("      Directory " + args[0] + " could not be found");
             System.exit(1);
@@ -38,16 +32,14 @@ public class MergeID3AndMP3Files
 
 
         File toDir = new File(args[1]);
-        if (!rootDir.isDirectory())
-        {
+        if (!rootDir.isDirectory()) {
             System.err.println("usage MergeID3AndMP3Files FromDir ToDir mp3File");
             System.err.println("      Directory " + args[1] + " could not be found");
             System.exit(1);
         }
 
         File mp3File = new File(args[2]);
-        if (!mp3File.isFile())
-        {
+        if (!mp3File.isFile()) {
             System.err.println("usage MergeID3AndMP3Files FromDir ToDir mp3File");
             System.err.println("      Mp3File " + args[2] + " could not be found");
             System.exit(1);
@@ -70,26 +62,21 @@ public class MergeID3AndMP3Files
 
     /**
      * Recursive function to scan directory
+     *
      * @param fromDir
      * @param toDir
      * @param mp3File
      */
-    private void scanSingleDir(final File fromDir, final File toDir, final File mp3File)
-    {
+    private void scanSingleDir(final File fromDir, final File toDir, final File mp3File) {
 
         final File[] audioFiles = fromDir.listFiles(new MergeID3AndMP3Files.MP3FileFilter());
-        if (audioFiles.length > 0)
-        {
-            for (File audioFile : audioFiles)
-            {
+        if (audioFiles.length > 0) {
+            for (File audioFile : audioFiles) {
                 MergeID3AndMP3Files.count++;
 
-                try
-                {
+                try {
                     copyAudioToTmp(toDir, audioFile, mp3File);
-                }
-                catch (Throwable t)
-                {
+                } catch (Throwable t) {
                     System.err.println("Unable to merge record:" + MergeID3AndMP3Files.count + ":" + mp3File.getPath());
                     MergeID3AndMP3Files.failed++;
                     t.printStackTrace();
@@ -98,17 +85,14 @@ public class MergeID3AndMP3Files
         }
 
         final File[] audioFileDirs = fromDir.listFiles(new MergeID3AndMP3Files.DirFilter());
-        if (audioFileDirs.length > 0)
-        {
-            for (File audioFileDir : audioFileDirs)
-            {
+        if (audioFileDirs.length > 0) {
+            for (File audioFileDir : audioFileDirs) {
                 scanSingleDir(audioFileDir, new File(toDir, audioFileDir.getName()), mp3File);
             }
         }
     }
 
-    final class MP3FileFilter extends javax.swing.filechooser.FileFilter implements java.io.FileFilter
-    {
+    final class MP3FileFilter extends javax.swing.filechooser.FileFilter implements java.io.FileFilter {
 
         /**
          * allows Directories
@@ -119,8 +103,7 @@ public class MergeID3AndMP3Files
          * Create a default MP3FileFilter.  The allowDirectories field will
          * default to false.
          */
-        public MP3FileFilter()
-        {
+        public MP3FileFilter() {
             this(false);
         }
 
@@ -131,8 +114,7 @@ public class MergeID3AndMP3Files
          *
          * @param allowDirectories whether or not to accept directories
          */
-        private MP3FileFilter(final boolean allowDirectories)
-        {
+        private MP3FileFilter(final boolean allowDirectories) {
             this.allowDirectories = allowDirectories;
         }
 
@@ -144,8 +126,7 @@ public class MergeID3AndMP3Files
          * @param file the file to test
          * @return true if this file or directory should be accepted
          */
-        public final boolean accept(final File file)
-        {
+        public final boolean accept(final File file) {
             return (((file.getName()).toLowerCase().endsWith(".mp3")) || (file.isDirectory() && (this.allowDirectories)));
         }
 
@@ -154,16 +135,13 @@ public class MergeID3AndMP3Files
          *
          * @return The Description of the Filter
          */
-        public final String getDescription()
-        {
+        public final String getDescription() {
             return ".mp3 Files";
         }
     }
 
-    public final class DirFilter implements java.io.FileFilter
-    {
-        public DirFilter()
-        {
+    public final class DirFilter implements java.io.FileFilter {
+        public DirFilter() {
 
         }
 
@@ -176,25 +154,21 @@ public class MergeID3AndMP3Files
          * @param file the file to test
          * @return true if this file or directory should be accepted
          */
-        public final boolean accept(final File file)
-        {
+        public final boolean accept(final File file) {
             return file.isDirectory();
         }
 
         public static final String IDENT = "$Id$";
     }
 
-    public static File copyAudioToTmp(File toDir, File tagFile, File mp3File)
-    {
+    public static File copyAudioToTmp(File toDir, File tagFile, File mp3File) {
         File outputFile = new File(toDir.getPath(), tagFile.getName());
         boolean result = append(tagFile, mp3File, outputFile);
         return outputFile;
     }
 
-    private static boolean append(File fromFile1, File fromFile2, File toFile)
-    {
-        try
-        {
+    private static boolean append(File fromFile1, File fromFile2, File toFile) {
+        try {
             FileInputStream in = new FileInputStream(fromFile1);
             FileInputStream in2 = new FileInputStream(fromFile2);
 
@@ -206,13 +180,11 @@ public class MergeID3AndMP3Files
 
             int theByte;
 
-            while ((theByte = inBuffer.read()) > -1)
-            {
+            while ((theByte = inBuffer.read()) > -1) {
                 outBuffer.write(theByte);
             }
 
-            while ((theByte = inBuffer2.read()) > -1)
-            {
+            while ((theByte = inBuffer2.read()) > -1) {
                 outBuffer.write(theByte);
             }
 
@@ -224,17 +196,14 @@ public class MergeID3AndMP3Files
             in2.close();
 
             // cleanupif files are not the same length
-            if ((fromFile1.length() + fromFile2.length()) != toFile.length())
-            {
+            if ((fromFile1.length() + fromFile2.length()) != toFile.length()) {
                 toFile.delete();
 
                 return false;
             }
 
             return true;
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }

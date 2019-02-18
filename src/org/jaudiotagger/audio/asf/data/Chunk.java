@@ -1,17 +1,17 @@
 /*
  * Entagged Audio Tag library
  * Copyright (c) 2004-2005 Christian Laireiter <liree@web.de>
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- *  
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -30,8 +30,7 @@ import java.math.BigInteger;
  *
  * @author Christian Laireiter
  */
-public class Chunk
-{
+public class Chunk {
 
     /**
      * The length of current chunk. <br>
@@ -54,14 +53,11 @@ public class Chunk
      * @param headerGuid The GUID of header object.
      * @param chunkLen   Length of current chunk.
      */
-    public Chunk(final GUID headerGuid, final BigInteger chunkLen)
-    {
-        if (headerGuid == null)
-        {
+    public Chunk(final GUID headerGuid, final BigInteger chunkLen) {
+        if (headerGuid == null) {
             throw new IllegalArgumentException("GUID must not be null.");
         }
-        if (chunkLen == null || chunkLen.compareTo(BigInteger.ZERO) < 0)
-        {
+        if (chunkLen == null || chunkLen.compareTo(BigInteger.ZERO) < 0) {
             throw new IllegalArgumentException("chunkLen must not be null nor negative.");
         }
         this.guid = headerGuid;
@@ -75,18 +71,14 @@ public class Chunk
      * @param pos        Position of header object within stream or file.
      * @param chunkLen   Length of current chunk.
      */
-    public Chunk(final GUID headerGuid, final long pos, final BigInteger chunkLen)
-    {
-        if (headerGuid == null)
-        {
+    public Chunk(final GUID headerGuid, final long pos, final BigInteger chunkLen) {
+        if (headerGuid == null) {
             throw new IllegalArgumentException("GUID must not be null");
         }
-        if (pos < 0)
-        {
+        if (pos < 0) {
             throw new IllegalArgumentException("Position of header can't be negative.");
         }
-        if (chunkLen == null || chunkLen.compareTo(BigInteger.ZERO) < 0)
-        {
+        if (chunkLen == null || chunkLen.compareTo(BigInteger.ZERO) < 0) {
             throw new IllegalArgumentException("chunkLen must not be null nor negative.");
         }
         this.guid = headerGuid;
@@ -102,8 +94,7 @@ public class Chunk
      * @deprecated typo, use {@link #getChunkEnd()} instead.
      */
     @Deprecated
-    public long getChunckEnd()
-    {
+    public long getChunckEnd() {
         return this.position + this.chunkLength.longValue();
     }
 
@@ -113,32 +104,28 @@ public class Chunk
      *
      * @return Position after current chunk.
      */
-    public long getChunkEnd()
-    {
+    public long getChunkEnd() {
         return this.position + this.chunkLength.longValue();
     }
 
     /**
      * @return Returns the chunkLength.
      */
-    public BigInteger getChunkLength()
-    {
+    public BigInteger getChunkLength() {
         return this.chunkLength;
     }
 
     /**
      * @return Returns the guid.
      */
-    public GUID getGuid()
-    {
+    public GUID getGuid() {
         return this.guid;
     }
 
     /**
      * @return Returns the position.
      */
-    public long getPosition()
-    {
+    public long getPosition() {
         return this.position;
     }
 
@@ -150,8 +137,7 @@ public class Chunk
      * @param prefix each line gets this string prepended.
      * @return Information of current Chunk Object.
      */
-    public String prettyPrint(final String prefix)
-    {
+    public String prettyPrint(final String prefix) {
         final StringBuilder result = new StringBuilder();
         result.append(prefix).append("-> GUID: ").append(GUID.getGuidDescription(this.guid)).append(Utils.LINE_SEPARATOR);
         result.append(prefix).append("  | : Starts at position: ").append(getPosition()).append(Utils.LINE_SEPARATOR);
@@ -164,8 +150,7 @@ public class Chunk
      *
      * @param pos position to set.
      */
-    public void setPosition(final long pos)
-    {
+    public void setPosition(final long pos) {
         this.position = pos;
     }
 
@@ -175,8 +160,7 @@ public class Chunk
      * @see java.lang.Object#toString()
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         return prettyPrint("");
     }
 

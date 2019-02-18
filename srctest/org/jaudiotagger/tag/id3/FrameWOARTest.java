@@ -43,8 +43,7 @@ public class FrameWOARTest extends AbstractTestCase
         return frame;
     }
 
-    public static ID3v24Frame getRawUnicodeFrame() throws Exception
-    {
+    public static ID3v24Frame getRawUnicodeFrame() {
         ID3v24Frame frame = new ID3v24Frame(ID3v24Frames.FRAME_ID_URL_ARTIST_WEB);
         FrameBodyWOAR fb = new FrameBodyWOAR();
         fb.setUrlLink(UNICODE_LINK);

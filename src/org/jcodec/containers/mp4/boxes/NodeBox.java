@@ -175,7 +175,7 @@ public class NodeBox extends Box {
     }
 
     public static <T extends Box> T findFirstPath(NodeBox box, Class<T> clazz, String[] path) {
-        T[] result = (T[]) findAllPath(box, clazz, path);
+        T[] result = findAllPath(box, clazz, path);
         return result.length > 0 ? result[0] : null;
     }
 

@@ -23,7 +23,6 @@ import org.jaudiotagger.tag.id3.valuepair.ImageFormats;
 import org.jaudiotagger.tag.mp4.Mp4FieldKey;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
 
 /**
  * Represents Cover Art

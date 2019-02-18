@@ -48,8 +48,7 @@ public class FrameWXXXTest extends AbstractTestCase
         return frame;
     }
 
-    public static ID3v24Frame getRawUnicodeFrame() throws Exception
-    {
+    public static ID3v24Frame getRawUnicodeFrame() {
         ID3v24Frame frame = new ID3v24Frame(ID3v24Frames.FRAME_ID_USER_DEFINED_URL);
         FrameBodyWXXX fb = new FrameBodyWXXX();
         fb.setUrlLink(UNICODE_LINK);

@@ -13,8 +13,7 @@ public class Issue309Test extends AbstractTestCase
 {
     public static int countExceptions =0;
 
-    public void testAddingLargeImageToOgg() throws Exception
-    {
+    public void testAddingLargeImageToOgg() {
         File orig = new File("testdata", "test73.m4a");
         if (!orig.isFile())
         {

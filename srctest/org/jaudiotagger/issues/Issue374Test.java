@@ -16,8 +16,7 @@ import java.io.File;
  */
 public class Issue374Test extends AbstractTestCase
 {
-    public void testIssue() throws Exception
-    {
+    public void testIssue() {
         File testdatadir = new File("testdata");
         int count =0;
         for(File next:testdatadir.listFiles(new MP3FileFilter()))

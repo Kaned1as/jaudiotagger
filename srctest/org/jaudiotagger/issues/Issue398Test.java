@@ -17,8 +17,7 @@ import org.jaudiotagger.tag.vorbiscomment.VorbisCommentTag;
  */
 public class Issue398Test extends AbstractTestCase
 {
-    public void testID3v24() throws Exception
-    {
+    public void testID3v24() {
         Exception caught = null;
         try
         {
@@ -57,8 +56,7 @@ public class Issue398Test extends AbstractTestCase
         assertNull(caught);
     }
 
-    public void testID3v23() throws Exception
-    {
+    public void testID3v23() {
         Exception caught = null;
         try
         {
@@ -91,8 +89,7 @@ public class Issue398Test extends AbstractTestCase
         assertNull(caught);
     }
 
-    public void testID3v22() throws Exception
-    {
+    public void testID3v22() {
         Exception caught = null;
         try
         {
@@ -126,8 +123,7 @@ public class Issue398Test extends AbstractTestCase
     }
 
 
-    public void testID3v1() throws Exception
-    {
+    public void testID3v1() {
         Exception caught = null;
         try
         {
@@ -147,8 +143,7 @@ public class Issue398Test extends AbstractTestCase
         assertNull(caught);
     }
 
-     public void testMp4() throws Exception
-    {
+     public void testMp4() {
         Exception caught = null;
         try
         {
@@ -195,10 +190,8 @@ public class Issue398Test extends AbstractTestCase
 
     /** Mp4 should only allow one track field
      *
-     * @throws Exception
      */
-    public void testMp4getValue() throws Exception
-    {
+    public void testMp4getValue() {
         Exception caught = null;
         try
         {
@@ -222,8 +215,7 @@ public class Issue398Test extends AbstractTestCase
         assertNull(caught);
     }
 
-    public void testVorbis() throws Exception
-    {
+    public void testVorbis() {
         Exception caught = null;
         try
         {
@@ -266,8 +258,7 @@ public class Issue398Test extends AbstractTestCase
         assertNull(caught);
     }
 
-    public void testFlac() throws Exception
-    {
+    public void testFlac() {
         Exception caught = null;
         try
         {
@@ -309,8 +300,7 @@ public class Issue398Test extends AbstractTestCase
         assertNull(caught);
     }
 
-     public void testWma() throws Exception
-    {
+     public void testWma() {
         Exception caught = null;
         try
         {

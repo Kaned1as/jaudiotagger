@@ -607,7 +607,7 @@ public class MP3AudioHeaderTest extends TestCase
             //make change to file
             mp3file.getID3v2Tag().setField(FieldKey.TITLE,"FREDDY");
             mp3file.getID3v2Tag().deleteField(FieldKey.COVER_ART);
-            ((ID3v24Tag) mp3file.getID3v2Tag()).removeFrame("PRIV");
+            mp3file.getID3v2Tag().removeFrame("PRIV");
             final TagOptionSingleton tagOptions = TagOptionSingleton.getInstance();
             tagOptions.setToDefault();
 

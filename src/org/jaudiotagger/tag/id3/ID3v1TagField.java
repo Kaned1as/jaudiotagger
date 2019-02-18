@@ -13,8 +13,7 @@ import java.nio.charset.Charset;
  * @author @author Raphael Slinckx (KiKiDonK)
  * @author Christian Laireiter (liree)
  */
-public class ID3v1TagField implements TagTextField
-{
+public class ID3v1TagField implements TagTextField {
 
     /**
      * If <code>true</code>, the id of the current encapsulated tag field is
@@ -39,28 +38,20 @@ public class ID3v1TagField implements TagTextField
      * Creates an instance.
      *
      * @param raw Raw byte data of the tagfield.
-     * @throws UnsupportedEncodingException If the data doesn't conform "UTF-8" specification.
      */
-    public ID3v1TagField(final byte[] raw) throws UnsupportedEncodingException
-    {
+    public ID3v1TagField(final byte[] raw) {
         String field = new String(raw, Charset.forName("ISO-8859-1"));
 
         int i = field.indexOf('=');
-        if (i == -1)
-        {
+        if (i == -1) {
             //Beware that ogg ID, must be capitalized and contain no space..
             this.id = "ERRONEOUS";
             this.content = field;
-        }
-        else
-        {
+        } else {
             this.id = field.substring(0, i).toUpperCase();
-            if (field.length() > i)
-            {
+            if (field.length() > i) {
                 this.content = field.substring(i + 1);
-            }
-            else
-            {
+            } else {
                 //We have "XXXXXX=" with nothing after the "="
                 this.content = "";
             }
@@ -74,8 +65,7 @@ public class ID3v1TagField implements TagTextField
      * @param fieldId      ID (name) of the field.
      * @param fieldContent Content of the field.
      */
-    public ID3v1TagField(final String fieldId, final String fieldContent)
-    {
+    public ID3v1TagField(final String fieldId, final String fieldContent) {
         this.id = fieldId.toUpperCase();
         this.content = fieldContent;
         checkCommon();
@@ -86,8 +76,7 @@ public class ID3v1TagField implements TagTextField
      * {@link #common}in order to reflect if the tag id is a commonly used one.
      * <br>
      */
-    private void checkCommon()
-    {
+    private void checkCommon() {
         this.common = id.equals(ID3v1FieldKey.TITLE.name()) || id.equals(ID3v1FieldKey.ALBUM.name()) || id.equals(ID3v1FieldKey.ARTIST.name()) || id.equals(ID3v1FieldKey.GENRE.name()) || id.equals(ID3v1FieldKey.YEAR.name()) || id.equals(ID3v1FieldKey.COMMENT.name()) || id.equals(ID3v1FieldKey.TRACK.name());
     }
 
@@ -100,8 +89,7 @@ public class ID3v1TagField implements TagTextField
      * @param dstOffset at which position of <code>dst</code> the data should be
      *                  copied.
      */
-    protected void copy(byte[] src, byte[] dst, int dstOffset)
-    {
+    protected void copy(byte[] src, byte[] dst, int dstOffset) {
         //        for (int i = 0; i < src.length; i++)
         //            dst[i + dstOffset] = src[i];
         /*
@@ -112,35 +100,29 @@ public class ID3v1TagField implements TagTextField
     }
 
     @Override
-    public void copyContent(TagField field)
-    {
-        if (field instanceof TagTextField)
-        {
+    public void copyContent(TagField field) {
+        if (field instanceof TagTextField) {
             this.content = ((TagTextField) field).getContent();
         }
     }
 
     @Override
-    public String getContent()
-    {
+    public String getContent() {
         return content;
     }
 
     @Override
-    public Charset getEncoding()
-    {
+    public Charset getEncoding() {
         return Charset.forName("ISO-8859-1");
     }
 
     @Override
-    public String getId()
-    {
+    public String getId() {
         return this.id;
     }
 
     @Override
-    public byte[] getRawContent() throws UnsupportedEncodingException
-    {
+    public byte[] getRawContent() {
         byte[] size = new byte[4];
         byte[] idBytes = this.id.getBytes(Charset.forName("ISO-8859-1"));
         byte[] contentBytes = this.content.getBytes(Charset.forName("ISO-8859-1"));
@@ -165,44 +147,37 @@ public class ID3v1TagField implements TagTextField
     }
 
     @Override
-    public boolean isBinary()
-    {
+    public boolean isBinary() {
         return false;
     }
 
     @Override
-    public void isBinary(boolean b)
-    {
+    public void isBinary(boolean b) {
         //Do nothing, always false
     }
 
     @Override
-    public boolean isCommon()
-    {
+    public boolean isCommon() {
         return common;
     }
 
     @Override
-    public boolean isEmpty()
-    {
+    public boolean isEmpty() {
         return "".equals(this.content);
     }
 
     @Override
-    public void setContent(String s)
-    {
+    public void setContent(String s) {
         this.content = s;
     }
 
     @Override
-    public void setEncoding(Charset s)
-    {
+    public void setEncoding(Charset s) {
         //Do nothing, encoding is always ISO-8859-1 for this tag
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return getContent();
     }
 }

@@ -60,8 +60,7 @@ public class AsfTagTest extends TestCase
 
     
 
-    public void testMixedIdentifiers() throws Exception
-    {
+    public void testMixedIdentifiers() {
         final AsfTag asfTag = new AsfTag();
         AsfTagTextField textField = asfTag.createField(AsfFieldKey.ALBUM, AsfFieldKey.ALBUM.toString());
         asfTag.setField(textField);

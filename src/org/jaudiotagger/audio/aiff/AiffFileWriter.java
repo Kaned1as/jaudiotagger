@@ -28,20 +28,17 @@ import java.nio.channels.FileChannel;
 /**
  * Write/delete tag info for Aiff file (Old Apple format)
  */
-public class AiffFileWriter extends AudioFileWriter2
-{
+public class AiffFileWriter extends AudioFileWriter2 {
 
     private AiffTagWriter tw = new AiffTagWriter();
 
     @Override
-    protected void writeTag(Tag tag, FileChannel channel, final String fileName) throws CannotWriteException
-    {
+    protected void writeTag(Tag tag, FileChannel channel, final String fileName) throws CannotWriteException {
         tw.write(tag, channel, fileName);
     }
 
     @Override
-    protected void deleteTag(Tag tag, FileChannel channel, final String fileName) throws CannotWriteException
-    {
+    protected void deleteTag(Tag tag, FileChannel channel, final String fileName) throws CannotWriteException {
         tw.delete(tag, channel, fileName);
     }
 

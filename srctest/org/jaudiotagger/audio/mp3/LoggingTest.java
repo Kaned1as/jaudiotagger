@@ -86,8 +86,7 @@ public class LoggingTest extends TestCase
     }
 
     public static int count=0;
-    public void testMultiThreadedSimpleDataAccess() throws Exception
-    {                               
+    public void testMultiThreadedSimpleDataAccess() {
         final SimpleDateFormat timeInFormat = new SimpleDateFormat("ss");
         final Thread[] threads = new Thread[1000];
         for(int i = 0; i < 1000; i++)

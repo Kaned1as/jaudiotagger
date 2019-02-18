@@ -14,8 +14,7 @@ import java.io.File;
  */
 public class Issue66Test extends AbstractTestCase
 {
-    public void testIssue() throws Exception
-    {
+    public void testIssue() {
         Exception caught = null;
         File orig = new File("testdata", "test118.m4a");
 

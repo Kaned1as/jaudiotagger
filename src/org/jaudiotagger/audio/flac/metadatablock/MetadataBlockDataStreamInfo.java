@@ -1,17 +1,17 @@
 /*
  * Entagged Audio Tag library
  * Copyright (c) 2003-2005 Raphaël Slinckx <raphael@slinckx.net>
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- *  
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -21,7 +21,6 @@ package org.jaudiotagger.audio.flac.metadatablock;
 import org.jaudiotagger.audio.generic.Utils;
 
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.channels.FileChannel;
@@ -29,7 +28,7 @@ import java.util.logging.Logger;
 
 /**
  * Stream Info
- *
+ * <p>
  * This block has information about the whole stream, like sample rate, number of channels, total number of samples,
  * etc. It must be present as the first metadata block in the stream. Other metadata blocks may follow, and ones
  * that the decoder doesn't understand, it will skip.
@@ -51,8 +50,7 @@ import java.util.logging.Logger;
  * NOTES
  * * FLAC specifies a minimum block size of 16 and a maximum block size of 65535, meaning the bit patterns corresponding to the numbers 0-15 in the minimum blocksize and maximum blocksize fields are invalid.
  */
-public class MetadataBlockDataStreamInfo  implements MetadataBlockData
-{
+public class MetadataBlockDataStreamInfo implements MetadataBlockData {
     public static final int STREAM_INFO_DATA_LENGTH = 34;
 
     // Logger Object
@@ -65,41 +63,36 @@ public class MetadataBlockDataStreamInfo  implements MetadataBlockData
 
     private ByteBuffer rawdata;
 
-    public MetadataBlockDataStreamInfo(MetadataBlockHeader header, FileChannel fc) throws IOException
-    {
+    public MetadataBlockDataStreamInfo(MetadataBlockHeader header, FileChannel fc) throws IOException {
         rawdata = ByteBuffer.allocate(header.getDataLength());
         rawdata.order(ByteOrder.BIG_ENDIAN);
         int bytesRead = fc.read(rawdata);
-        if (bytesRead < header.getDataLength())
-        {
+        if (bytesRead < header.getDataLength()) {
             throw new IOException("Unable to read required number of bytes, read:" + bytesRead + ":required:" + header.getDataLength());
         }
         rawdata.flip();
 
-        minBlockSize    = Utils.u(rawdata.getShort());
-        maxBlockSize    = Utils.u(rawdata.getShort());
-        minFrameSize    = readThreeByteInteger(rawdata.get(), rawdata.get(), rawdata.get());
-        maxFrameSize    = readThreeByteInteger(rawdata.get(), rawdata.get(), rawdata.get());
-        samplingRate    = readSamplingRate();
-        noOfChannels    = readNoOfChannels();
-        bitsPerSample   = readBitsPerSample();
-        noOfSamples     = readTotalNumberOfSamples();
-        md5             = readMd5();
-        trackLength     = (float) ((double) noOfSamples / samplingRate);
+        minBlockSize = Utils.u(rawdata.getShort());
+        maxBlockSize = Utils.u(rawdata.getShort());
+        minFrameSize = readThreeByteInteger(rawdata.get(), rawdata.get(), rawdata.get());
+        maxFrameSize = readThreeByteInteger(rawdata.get(), rawdata.get(), rawdata.get());
+        samplingRate = readSamplingRate();
+        noOfChannels = readNoOfChannels();
+        bitsPerSample = readBitsPerSample();
+        noOfSamples = readTotalNumberOfSamples();
+        md5 = readMd5();
+        trackLength = (float) ((double) noOfSamples / samplingRate);
         samplingRatePerChannel = samplingRate / noOfChannels;
         rawdata.rewind();
     }
 
     private final static char[] hexArray = "0123456789abcdef".toCharArray();
 
-    private String readMd5()
-    {
+    private String readMd5() {
         char[] hexChars = new char[32]; // MD5 is always 32 characters
 
-        if(rawdata.limit()>=34)
-        {
-            for (int i = 0; i < 16; i++)
-            {
+        if (rawdata.limit() >= 34) {
+            for (int i = 0; i < 16; i++) {
                 int v = rawdata.get(i + 18) & 0xFF; // Offset 18
                 hexChars[i * 2] = hexArray[v >>> 4];
                 hexChars[i * 2 + 1] = hexArray[v & 0x0F];
@@ -112,67 +105,54 @@ public class MetadataBlockDataStreamInfo  implements MetadataBlockData
     /**
      * @return the rawdata as it will be written to file
      */
-    public ByteBuffer getBytes()
-    {
+    public ByteBuffer getBytes() {
         return rawdata;
     }
 
-    public int getLength()
-    {
+    public int getLength() {
         return rawdata.limit();
     }
 
-    
 
-    public String toString()
-    {
+    public String toString() {
 
         return "MinBlockSize:" + minBlockSize + "MaxBlockSize:" + maxBlockSize + "MinFrameSize:" + minFrameSize + "MaxFrameSize:" + maxFrameSize + "SampleRateTotal:" + samplingRate + "SampleRatePerChannel:" + samplingRatePerChannel + ":Channel number:" + noOfChannels + ":Bits per sample: " + bitsPerSample + ":TotalNumberOfSamples: " + noOfSamples + ":Length: " + trackLength;
 
     }
 
-    public float getPreciseLength()
-    {
+    public float getPreciseLength() {
         return trackLength;
     }
 
-    public int getNoOfChannels()
-    {
+    public int getNoOfChannels() {
         return noOfChannels;
     }
 
-    public int getSamplingRate()
-    {
+    public int getSamplingRate() {
         return samplingRate;
     }
 
-    public int getSamplingRatePerChannel()
-    {
+    public int getSamplingRatePerChannel() {
         return samplingRatePerChannel;
     }
 
-    public String getEncodingType()
-    {
+    public String getEncodingType() {
         return "FLAC " + bitsPerSample + " bits";
     }
-    
-    public int getBitsPerSample()
-    {
-    	return bitsPerSample;
+
+    public int getBitsPerSample() {
+        return bitsPerSample;
     }
 
-    public long getNoOfSamples()
-    {
+    public long getNoOfSamples() {
         return noOfSamples;
     }
 
-    public String getMD5Signature()
-    {
+    public String getMD5Signature() {
         return md5;
     }
 
-    public boolean isValid()
-    {
+    public boolean isValid() {
         return isValid;
     }
 
@@ -184,8 +164,7 @@ public class MetadataBlockDataStreamInfo  implements MetadataBlockData
      * @param b3
      * @return
      */
-    private int readThreeByteInteger(byte b1, byte b2, byte b3)
-    {
+    private int readThreeByteInteger(byte b1, byte b2, byte b3) {
         int rate = (Utils.u(b1) << 16) + (Utils.u(b2) << 8) + (Utils.u(b3));
         return rate;
     }
@@ -195,32 +174,31 @@ public class MetadataBlockDataStreamInfo  implements MetadataBlockData
      *
      * @return
      */
-    private int readSamplingRate()
-    {
+    private int readSamplingRate() {
         int rate = (Utils.u(rawdata.get(10)) << 12) + (Utils.u(rawdata.get(11)) << 4) + ((Utils.u(rawdata.get(12)) & 0xF0) >>> 4);
         return rate;
     }
 
     /**
-    Stored in 5th to 7th bits of byte 12
+     * Stored in 5th to 7th bits of byte 12
      */
-    private int readNoOfChannels()
-    {
+    private int readNoOfChannels() {
         return ((Utils.u(rawdata.get(12)) & 0x0E) >>> 1) + 1;
     }
 
-    /** Stored in last bit of byte 12 and first 4 bits of byte 13 */
-    private int readBitsPerSample()
-    {
+    /**
+     * Stored in last bit of byte 12 and first 4 bits of byte 13
+     */
+    private int readBitsPerSample() {
         return ((Utils.u(rawdata.get(12)) & 0x01) << 4) + ((Utils.u(rawdata.get(13)) & 0xF0) >>> 4) + 1;
     }
 
-    /** Stored in second half of byte 13 plus bytes 14 - 17
+    /**
+     * Stored in second half of byte 13 plus bytes 14 - 17
      *
      * @return
      */
-    private int readTotalNumberOfSamples()
-    {
+    private int readTotalNumberOfSamples() {
         int nb = Utils.u(rawdata.get(17));
         nb += Utils.u(rawdata.get(16)) << 8;
         nb += Utils.u(rawdata.get(15)) << 16;

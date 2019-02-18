@@ -14,8 +14,7 @@ import java.io.File;
  */
 public class Issue478Test extends AbstractTestCase
 {
-    public void testKeepPodcastTags() throws Exception
-    {
+    public void testKeepPodcastTags() {
         File orig = new File("testdata", "test115.mp3");
         if (!orig.isFile())
         {
@@ -47,7 +46,7 @@ public class Issue478Test extends AbstractTestCase
             assertNotNull(tag.getFrame("TGID"));
 
             //Now get v24 Version
-            ID3v24Tag v24tag   = (ID3v24Tag)mp3File.getID3v2TagAsv24();
+            ID3v24Tag v24tag   = mp3File.getID3v2TagAsv24();
             assertTrue(v24tag.hasFrame("TGID"));
             assertTrue(v24tag.hasFrame("PCST"));
             assertNotNull(v24tag.getFrame("PCST"));

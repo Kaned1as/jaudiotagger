@@ -13,17 +13,16 @@ import java.nio.charset.Charset;
  *
  * <p>Originally only used by Itunes for information that was iTunes specific but now used in a wide range of uses,
  * for example Musicbrainz uses it for many of its fields.
- *
+ * <p>
  * These fields have a more complex setup
  * Box ----  shows this is a reverse dns metadata field
  * Box mean  the issuer in the form of reverse DNS domain (e.g com.apple.iTunes)
  * Box name  descriptor identifying the type of contents
  * Box data  contents
- *
+ * <p>
  * The raw data passed starts from the mean box
  */
-public class Mp4TagReverseDnsField extends Mp4TagField implements TagTextField
-{
+public class Mp4TagReverseDnsField extends Mp4TagField implements TagTextField {
     public static final String IDENTIFIER = "----";
 
     protected int dataSize;
@@ -44,8 +43,7 @@ public class Mp4TagReverseDnsField extends Mp4TagField implements TagTextField
      * @param id
      * @param content
      */
-    public Mp4TagReverseDnsField(Mp4FieldKey id, String content)
-    {
+    public Mp4TagReverseDnsField(Mp4FieldKey id, String content) {
         super(id.getFieldName());
         this.issuer = id.getIssuer();
         this.descriptor = id.getIdentifier();
@@ -54,32 +52,29 @@ public class Mp4TagReverseDnsField extends Mp4TagField implements TagTextField
 
     /**
      * Newly created Reverse Dns field bypassing the Mp4TagField enum for creation of temporary reverse dns fields
+     *
      * @param fieldName
      * @param issuer
      * @param identifier
      * @param content
      */
-    public Mp4TagReverseDnsField(final String fieldName, final String issuer, final String identifier, final String content)
-    {
+    public Mp4TagReverseDnsField(final String fieldName, final String issuer, final String identifier, final String content) {
         super(fieldName);
-        this.issuer     = issuer;
+        this.issuer = issuer;
         this.descriptor = identifier;
-        this.content    = content;
+        this.content = content;
     }
 
     @Override
-    public Mp4FieldType getFieldType()
-    {
+    public Mp4FieldType getFieldType() {
         //TODO always assuming text at moment but may not always be the case (though dont have any concrete
         //examples)
         return Mp4FieldType.TEXT;
     }
 
     @Override
-    public void copyContent(TagField field)
-    {
-        if (field instanceof Mp4TagReverseDnsField)
-        {
+    public void copyContent(TagField field) {
+        if (field instanceof Mp4TagReverseDnsField) {
             this.issuer = ((Mp4TagReverseDnsField) field).getIssuer();
             this.descriptor = ((Mp4TagReverseDnsField) field).getDescriptor();
             this.content = ((Mp4TagReverseDnsField) field).getContent();
@@ -87,66 +82,56 @@ public class Mp4TagReverseDnsField extends Mp4TagField implements TagTextField
     }
 
     @Override
-    public String getContent()
-    {
+    public String getContent() {
         return content;
     }
 
     @Override
-    protected byte[] getDataBytes() throws UnsupportedEncodingException
-    {
+    protected byte[] getDataBytes() {
         return content.getBytes(getEncoding());
     }
 
     @Override
-    public Charset getEncoding()
-    {
+    public Charset getEncoding() {
         return Charset.forName("UTF-8");
     }
 
     @Override
-    public boolean isBinary()
-    {
+    public boolean isBinary() {
         return false;
     }
 
     @Override
-    public boolean isEmpty()
-    {
+    public boolean isEmpty() {
         return "".equals(this.content.trim());
     }
 
     @Override
-    public void setContent(String s)
-    {
+    public void setContent(String s) {
         this.content = s;
     }
 
     @Override
-    public void setEncoding(Charset s)
-    {
+    public void setEncoding(Charset s) {
         /* Not allowed */
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return content;
     }
 
     /**
      * @return the issuer
      */
-    public String getIssuer()
-    {
+    public String getIssuer() {
         return issuer;
     }
 
     /**
      * @return the descriptor
      */
-    public String getDescriptor()
-    {
+    public String getDescriptor() {
         return descriptor;
     }
 
@@ -155,8 +140,7 @@ public class Mp4TagReverseDnsField extends Mp4TagField implements TagTextField
      *
      * @param issuer
      */
-    public void setIssuer(String issuer)
-    {
+    public void setIssuer(String issuer) {
         this.issuer = issuer;
     }
 
@@ -165,8 +149,7 @@ public class Mp4TagReverseDnsField extends Mp4TagField implements TagTextField
      *
      * @param descriptor
      */
-    public void setDescriptor(String descriptor)
-    {
+    public void setDescriptor(String descriptor) {
         this.descriptor = descriptor;
     }
 }

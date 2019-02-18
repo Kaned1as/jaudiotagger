@@ -17,8 +17,7 @@ public class Issue315Test extends AbstractTestCase
      *
      * @throws Exception
      */
-    public void testReadWriteTagWithPictureBlockAtStart() throws Exception
-    {
+    public void testReadWriteTagWithPictureBlockAtStart() {
         File orig = new File("testdata", "test54.flac");
         if (!orig.isFile())
         {

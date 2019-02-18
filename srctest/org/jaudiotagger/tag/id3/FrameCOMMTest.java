@@ -15,8 +15,7 @@ public class FrameCOMMTest extends AbstractTestCase
      * Should run without throwing Runtime excception, although COMMFrame wont be loaded and will
      * throwe invalid size exception
      */
-    public void testReadFileContainingInvalidSizeCOMMFrame() throws Exception
-    {
+    public void testReadFileContainingInvalidSizeCOMMFrame() {
         Exception e = null;
         try
         {
@@ -34,8 +33,7 @@ public class FrameCOMMTest extends AbstractTestCase
      * Should run without throwing Runtime excception, although COMMFrame wont be loaded and will
      * throwe invalid datatype exception
      */
-    public void testReadFileContainingInvalidTextEncodingCOMMFrame() throws Exception
-    {
+    public void testReadFileContainingInvalidTextEncodingCOMMFrame() {
         Exception e = null;
         try
         {
@@ -53,8 +51,7 @@ public class FrameCOMMTest extends AbstractTestCase
      * Can read file containing a language code that does not actually map to a code , and write it back
      * In this real example the language code has been held as three space characters
      */
-    public void testreadFrameContainingInvalidlanguageCodeCOMMFrame() throws Exception
-    {
+    public void testreadFrameContainingInvalidlanguageCodeCOMMFrame() {
         final String INVALID_LANG_CODE = "   ";
         Exception e = null;
         try
@@ -80,8 +77,7 @@ public class FrameCOMMTest extends AbstractTestCase
     /**
      * Can write file containing a COMM Frame with null language code
      */
-    public void testsaveFileContainingNullLanguageCodeCOMMFrame() throws Exception
-    {
+    public void testsaveFileContainingNullLanguageCodeCOMMFrame() {
         final String SAFE_LANG_CODE = "   ";
         final String SAFE_LONGER_LANG_CODE = "aa ";
         final String SAFE_SHORTER_LANG_CODE = "aaa";

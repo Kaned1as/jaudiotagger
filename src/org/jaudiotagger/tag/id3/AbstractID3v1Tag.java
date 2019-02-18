@@ -1,26 +1,25 @@
 /**
- *  @author : Paul Taylor
- *  @author : Eric Farng
- *
- *  Version @version:$Id$
- *
- *  MusicTag Copyright (C)2003,2004
- *
- *  This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser
- *  General Public  License as published by the Free Software Foundation; either version 2.1 of the License,
- *  or (at your option) any later version.
- *
- *  This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
- *  the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU Lesser General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public License along with this library; if not,
- *  you can get a copy from http://www.opensource.org/licenses/lgpl-license.php or write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- *
+ * @author : Paul Taylor
+ * @author : Eric Farng
+ * <p>
+ * Version @version:$Id$
+ * <p>
+ * MusicTag Copyright (C)2003,2004
+ * <p>
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser
+ * General Public  License as published by the Free Software Foundation; either version 2.1 of the License,
+ * or (at your option) any later version.
+ * <p>
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU Lesser General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not,
+ * you can get a copy from http://www.opensource.org/licenses/lgpl-license.php or write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+ * <p>
  * Description:
  * Abstract superclass of all URL Frames
- *
  */
 package org.jaudiotagger.tag.id3;
 
@@ -38,19 +37,16 @@ import java.util.regex.Pattern;
  * @author : Eric Farng
  * @author : Paul Taylor
  */
-abstract public class AbstractID3v1Tag extends AbstractID3Tag
-{
+abstract public class AbstractID3v1Tag extends AbstractID3Tag {
 
     //Logger
     public static Logger logger = Logger.getLogger("org.jaudiotagger.tag.id3");
 
 
-    public AbstractID3v1Tag()
-    {
+    public AbstractID3v1Tag() {
     }
 
-    public AbstractID3v1Tag(AbstractID3v1Tag copyObject)
-    {
+    public AbstractID3v1Tag(AbstractID3v1Tag copyObject) {
         super(copyObject);
     }
 
@@ -94,8 +90,7 @@ abstract public class AbstractID3v1Tag extends AbstractID3Tag
      *
      * @return size of this tag in bytes
      */
-    public int getSize()
-    {
+    public int getSize() {
         return TAG_LENGTH;
     }
 
@@ -104,13 +99,13 @@ abstract public class AbstractID3v1Tag extends AbstractID3Tag
      *
      * @return whether tag exists within the byteBuffer
      */
-    public static boolean seekForV1OrV11Tag(ByteBuffer byteBuffer)
-    {
+    public static boolean seekForV1OrV11Tag(ByteBuffer byteBuffer) {
         byte[] buffer = new byte[FIELD_TAGID_LENGTH];
         // read the TAG value
         byteBuffer.get(buffer, 0, FIELD_TAGID_LENGTH);
         return (Arrays.equals(buffer, TAG_ID));
     }
+
     /**
      * Delete tag from file
      * Looks for tag and if found lops it off the file.
@@ -118,8 +113,7 @@ abstract public class AbstractID3v1Tag extends AbstractID3Tag
      * @param file to delete the tag from
      * @throws IOException if there was a problem accessing the file
      */
-    public void delete(RandomAccessFile file) throws IOException
-    {
+    public void delete(RandomAccessFile file) throws IOException {
         //Read into Byte Buffer
         logger.config("Deleting ID3v1 from file if exists");
 
@@ -127,31 +121,24 @@ abstract public class AbstractID3v1Tag extends AbstractID3Tag
         ByteBuffer byteBuffer;
         fc = file.getChannel();
 
-        if(file.length() < TAG_LENGTH)
-        {
+        if (file.length() < TAG_LENGTH) {
             throw new IOException("File not not appear large enough to contain a tag");
         }
         fc.position(file.length() - TAG_LENGTH);
         byteBuffer = ByteBuffer.allocate(TAG_LENGTH);
         fc.read(byteBuffer);
         byteBuffer.rewind();
-        if (AbstractID3v1Tag.seekForV1OrV11Tag(byteBuffer))
-        {
-            try
-            {
+        if (AbstractID3v1Tag.seekForV1OrV11Tag(byteBuffer)) {
+            try {
                 logger.config("Deleted ID3v1 tag");
                 file.setLength(file.length() - TAG_LENGTH);
+            } catch (IOException ex) {
+                logger.severe("Unable to delete existing ID3v1 Tag:" + ex.getMessage());
             }
-            catch(IOException ex)
-            {
-                logger.severe("Unable to delete existing ID3v1 Tag:"+ex.getMessage());
-            }
-        }
-        else
-        {
+        } else {
             logger.config("Unable to find ID3v1 tag to deleteField");
         }
     }
 
- 
+
 }

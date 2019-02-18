@@ -1,17 +1,17 @@
 /*
  * Entagged Audio Tag library
  * Copyright (c) 2003-2005 Raphaël Slinckx <raphael@slinckx.net>
- * 
+ *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
- *  
+ *
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  * Lesser General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
@@ -46,8 +46,7 @@ import java.nio.charset.Charset;
  * change as it seems that code should probably be enscapulated into this. Whereas the raw content returned by the
  * getRawContent() contains the byte data for parent and child.
  */
-public class Mp4TagTextField extends Mp4TagField implements TagTextField
-{
+public class Mp4TagTextField extends Mp4TagField implements TagTextField {
     protected int dataSize;
     protected String content;
 
@@ -57,72 +56,60 @@ public class Mp4TagTextField extends Mp4TagField implements TagTextField
      * @param id      parent id
      * @param content data atom data
      */
-    public Mp4TagTextField(String id, String content)
-    {
+    public Mp4TagTextField(String id, String content) {
         super(id);
         this.content = content;
     }
 
     @Override
-    public void copyContent(TagField field)
-    {
-        if (field instanceof Mp4TagTextField)
-        {
+    public void copyContent(TagField field) {
+        if (field instanceof Mp4TagTextField) {
             this.content = ((Mp4TagTextField) field).getContent();
         }
     }
 
     @Override
-    public String getContent()
-    {
+    public String getContent() {
         return content;
     }
 
     @Override
-    protected byte[] getDataBytes() throws UnsupportedEncodingException
-    {
+    protected byte[] getDataBytes() throws UnsupportedEncodingException {
         return content.getBytes(getEncoding());
     }
 
     @Override
-    public Mp4FieldType getFieldType()
-    {
+    public Mp4FieldType getFieldType() {
         return Mp4FieldType.TEXT;
     }
 
     @Override
-    public Charset getEncoding()
-    {
+    public Charset getEncoding() {
         return Charset.forName("UTF-8");
     }
 
     @Override
-    public boolean isBinary()
-    {
+    public boolean isBinary() {
         return false;
     }
 
     @Override
-    public boolean isEmpty()
-    {
+    public boolean isEmpty() {
         return this.content.trim().equals("");
     }
 
     @Override
-    public void setContent(String s)
-    {
+    public void setContent(String s) {
         this.content = s;
     }
 
     @Override
-    public void setEncoding(Charset s)
-    {
+    public void setEncoding(Charset s) {
         /* Not allowed */
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return content;
     }
 }

@@ -9,8 +9,7 @@ import java.util.Collection;
 /**
  * @author eric
  */
-public class EncryptionChunk extends Chunk
-{
+public class EncryptionChunk extends Chunk {
     private String keyID;
 
     private String licenseURL;
@@ -26,8 +25,7 @@ public class EncryptionChunk extends Chunk
      *
      * @param chunkLen Length of current chunk.
      */
-    public EncryptionChunk(final BigInteger chunkLen)
-    {
+    public EncryptionChunk(final BigInteger chunkLen) {
         super(GUID.GUID_CONTENT_ENCRYPTION, chunkLen);
         this.strings = new ArrayList<String>();
         this.secretData = "";
@@ -41,8 +39,7 @@ public class EncryptionChunk extends Chunk
      *
      * @param toAdd String to add.
      */
-    public void addString(final String toAdd)
-    {
+    public void addString(final String toAdd) {
         this.strings.add(toAdd);
     }
 
@@ -51,8 +48,7 @@ public class EncryptionChunk extends Chunk
      *
      * @return
      */
-    public String getKeyID()
-    {
+    public String getKeyID() {
         return this.keyID;
     }
 
@@ -61,8 +57,7 @@ public class EncryptionChunk extends Chunk
      *
      * @return
      */
-    public String getLicenseURL()
-    {
+    public String getLicenseURL() {
         return this.licenseURL;
     }
 
@@ -71,8 +66,7 @@ public class EncryptionChunk extends Chunk
      *
      * @return
      */
-    public String getProtectionType()
-    {
+    public String getProtectionType() {
         return this.protectionType;
     }
 
@@ -81,8 +75,7 @@ public class EncryptionChunk extends Chunk
      *
      * @return
      */
-    public String getSecretData()
-    {
+    public String getSecretData() {
         return this.secretData;
     }
 
@@ -92,8 +85,7 @@ public class EncryptionChunk extends Chunk
      *
      * @return Inserted Strings.
      */
-    public Collection<String> getStrings()
-    {
+    public Collection<String> getStrings() {
         return new ArrayList<String>(this.strings);
     }
 
@@ -101,8 +93,7 @@ public class EncryptionChunk extends Chunk
      * {@inheritDoc}
      */
     @Override
-    public String prettyPrint(final String prefix)
-    {
+    public String prettyPrint(final String prefix) {
         final StringBuilder result = new StringBuilder(super.prettyPrint(prefix));
         result.insert(0, Utils.LINE_SEPARATOR + prefix + " Encryption:" + Utils.LINE_SEPARATOR);
         result.append(prefix).append("	|->keyID ").append(this.keyID).append(Utils.LINE_SEPARATOR);
@@ -110,8 +101,7 @@ public class EncryptionChunk extends Chunk
         result.append(prefix).append("	|->protectionType ").append(this.protectionType).append(Utils.LINE_SEPARATOR);
         result.append(prefix).append("	|->licenseURL ").append(this.licenseURL).append(Utils.LINE_SEPARATOR);
         this.strings.iterator();
-        for (final String string : this.strings)
-        {
+        for (final String string : this.strings) {
             result.append(prefix).append("   |->").append(string).append(Utils.LINE_SEPARATOR);
         }
         return result.toString();
@@ -122,8 +112,7 @@ public class EncryptionChunk extends Chunk
      *
      * @param toAdd String to add.
      */
-    public void setKeyID(final String toAdd)
-    {
+    public void setKeyID(final String toAdd) {
         this.keyID = toAdd;
     }
 
@@ -132,8 +121,7 @@ public class EncryptionChunk extends Chunk
      *
      * @param toAdd String to add.
      */
-    public void setLicenseURL(final String toAdd)
-    {
+    public void setLicenseURL(final String toAdd) {
         this.licenseURL = toAdd;
     }
 
@@ -142,8 +130,7 @@ public class EncryptionChunk extends Chunk
      *
      * @param toAdd String to add.
      */
-    public void setProtectionType(final String toAdd)
-    {
+    public void setProtectionType(final String toAdd) {
         this.protectionType = toAdd;
     }
 
@@ -152,8 +139,7 @@ public class EncryptionChunk extends Chunk
      *
      * @param toAdd String to add.
      */
-    public void setSecretData(final String toAdd)
-    {
+    public void setSecretData(final String toAdd) {
         this.secretData = toAdd;
     }
 }
