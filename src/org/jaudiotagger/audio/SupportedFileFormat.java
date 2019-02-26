@@ -37,7 +37,7 @@ public enum SupportedFileFormat {
     FLAC("flac") {
         @Override
         public Tag createDefaultTag() {
-            return new FlacTag(VorbisCommentTag.createNewTag(), new ArrayList<MetadataBlockDataPicture>());
+            return new FlacTag(VorbisCommentTag.createNewTag(), new ArrayList<>());
         }
     },
     MP4("mp4") {
@@ -110,6 +110,12 @@ public enum SupportedFileFormat {
         @Override
         public Tag createDefaultTag() {
             return Dsf.createDefaultTag();
+        }
+    },
+    OPUS("opus") {
+        @Override
+        public Tag createDefaultTag() {
+            return VorbisCommentTag.createNewTag();
         }
     },
     UNKNOWN("") {

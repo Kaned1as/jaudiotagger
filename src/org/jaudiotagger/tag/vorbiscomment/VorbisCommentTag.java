@@ -20,9 +20,9 @@ package org.jaudiotagger.tag.vorbiscomment;
 
 import org.jaudiotagger.audio.flac.metadatablock.MetadataBlockDataPicture;
 import org.jaudiotagger.audio.generic.AbstractTag;
-import org.jaudiotagger.audio.ogg.util.VorbisHeader;
 import org.jaudiotagger.logging.ErrorMessage;
 import org.jaudiotagger.tag.*;
+import org.jaudiotagger.tag.id3.valuepair.TextEncoding;
 import org.jaudiotagger.tag.images.Artwork;
 import org.jaudiotagger.tag.images.ArtworkFactory;
 
@@ -242,7 +242,7 @@ public class VorbisCommentTag extends AbstractTag {
     }
 
     protected boolean isAllowedEncoding(Charset enc) {
-        return enc.equals(VorbisHeader.CHARSET_UTF_8);
+        return enc.equals(Charset.forName(TextEncoding.CHARSET_UTF_8));
     }
 
     public String toString() {

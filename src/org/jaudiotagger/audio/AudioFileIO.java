@@ -34,6 +34,8 @@ import org.jaudiotagger.audio.mp4.Mp4FileReader;
 import org.jaudiotagger.audio.mp4.Mp4FileWriter;
 import org.jaudiotagger.audio.ogg.OggFileReader;
 import org.jaudiotagger.audio.ogg.OggFileWriter;
+import org.jaudiotagger.audio.opus.OpusFileReader;
+import org.jaudiotagger.audio.opus.OpusFileWriter;
 import org.jaudiotagger.audio.real.RealFileReader;
 import org.jaudiotagger.audio.wav.WavFileReader;
 import org.jaudiotagger.audio.wav.WavFileWriter;
@@ -270,12 +272,13 @@ public class AudioFileIO {
         readers.put(SupportedFileFormat.AIFC.getFilesuffix(), new AiffFileReader());
         readers.put(SupportedFileFormat.AIFF.getFilesuffix(), new AiffFileReader());
         readers.put(SupportedFileFormat.DSF.getFilesuffix(), new DsfFileReader());
-        final RealFileReader realReader = new RealFileReader();
-        readers.put(SupportedFileFormat.RA.getFilesuffix(), realReader);
-        readers.put(SupportedFileFormat.RM.getFilesuffix(), realReader);
+        readers.put(SupportedFileFormat.OPUS.getFilesuffix(), new OpusFileReader());
+        readers.put(SupportedFileFormat.RA.getFilesuffix(), new RealFileReader());
+        readers.put(SupportedFileFormat.RM.getFilesuffix(), new RealFileReader());
 
         // Tag Writers
         writers.put(SupportedFileFormat.OGG.getFilesuffix(), new OggFileWriter());
+        writers.put(SupportedFileFormat.OPUS.getFilesuffix(), new OpusFileWriter());
         writers.put(SupportedFileFormat.FLAC.getFilesuffix(), new FlacFileWriter());
         writers.put(SupportedFileFormat.MP3.getFilesuffix(), new MP3FileWriter());
         writers.put(SupportedFileFormat.MP4.getFilesuffix(), new Mp4FileWriter());
@@ -290,7 +293,6 @@ public class AudioFileIO {
         writers.put(SupportedFileFormat.DSF.getFilesuffix(), new DsfFileWriter());
 
         // Register modificationHandler
-        Iterator<AudioFileWriter> it = writers.values().iterator();
         for (AudioFileWriter curr : writers.values()) {
             curr.setAudioFileModificationListener(this.modificationHandler);
         }

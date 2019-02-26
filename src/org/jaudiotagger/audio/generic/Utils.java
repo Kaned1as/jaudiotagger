@@ -139,6 +139,11 @@ public class Utils {
         return (int) getLongLE(ByteBuffer.wrap(b), start, end);
     }
 
+
+    public static long getLongLE(final byte[] b, final int start, final int end) {
+        return getLongLE(ByteBuffer.wrap(b), start, end);
+    }
+
     /**
      * Computes a number whereby the 1st byte is the most significant and the last
      * byte is the least significant.

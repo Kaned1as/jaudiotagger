@@ -97,7 +97,7 @@ public class OggVorbisTagWriter {
         int newSecondPageDataLength = vorbisHeaderSizes.getSetupHeaderSize() + newCommentLength + vorbisHeaderSizes.getExtraPacketDataSize();
         logger.fine("Old 2nd Page no of packets: " + secondPageHeader.getPacketList().size());
         logger.fine("Old 2nd Page size: " + secondPageHeader.getPageLength());
-        logger.fine("Old last packet incomplete: " + secondPageHeader.isLastPacketIncomplete());
+        logger.fine("Old last page status: " + secondPageHeader.isLastPage());
         logger.fine("Setup Header Size: " + vorbisHeaderSizes.getSetupHeaderSize());
         logger.fine("Extra Packets: " + vorbisHeaderSizes.getExtraPacketList().size());
         logger.fine("Extra Packet Data Size: " + vorbisHeaderSizes.getExtraPacketDataSize());
@@ -115,7 +115,7 @@ public class OggVorbisTagWriter {
             //   OR
             //There are more than the packets in which case have complete setup header and some audio packets
             //we dont care if the last audio packet is split on next page as long as we preserve it
-            if ((secondPageHeader.getPageLength() < OggPageHeader.MAXIMUM_PAGE_DATA_SIZE) && (((secondPageHeader.getPacketList().size() == 2) && (!secondPageHeader.isLastPacketIncomplete())) || (secondPageHeader.getPacketList().size() > 2))) {
+            if ((secondPageHeader.getPageLength() < OggPageHeader.MAXIMUM_PAGE_DATA_SIZE) && (((secondPageHeader.getPacketList().size() == 2) && secondPageHeader.isLastPage()) || (secondPageHeader.getPacketList().size() > 2))) {
                 logger.fine("Header and Setup remain on single page:");
                 replaceSecondPageOnly(vorbisHeaderSizes, newCommentLength, newSecondPageDataLength, secondPageHeader, newComment, secondPageHeaderEndPos, raf, rafTemp);
             }

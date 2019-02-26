@@ -34,7 +34,7 @@ import java.util.logging.Logger;
  * Read encoding info, only implemented for vorbis streams
  */
 public class OggInfoReader {
-    // Logger Object
+
     public static Logger logger = Logger.getLogger("org.jaudiotagger.audio.ogg.atom");
 
     public GenericAudioHeader read(RandomAccessFile raf) throws CannotReadException, IOException {
@@ -62,7 +62,7 @@ public class OggInfoReader {
         //which must be set.
         //TODO should do buffering to cut down the number of file reads
         raf.seek(start);
-        double pcmSamplesNumber = -1;
+        long pcmSamplesNumber = -1;
         raf.seek(raf.length() - 2);
         while (raf.getFilePointer() >= 4) {
             if (raf.read() == OggPageHeader.CAPTURE_PATTERN[3]) {
@@ -98,19 +98,16 @@ public class OggInfoReader {
         OggPageHeader pageHeader = OggPageHeader.read(raf);
         byte[] vorbisData = new byte[pageHeader.getPageLength()];
 
-        if (vorbisData.length < OggPageHeader.OGG_PAGE_HEADER_FIXED_LENGTH) {
-            throw new CannotReadException("Invalid Identification header for this Ogg File");
-        }
         raf.read(vorbisData);
         VorbisIdentificationHeader vorbisIdentificationHeader = new VorbisIdentificationHeader(vorbisData);
 
         //Map to generic encodingInfo
-        info.setPreciseLength((float) (pcmSamplesNumber / vorbisIdentificationHeader.getSamplingRate()));
+        info.setPreciseLength((float) pcmSamplesNumber / vorbisIdentificationHeader.getSamplingRate());
         info.setChannelNumber(vorbisIdentificationHeader.getChannelNumber());
         info.setSamplingRate(vorbisIdentificationHeader.getSamplingRate());
         info.setEncodingType(vorbisIdentificationHeader.getEncodingType());
 
-        //According to Wikipedia Vorbis Page, Vorbis only works on 16bits 44khz 
+        //According to Wikipedia Vorbis Page, Vorbis only works on 16bits 44khz
         info.setBitsPerSample(16);
 
         //TODO this calculation should be done within identification header
