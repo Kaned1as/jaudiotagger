@@ -1,5 +1,7 @@
 package org.jcodec.containers.mp4.boxes;
 
+import org.jaudiotagger.audio.generic.Utils;
+
 import java.lang.IllegalArgumentException;
 import java.lang.IllegalStateException;
 import java.nio.ByteBuffer;
@@ -158,7 +160,7 @@ public class TrunBox extends FullBox {
     }
 
     public long getSampleCount() {
-        return Integer.toUnsignedLong(sampleCount);
+        return Utils.u(sampleCount);
     }
 
     public int getDataOffset() {
@@ -186,11 +188,11 @@ public class TrunBox extends FullBox {
     }
 
     public long getSampleDuration(int i) {
-        return Integer.toUnsignedLong(sampleDuration[i]);
+        return Utils.u(sampleDuration[i]);
     }
 
     public long getSampleSize(int i) {
-        return Integer.toUnsignedLong(sampleSize[i]);
+        return Utils.u(sampleSize[i]);
     }
 
     public int getSampleFlags(int i) {
@@ -198,7 +200,7 @@ public class TrunBox extends FullBox {
     }
 
     public long getSampleCompositionOffset(int i) {
-        return Integer.toUnsignedLong(sampleCompositionOffset[i]);
+        return Utils.u(sampleCompositionOffset[i]);
     }
 
     public boolean isDataOffsetAvailable() {

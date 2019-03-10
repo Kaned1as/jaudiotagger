@@ -1,5 +1,7 @@
 package org.jcodec.containers.mp4.boxes;
 
+import org.jaudiotagger.audio.generic.Utils;
+
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
@@ -50,11 +52,11 @@ public class SegmentIndexBox extends FullBox {
     @Override
     public void parse(ByteBuffer input) {
         super.parse(input);
-        this.reference_ID = Integer.toUnsignedLong(input.getInt());
-        this.timescale = Integer.toUnsignedLong(input.getInt());
+        this.reference_ID = Utils.u(input.getInt());
+        this.timescale = Utils.u(input.getInt());
         if (version == 0) {
-            this.earliest_presentation_time = Integer.toUnsignedLong(input.getInt());
-            this.first_offset = Integer.toUnsignedLong(input.getInt());
+            this.earliest_presentation_time = Utils.u(input.getInt());
+            this.first_offset = Utils.u(input.getInt());
         } else {
             this.earliest_presentation_time = input.getLong();
             this.first_offset = input.getLong();
@@ -63,9 +65,9 @@ public class SegmentIndexBox extends FullBox {
         this.reference_count = input.getShort() & 0xffff;
         this.references = new Reference[this.reference_count];
         for (int i = 0; i < this.reference_count; i++) {
-            long i0 = Integer.toUnsignedLong(input.getInt());
-            long i1 = Integer.toUnsignedLong(input.getInt());
-            long i2 = Integer.toUnsignedLong(input.getInt());
+            long i0 = Utils.u(input.getInt());
+            long i1 = Utils.u(input.getInt());
+            long i2 = Utils.u(input.getInt());
 
             Reference ref = new Reference();
             ref.reference_type = ((i0 >>> 31) & 1) == 1;

@@ -49,7 +49,7 @@ public class Header {
     
     public static Header read(ByteBuffer input) {
         long size = 0;
-        while (input.remaining() >= 4 && (size = Integer.toUnsignedLong(input.getInt())) == 0)
+        while (input.remaining() >= 4 && (size = Utils.u(input.getInt())) == 0)
             ;
         if (input.remaining() < 4 || size < 8 && size != 1) {
             LOGGER.severe("Broken atom of size " + size);

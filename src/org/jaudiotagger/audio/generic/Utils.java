@@ -486,7 +486,7 @@ public class Utils {
      * @return
      */
     public static long u(final int n) {
-        return n & 0xffffffffl;
+        return n & 0xFFFFFFFFL;
     }
 
     /**
@@ -497,7 +497,7 @@ public class Utils {
      * @return
      */
     public static int u(final short n) {
-        return n & 0xffff;
+        return n & 0xFFFF;
     }
 
     /**
@@ -508,7 +508,7 @@ public class Utils {
      * @return
      */
     public static int u(final byte n) {
-        return n & 0xff;
+        return n & 0xFF;
     }
 
     public static ByteBuffer fetchFromChannel(ReadableByteChannel ch, int size) throws IOException {

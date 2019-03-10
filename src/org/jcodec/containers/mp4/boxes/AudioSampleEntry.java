@@ -1,5 +1,7 @@
 package org.jcodec.containers.mp4.boxes;
 
+import org.jaudiotagger.audio.generic.Utils;
+
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.*;
@@ -77,7 +79,7 @@ public class AudioSampleEntry extends SampleEntry {
         compressionId = input.getShort();
         pktSize = input.getShort();
 
-        long sr = Integer.toUnsignedLong(input.getInt());
+        long sr = Utils.u(input.getInt());
         sampleRate = (float) sr / 65536f;
 
         if (version == 1) {

@@ -1,5 +1,7 @@
 package org.jcodec.containers.mp4.boxes;
 
+import org.jaudiotagger.audio.generic.Utils;
+
 import java.nio.ByteBuffer;
 
 /**
@@ -35,7 +37,7 @@ public class ChunkOffsetsBox extends FullBox {
         int length = input.getInt();
         chunkOffsets = new long[length];
         for (int i = 0; i < length; i++) {
-            chunkOffsets[i] = Integer.toUnsignedLong(input.getInt());
+            chunkOffsets[i] = Utils.u(input.getInt());
         }
     }
 
