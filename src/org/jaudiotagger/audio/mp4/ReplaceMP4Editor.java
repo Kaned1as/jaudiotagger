@@ -4,6 +4,7 @@ import org.jcodec.containers.mp4.MP4Util;
 import org.jcodec.containers.mp4.MP4Util.Movie;
 import org.jcodec.containers.mp4.boxes.Box;
 import org.jcodec.containers.mp4.boxes.MovieBox;
+import org.jcodec.containers.mp4.boxes.TrakBox;
 
 import java.io.IOException;
 import java.nio.channels.FileChannel;

@@ -37,7 +37,7 @@ public class Mp4FileWriter extends AudioFileWriter {
 
 
     protected void writeTag(AudioFile audioFile, Tag tag, RandomAccessFile raf, RandomAccessFile rafTemp) throws CannotWriteException, IOException {
-        tw.write(tag, raf, rafTemp);
+        tw.write(audioFile, raf, rafTemp);
     }
 
     protected void deleteTag(Tag tag, RandomAccessFile raf, RandomAccessFile rafTemp) throws IOException {

@@ -49,8 +49,9 @@ public class InplaceMP4Editor {
         ByteBuffer moovBuffer = fetchBox(fi, moovAtom);
         MovieBox moovBox = (MovieBox) parseBox(moovBuffer);
 
+        moovBox.getBoxes().clear();
         for (Box box : edit.getBoxes()) {
-            moovBox.replaceBox(box);
+            moovBox.add(box);
         }
 
         if (!rewriteBox(moovBuffer, moovBox))
