@@ -22,7 +22,7 @@ import java.nio.channels.FileChannel;
 public class ReplaceMP4Editor {
 
     public void modifyOrReplace(FileChannel src, FileChannel dst, MovieBox edit) throws IOException {
-        boolean modify = new InplaceMP4Editor().modify(src, edit);
+        boolean modify = new InplaceMP4Editor().modify(dst, edit);
         if (!modify)
             copy(src, dst, edit);
     }
