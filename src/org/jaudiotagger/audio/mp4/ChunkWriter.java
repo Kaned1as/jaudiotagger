@@ -1,27 +1,42 @@
 package org.jaudiotagger.audio.mp4;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.SeekableByteChannel;
 
 import org.jaudiotagger.audio.generic.Utils;
-import org.jcodec.containers.mp4.boxes.*;
-
-import java.io.IOException;
-import java.nio.channels.FileChannel;
+import org.jaudiotagger.utils.IntArrayList;
+import org.jcodec.containers.mp4.boxes.AliasBox;
+import org.jcodec.containers.mp4.boxes.Box;
+import org.jcodec.containers.mp4.boxes.ChunkOffsets64Box;
+import org.jcodec.containers.mp4.boxes.ChunkOffsetsBox;
+import org.jcodec.containers.mp4.boxes.DataInfoBox;
+import org.jcodec.containers.mp4.boxes.DataRefBox;
+import org.jcodec.containers.mp4.boxes.MediaInfoBox;
+import org.jcodec.containers.mp4.boxes.NodeBox;
+import org.jcodec.containers.mp4.boxes.SampleEntry;
+import org.jcodec.containers.mp4.boxes.SampleSizesBox;
+import org.jcodec.containers.mp4.boxes.TrakBox;
 
 /**
  * This class is part of JCodec ( www.jcodec.org ) This software is distributed
  * under FreeBSD License
  *
  * @author The JCodec project
+ *
  */
 public class ChunkWriter {
     private long[] offsets;
     private SampleEntry[] entries;
-    private FileChannel[] inputs;
+    private SeekableByteChannel input;
     private int curChunk;
-    private FileChannel out;
+    private SeekableByteChannel out;
     byte[] buf;
     private TrakBox trak;
+    private IntArrayList sampleSizes;
+    private int sampleSize;
+    private int sampleCount;
 
-    public ChunkWriter(TrakBox trak, FileChannel[] inputs, FileChannel out) {
+    public ChunkWriter(TrakBox trak, SeekableByteChannel input, SeekableByteChannel out) {
         this.buf = new byte[8092];
         entries = trak.getSampleEntries();
         ChunkOffsetsBox stco = trak.getStco();
@@ -31,11 +46,12 @@ public class ChunkWriter {
             size = stco.getChunkOffsets().length;
         else
             size = co64.getChunkOffsets().length;
-        this.inputs = inputs;
+        this.input = input;
 
         offsets = new long[size];
         this.out = out;
         this.trak = trak;
+        this.sampleSizes = IntArrayList.createIntArrayList();
     }
 
     public void apply() {
@@ -44,6 +60,10 @@ public class ChunkWriter {
 
         stbl.add(ChunkOffsets64Box.createChunkOffsets64Box(offsets));
         cleanDrefs(trak);
+
+        SampleSizesBox stsz = sampleCount != 0 ? SampleSizesBox.createSampleSizesBox(sampleSize, sampleCount)
+                : SampleSizesBox.createSampleSizesBox2(sampleSizes.toArray());
+        stbl.replaceBox(stsz);
     }
 
     private void cleanDrefs(TrakBox trak) {
@@ -70,17 +90,39 @@ public class ChunkWriter {
         }
     }
 
-    private FileChannel getInput(Chunk chunk) {
+    private SeekableByteChannel getInput(Chunk chunk) {
         SampleEntry se = entries[chunk.getEntry() - 1];
-        return inputs[se.getDrefInd() - 1];
+        if (se.getDrefInd() != 1)
+            throw new RuntimeException("Multiple sample entries not supported");
+        return input;
     }
 
     public void write(Chunk chunk) throws IOException {
-        FileChannel input = getInput(chunk);
-        input.position(chunk.getOffset());
         long pos = out.position();
 
-        out.write(Utils.fetchFromChannel(input, (int) chunk.getSize()));
+        ByteBuffer chunkData = chunk.getData();
+        if (chunkData == null) {
+            SeekableByteChannel input = getInput(chunk);
+            input.position(chunk.getOffset());
+            chunkData = Utils.fetchFromChannel(input, (int) chunk.getSize());
+        }
+
+        out.write(chunkData);
         offsets[curChunk++] = pos;
+
+        if (chunk.getSampleSize() == Chunk.UNEQUAL_SIZES) {
+            if (sampleCount != 0)
+                throw new RuntimeException("Mixed chunks unsupported 1.");
+            sampleSizes.addAll(chunk.getSampleSizes());
+        } else {
+            if (sampleSizes.size() != 0)
+                throw new RuntimeException("Mixed chunks unsupported 2.");
+            if (sampleCount == 0) {
+                sampleSize = chunk.getSampleSize();
+            } else if (sampleSize != chunk.getSampleSize()) {
+                throw new RuntimeException("Mismatching default sizes");
+            }
+            sampleCount += chunk.getSampleCount();
+        }
     }
 }

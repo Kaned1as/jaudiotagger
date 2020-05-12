@@ -130,6 +130,15 @@ public class MP4Util {
         return result;
     }
 
+    public static Atom getMoov(List<Atom> rootAtoms) {
+        for (Atom atom : rootAtoms) {
+            if ("moov".equals(atom.getHeader().getFourcc())) {
+                return atom;
+            }
+        }
+        return null;
+    }
+
     public static Atom findFirstAtom(String fourcc, FileChannel input) throws IOException {
         List<Atom> rootAtoms = getRootAtoms(input);
         for (Atom atom : rootAtoms) {

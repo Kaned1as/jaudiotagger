@@ -4,7 +4,6 @@ import org.jcodec.containers.mp4.MP4Util;
 import org.jcodec.containers.mp4.MP4Util.Movie;
 import org.jcodec.containers.mp4.boxes.Box;
 import org.jcodec.containers.mp4.boxes.MovieBox;
-import org.jcodec.containers.mp4.boxes.TrakBox;
 
 import java.io.IOException;
 import java.nio.channels.FileChannel;
@@ -34,7 +33,7 @@ public class ReplaceMP4Editor {
             movie.getMoov().replaceBox(box);
         }
 
-        Flattern fl = new Flattern();
-        fl.flatternChannel(movie, dst);
+        Flatten fl = new Flatten();
+        fl.flattenChannel(movie, dst);
     }
 }

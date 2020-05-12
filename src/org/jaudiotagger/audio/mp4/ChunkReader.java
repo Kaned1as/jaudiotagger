@@ -1,16 +1,28 @@
 package org.jaudiotagger.audio.mp4;
-
-import org.jcodec.containers.mp4.boxes.*;
-import org.jcodec.containers.mp4.boxes.SampleToChunkBox.SampleToChunkEntry;
-import org.jcodec.containers.mp4.boxes.TimeToSampleBox.TimeToSampleEntry;
-
+import java.io.IOException;
+import java.nio.channels.SeekableByteChannel;
 import java.util.Arrays;
+
+import org.jaudiotagger.audio.generic.Utils;
+import org.jcodec.containers.mp4.boxes.AudioSampleEntry;
+import org.jcodec.containers.mp4.boxes.Box;
+import org.jcodec.containers.mp4.boxes.ChunkOffsets64Box;
+import org.jcodec.containers.mp4.boxes.ChunkOffsetsBox;
+import org.jcodec.containers.mp4.boxes.SampleDescriptionBox;
+import org.jcodec.containers.mp4.boxes.SampleEntry;
+import org.jcodec.containers.mp4.boxes.SampleSizesBox;
+import org.jcodec.containers.mp4.boxes.SampleToChunkBox;
+import org.jcodec.containers.mp4.boxes.SampleToChunkBox.SampleToChunkEntry;
+import org.jcodec.containers.mp4.boxes.TimeToSampleBox;
+import org.jcodec.containers.mp4.boxes.TimeToSampleBox.TimeToSampleEntry;
+import org.jcodec.containers.mp4.boxes.TrakBox;
 
 /**
  * This class is part of JCodec ( www.jcodec.org ) This software is distributed
  * under FreeBSD License
  *
  * @author The JCodec project
+ *
  */
 public class ChunkReader {
     private int curChunk;
@@ -24,8 +36,10 @@ public class ChunkReader {
     private SampleSizesBox stsz;
     private TimeToSampleEntry[] tts;
     private SampleDescriptionBox stsd;
+    private SeekableByteChannel input;
+    private SampleEntry[] entries;
 
-    public ChunkReader(TrakBox trakBox) {
+    public ChunkReader(TrakBox trakBox, SeekableByteChannel inputs) {
         TimeToSampleBox stts = trakBox.getStts();
         tts = stts.getEntries();
         ChunkOffsetsBox stco = trakBox.getStco();
@@ -39,13 +53,15 @@ public class ChunkReader {
             chunkOffsets = co64.getChunkOffsets();
         sampleToChunk = stsc.getSampleToChunk();
         stsd = trakBox.getStsd();
+        entries = trakBox.getSampleEntries();
+        this.input = inputs;
     }
 
     public boolean hasNext() {
         return curChunk < chunkOffsets.length;
     }
 
-    public Chunk next() {
+    public Chunk next() throws IOException {
         if (curChunk >= chunkOffsets.length)
             return null;
 
@@ -54,7 +70,7 @@ public class ChunkReader {
         int sampleCount = sampleToChunk[s2cIndex].getCount();
 
         int[] samplesDur = null;
-        int sampleDur = 0;
+        int sampleDur = Chunk.UNEQUAL_DUR;
         if (ttsSubInd + sampleCount <= tts[ttsInd].getSampleCount()) {
             sampleDur = tts[ttsInd].getSampleDuration();
             ttsSubInd += sampleCount;
@@ -70,7 +86,7 @@ public class ChunkReader {
             }
         }
 
-        int size = 0;
+        int size = Chunk.UNEQUAL_SIZES;
         int[] sizes = null;
         if (stsz.getDefaultSize() > 0) {
             size = getFrameSize();
@@ -84,7 +100,20 @@ public class ChunkReader {
         chunkTv += chunk.getDuration();
         sampleNo += sampleCount;
         ++curChunk;
+
+        if (input != null) {
+            SeekableByteChannel input = getInput(chunk);
+            input.position(chunk.getOffset());
+            chunk.setData(Utils.fetchFromChannel(input, (int) chunk.getSize()));
+        }
         return chunk;
+    }
+
+    private SeekableByteChannel getInput(Chunk chunk) {
+        SampleEntry se = entries[chunk.getEntry() - 1];
+        if (se.getDrefInd() != 1)
+            throw new RuntimeException("Multiple sample entries");
+        return input;
     }
 
     private int getFrameSize() {

@@ -524,6 +524,13 @@ public class Utils {
         return buffer.position() - rem;
     }
 
+    public static ByteBuffer duplicate(ByteBuffer bb) {
+        ByteBuffer out = ByteBuffer.allocate(bb.remaining());
+        out.put(bb.duplicate());
+        out.flip();
+        return out;
+    }
+
     public static void copy(ReadableByteChannel _in, WritableByteChannel out, long amount) throws IOException {
         ByteBuffer buf = ByteBuffer.allocate(0x10000);
         int read;
