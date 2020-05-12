@@ -458,10 +458,9 @@ public class Utils {
 
     public static String readNullTermStringCharset(ByteBuffer buffer, Charset charset) {
         ByteBuffer fork = buffer.duplicate();
-        while (buffer.hasRemaining() && buffer.get() != 0)
-            ;
-        if (buffer.hasRemaining())
-            fork.limit(buffer.position() - 1);
+        while (buffer.hasRemaining() && buffer.get() != 0) {
+        }
+        fork.limit(buffer.position() - 1);
         return new String(toArray(fork), charset);
     }
 
