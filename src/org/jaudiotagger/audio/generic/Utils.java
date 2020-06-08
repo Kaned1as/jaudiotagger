@@ -622,7 +622,7 @@ public class Utils {
         Class[] classes = new Class[params.length];
         for (int i = 0; i < params.length; i++) {
             Class<?> cls = params[i].getClass();
-            classes[i] = boxed2primitive.getOrDefault(cls, cls);
+            classes[i] = boxed2primitive.containsKey(cls) ? boxed2primitive.get(cls) : cls;
         }
         return classes;
     }
