@@ -1,5 +1,7 @@
 package org.jcodec.containers.mp4.boxes;
 
+import android.text.TextUtils;
+
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Function;
@@ -74,7 +76,13 @@ public class MetaBox extends NodeBox {
                 if (box instanceof DataBox) {
                     DataBox db = (DataBox) box;
                     MetaValue value = MetaValue.createOtherWithLocale(db.getType(), db.getLocale(), db.getData());
-                    result.computeIfAbsent(index, idx -> new ArrayList<>()).add(value);
+                    if(result.containsKey(index)) {
+                        result.get(index).add(value);
+                    } else {
+                        List<MetaValue> metaVals = new ArrayList<>();
+                        metaVals.add(value);
+                        result.put(index, metaVals);
+                    }
                 }
             }
         }
@@ -87,12 +95,15 @@ public class MetaBox extends NodeBox {
         if (ilst == null || ilst.getRdnsValues() == null)
             return Collections.emptyMap();
 
-        return ilst.getRdnsValues().stream()
-                .filter(rdns -> rdns.getName() != null && !rdns.getName().isEmpty() )
-                .filter(rdns -> rdns.getIssuer() != null && !rdns.getIssuer().isEmpty() )
-                .filter(rdns -> rdns.getData() != null && rdns.getData().length > 0 )
-                .collect(Collectors.toMap(rdns -> "----:" + rdns.getIssuer() + ":" + rdns.getName(),
-                        rdns -> MetaValue.createOtherWithLocale(rdns.getDataBox())));
+        Map<String, MetaValue> map = new HashMap<>();
+        for (ReverseDnsBox rdns : ilst.getRdnsValues()) {
+            if (!TextUtils.isEmpty(rdns.getName()) && !TextUtils.isEmpty(rdns.getIssuer())) {
+                if (rdns.getData() != null && rdns.getData().length > 0) {
+                    map.put("----:" + rdns.getIssuer() + ":" + rdns.getName(), MetaValue.createOtherWithLocale(rdns.getDataBox()));
+                }
+            }
+        }
+        return map;
     }
 
     public void setKeyedMeta(Map<String, MetaValue> map) {

@@ -24,7 +24,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.jthink</groupId>
     <artifactId>jaudiotagger</artifactId>
-    <version>2.3.12</version>
+    <version>2.3.13</version>
     <packaging>jar</packaging>
     <name>jaudiotagger</name>
     <description>
@@ -161,6 +161,6 @@
         <connection>scm:git:https://github.com/Adonai/jaudiotagger-android.git</connection>
         <developerConnection>scm:git:git@github.com/Adonai/jaudiotagger-android.git</developerConnection>
         <url>https://github.com/Adonai/jaudiotagger-android</url>
-        <tag>jaudiotagger-2.3.12</tag>
+        <tag>jaudiotagger-2.3.13</tag>
     </scm>
 </project>
