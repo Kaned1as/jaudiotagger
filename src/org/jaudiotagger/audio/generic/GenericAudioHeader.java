@@ -34,8 +34,14 @@ import org.jaudiotagger.audio.AudioHeader;
  */
 public class GenericAudioHeader implements AudioHeader {
     //Use objects so clearer wherher has been set or not
+
+    // total number of bytes of audio
     private Long audioDataLength;
+
+    // start position of the first byte of audio (where applicable)
     private Long audioDataStartPosition;
+
+    // end position of the last byte of audio (where applicable)
     private Long audioDataEndPosition;
     private Integer bitRate;
     private Integer noOfChannels;

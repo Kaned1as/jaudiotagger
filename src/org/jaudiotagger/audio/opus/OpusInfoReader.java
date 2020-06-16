@@ -23,7 +23,6 @@ public class OpusInfoReader {
         long start = raf.getFilePointer();
         GenericAudioHeader info = new GenericAudioHeader();
         logger.fine("Started");
-        long oldPos;
 
         //Check start of file does it have Ogg pattern
         byte[] b = new byte[OggPageHeader.CAPTURE_PATTERN.length];
@@ -53,7 +52,33 @@ public class OpusInfoReader {
         info.setSamplingRate(opusIdHeader.getAudioSampleRate());
         info.setEncodingType("Opus Vorbis 1.0");
 
+        // find last Opus Header
+        OggPageHeader last = lastValidHeader(raf);
+        if (last == null) {
+            throw new CannotReadException("Opus file contains ID and Comment headers but no audio content");
+        }
+
+        info.setNoOfSamples(last.getAbsoluteGranulePosition() - opusIdHeader.getPreSkip());
+        info.setPreciseLength(info.getNoOfSamples() / 48000D);
+
         return info;
+    }
+
+    private OggPageHeader lastValidHeader(RandomAccessFile raf) throws IOException {
+        OggPageHeader best = null;
+        while (true) {
+            try {
+                OggPageHeader candidate = OggPageHeader.read(raf);
+                raf.seek(raf.getFilePointer() + candidate.getPageLength());
+                if (candidate.isValid() && !candidate.isLastPacketIncomplete()) {
+                    best = candidate;
+                }
+            } catch (CannotReadException ignored) {
+                break;
+            }
+        }
+
+        return best;
     }
 }
 
