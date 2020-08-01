@@ -129,10 +129,19 @@ public class MovieHeaderBox extends FullBox {
 
     public void doWrite(ByteBuffer out) {
         super.doWrite(out);
-        out.putInt((int) created);
-        out.putInt((int) modified);
-        out.putInt(timescale);
-        out.putInt((int) duration);
+        if (version == 0) {
+            out.putInt((int) created);
+            out.putInt((int) modified);
+            out.putInt(timescale);
+            out.putInt((int) duration);
+        } else if (version == 1) {
+            out.putLong(created);
+            out.putLong(modified);
+            out.putInt(timescale);
+            out.putLong(duration);
+        } else {
+            throw new RuntimeException("Unsupported version");
+        }
         writeFixed1616(out, rate);
         writeFixed88(out, volume);
         out.put(new byte[10]);

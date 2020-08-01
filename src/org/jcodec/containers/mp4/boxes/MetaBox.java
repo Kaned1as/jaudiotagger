@@ -1,11 +1,9 @@
 package org.jcodec.containers.mp4.boxes;
 
-import android.text.TextUtils;
+import org.jaudiotagger.audio.asf.util.Utils;
 
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * This class is part of JCodec ( www.jcodec.org ) This software is distributed
@@ -97,7 +95,7 @@ public class MetaBox extends NodeBox {
 
         Map<String, MetaValue> map = new HashMap<>();
         for (ReverseDnsBox rdns : ilst.getRdnsValues()) {
-            if (!TextUtils.isEmpty(rdns.getName()) && !TextUtils.isEmpty(rdns.getIssuer())) {
+            if (!Utils.isEmpty(rdns.getName()) && !Utils.isEmpty(rdns.getIssuer())) {
                 if (rdns.getData() != null && rdns.getData().length > 0) {
                     map.put("----:" + rdns.getIssuer() + ":" + rdns.getName(), MetaValue.createOtherWithLocale(rdns.getDataBox()));
                 }

@@ -225,6 +225,10 @@ public class Utils {
         return true;
     }
 
+    public static boolean isEmpty(String toTest) {
+        return toTest == null || toTest.length() == 0;
+    }
+
     /**
      * Reads 8 bytes from stream and interprets them as a UINT64 which is
      * returned as {@link BigInteger}.<br>

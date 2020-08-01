@@ -109,13 +109,22 @@ public class TrackHeaderBox extends FullBox {
     public void doWrite(ByteBuffer out) {
         super.doWrite(out);
 
-        out.putInt((int) created);
-        out.putInt((int) modified);
+        if (version == 0) {
+            out.putInt((int) created);
+            out.putInt((int) modified);
+        } else {
+            out.putLong(created);
+            out.putLong(modified);
+        }
 
         out.putInt(trackId);
         out.putInt(0);
 
-        out.putInt((int) duration);
+        if (version == 0) {
+            out.putInt((int) duration);
+        } else {
+            out.putLong(duration);
+        }
 
         out.putInt(0);
         out.putInt(0);
