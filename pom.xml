@@ -76,7 +76,7 @@
         <dependency>
             <groupId>com.squareup.okio</groupId>
             <artifactId>okio</artifactId>
-            <version>1.17.3</version>
+            <version>3.4.0</version>
         </dependency>
         <dependency>
             <groupId>com.google.android</groupId>
